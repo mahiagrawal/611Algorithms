@@ -14,7 +14,15 @@
 \newcommand{\M}{\mathcal{M}}
 \newcommand{\I}{\mathcal{I}}
 \newcommand{\E}{\mathcal{E}}
+\renewcommand{\O}{\mathcal{O}}
+% if you want to use \alg and \opt in text, wrap them in math mode to make the spacing work
+% e.g. We have shown that $\alg$ runs in $\O(n)$
+\newcommand{\alg}{\textsc{alg}}
+\newcommand{\opt}{\textsc{opt}}
 
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
 
 \title{Solutions for 611 Homework 1}
 
@@ -30,8 +38,67 @@
 
 \section{Solution to Question 2}
 
+For clarity, let the elements of $A$ and $B$ be indexed as $A = \{a_1, \dots, a_n\}$ and $B = \{b_1, \dots, b_n\}$.
+Consider the following algorithm $\alg$ for determining the $n$th smallest element of $A \cup B$:
+\begin{enumerate}
+  \item Let $i = j = \frac{n}{2}$ be indices into $A$ and $B$, respectively, which may be updated in later steps.
+  \item If it is the case that $a_i < b_{j+1}$ and $b_j < a_{i+1}$, return $\max \{a_i, b_j\}$.
+  \item Otherwise, if $a_i > b_{j+1}$, update $i$ and $j$ so that $i \mapsto \frac{1}{2}i$ and $j \mapsto \frac{1}{2}(j + n)$.
+    If, on the other hand, $b_j > a_{i+1}$, update the indices so that $i \mapsto \frac{1}{2}(i + n)$ and $j \mapsto \frac{1}{2}j$.
+    If $i$ (resp. $j$) is equal to $n$, return $a_i$ (resp. $b_j$); otherwise, return to step $2$.
+\end{enumerate}
+We will use the following lemma to prove the correctness of $\alg$.
 
+\begin{lemma}
+  \label{nth-smallest-lemma}
+  Suppose that $i + j = n$ and let $m = max \{a_i, b_j\}$. Then $m$ is the $n$th smallest element of $A \cup B$ if and only if $a_i < b_{j+1}$ and $b_j < a_{i+1}$.
+\end{lemma}
 
+\begin{proof}
+  $(\Rightarrow)$ Suppose that $m$ is the $n$th smallest element of $A \cup B$.
+  Then $m$ is larger than exactly $n - 1$ elements of $A \cup B$.
+  Where can these elements possibly be located in their lists?
+  If $m = a_i$, then $m$ is greater than exactly $i - 1$ elements of $A$ (since $A$ is sorted).
+  Thus $m$ must be greater than exactly $(n - 1) - (i - 1) = (i + j - 1) - (i - 1) = j$ elements of $B$.
+  In fact, since $B$ is sorted, $m$ must be greater than the first $j$ elements of $B$.
+  In particular, this means we have $a_{i + 1} > a_i = m > b_j$, giving us one of the desired inequalities.
+  Moreover, $m > b_{j+1}$ would imply the presence of an $n$th element of $A \cup B$ which is smaller than $m$, contradicting that $m$ is the $n$th smallest element of $A \cup B$.
+  Thus, we have shown $a_i = m \leq b_{j+1}$, and, since the elements are distinct, this inequality must be strict, as desired.
+  A symmetrical argument yields the same result in the case that $m = b_j$, completing one direction of the proof.
+
+  $(\Leftarrow)$ Now suppose that $a_i < b_{j+1}$ and $b_j < a_{i+1}$.
+  Since $m \geq a_i$, it is greater than at least $i - 1$ elements of $A$.
+  Likewise, since $m \geq b_j$, it is greater than at least $j - 1$ elements of $B$.
+  In fact, since $m = \max\{a_i, b_j\}$, one of these inequalities is strict and the other is actually an equality.
+  Without loss of generality (the other possible choice is dealt with by a symmetrical argument), suppose $m = a_i$ and $m > b_j$.
+  Then $m$ is greater than exactly $i - 1$ elements of $A$ and at least $j$ elements of $B$, so $m$ is greater than at lest $(i - 1) + j = n - 1$ elements of $A \cup B$.
+  We initially supposed that $m = a_i < b_{j+1}$, so this lower bound is actually tight.
+  Since $m$ is greater than exactly $n - 1$ elements of $A \cup B$, $m$ is the $n$th smallest element of $A \cup B$.
+\end{proof}
+
+\noindent {\bf Claim 1:} $\alg$ always terminates and returns the $n$th largest element of $A \cup B$.
+
+\begin{proof}
+  Firstly, note that initially we have $i = j = \frac{n}{2}$, so $i + j = n$.
+  When we update the indices, we do so by $(i, j) \mapsto \left(\frac{1}{2}i, \frac{1}{2}(j + n)\right)$.
+  Since \[\frac{1}{2}i + \frac{1}{2}(j + n) = \frac{1}{2}(i + j) + \frac{1}{2}n = n\] we have that $i + j = n$ is an invariant of $\alg$.
+  This allows us to apply Lemma \ref{nth-smallest-lemma} at any time during our analysis of $\alg$.
+
+  First, we argue that $\alg$ will always terminate.
+  Need to show that trajectories of the indices are monotonic.
+  This means we can't loop infinitely.
+  Since we always return at extremal values, we must return every time.
+  Finally, we are correct in the extremal case and we are correct if we return early by the lemma.
+\end{proof}
+
+\noindent {\bf Claim 2:} $\alg$ runs in $\O(\log n)$ time.
+
+\begin{proof}
+  The updating of $i$ and $j$ amounts to a binary search for the correct index configuration.
+  Since the position of $j$ is completely determined by the position of $i$ (lest we violate the invariant $i + j = n$), it suffices to constrain our analysis to the trajectory of $i$ under iteration of the map $i \mapsto \frac{1}{2}i$.
+  Each iteration halves the value of $i$, so there may be at most $\log_{2}n = \O(\log n)$ iterations before the algorithm terminates due to the extremal case of $i = 1$.
+  Restricting our attention to the case where $i$ decreases rather than increases maintains generality since we could make the same argument about the trajectory of $j$ in the case that $i$ increases during a run of $\alg$.
+\end{proof}
 \section{Solution to Question 3}
 
 
