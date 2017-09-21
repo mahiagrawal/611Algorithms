@@ -49,9 +49,8 @@ Consider the following algorithm $\alg$ for determining the $n$th smallest eleme
 \end{enumerate}
 We will use the following lemma to prove the correctness of $\alg$.
 
-\begin{lemma}
-  \label{nth-smallest-lemma}
-  Suppose that $i + j = n$ and let $m = max \{a_i, b_j\}$. Then $m$ is the $n$th smallest element of $A \cup B$ if and only if $a_i < b_{j+1}$ and $b_j < a_{i+1}$.
+\begin{lemma}\label{nth-smallest-lemma}
+Suppose that $i + j = n$ and let $m = \max \{a_i, b_j\}$. Then $m$ is the $n$th smallest element of $A \cup B$ if and only if $a_i < b_{j+1}$ and $b_j < a_{i+1}$.
 \end{lemma}
 
 \begin{proof}
@@ -82,22 +81,30 @@ We will use the following lemma to prove the correctness of $\alg$.
   Firstly, note that initially we have $i = j = \frac{n}{2}$, so $i + j = n$.
   When we update the indices, we do so by $(i, j) \mapsto \left(\frac{1}{2}i, \frac{1}{2}(j + n)\right)$.
   Since \[\frac{1}{2}i + \frac{1}{2}(j + n) = \frac{1}{2}(i + j) + \frac{1}{2}n = n\] we have that $i + j = n$ is an invariant of $\alg$.
-  This allows us to apply Lemma \ref{nth-smallest-lemma} at any time during our analysis of $\alg$.
+  Finally, because $n$ is a power of $2$, each subsequent image of $i$ is a multiple of $2$, so we always have $i, j \in \N$, and in particular $i$ and $j$ are always valid as indices.
+  This allows us to apply Lemma~\ref{nth-smallest-lemma} at any time during our analysis of $\alg$.
 
-  First, we argue that $\alg$ will always terminate.
-  Need to show that trajectories of the indices are monotonic.
-  This means we can't loop infinitely.
-  Since we always return at extremal values, we must return every time.
-  Finally, we are correct in the extremal case and we are correct if we return early by the lemma.
+  The updating of $i$ and $j$ amounts to a binary search for the correct index configuration.
+  Since the position of $j$ is completely determined by the position of $i$ (lest we violate the invariant $i + j = n$), it suffices to constrain our analysis to the trajectory of $i$ under iteration of the map that updates the indices over the course of a run.
+  The value of $i$ begins at $\frac{n}{2}$ and is only ever updated by either $i \mapsto \frac{i}{2}$ or $i \mapsto \frac{1}{2}(i + n)$.
+  In partiuclar, $i$ begins in the inverval $I_1 = [1, n]$, and is mapped into an interval $I_2 \in \left\{[1, \frac{n}{2}], [\frac{n}{2} + 1, n]\right\}$ after the first update.
+  In general, the $k$th time it is updated, $i$ is mapped into an interval $I_{k+1} \subseteq I_k$ of size $\frac{|I_k|}{2}$.
+  Since the intervals containing $i$ must be nested, and $n$ is finite, there may only be a finite number of updates in a single run of $\alg$.
+  Since we must return if we cannot update $i$, $\alg$ always terminates.
+
+  Now, we claim that if $\alg$ terminates, it returns the correct answer.
+  In the case that we return in Step $2$, our answer is correct by Lemma~\ref{nth-smallest-lemma}.
+  If we return in Step $3$, then $i = n$ without loss of generality.
+  Since $A$ is sorted, $i = n$ implies the existence of $n - 1$ elements of $A$ which are smaller than $a_i$.
+  If $b_j = b_1 < a_i$, then in the previous iteration we would have had $b_1 < a_{i+1}$, so we would have terminated in Step $2$.\footnote{This looks off-by-one at first glance, but because the lists are $1$-indexed, this final iteration maps $j = 1$ to $j = 1$ and $i = n - 1$ to $i = n$.}
+  Thus we have shown there are exactly $n - 1$ elements of $A \cup B$ which are less than $a_n$, so $a_n$ must be the $n$th smallest element.
+  This completes the proof of correctness.
 \end{proof}
 
 \noindent {\bf Claim 2:} $\alg$ runs in $\O(\log n)$ time.
 
 \begin{proof}
-  The updating of $i$ and $j$ amounts to a binary search for the correct index configuration.
-  Since the position of $j$ is completely determined by the position of $i$ (lest we violate the invariant $i + j = n$), it suffices to constrain our analysis to the trajectory of $i$ under iteration of the map $i \mapsto \frac{1}{2}i$.
-  Each iteration halves the value of $i$, so there may be at most $\log_{2}n = \O(\log n)$ iterations before the algorithm terminates due to the extremal case of $i = 1$.
-  Restricting our attention to the case where $i$ decreases rather than increases maintains generality since we could make the same argument about the trajectory of $j$ in the case that $i$ increases during a run of $\alg$.
+  For each $k$, the $k$th index update halves the size of the interval $I_k$ in which the desired index lies, so there may be at most $\log_{2}n = \O(\log n)$ iterations before the algorithm terminates due to the extremal case of $i \in \{1, n\}$.
 \end{proof}
 \section{Solution to Question 3}
 
