@@ -273,6 +273,55 @@ Thus time complexity is $\O(log n)$+ $\O(n)$ \newline
 
 \section{Solution to Question 5}
 
+Suppose we have n lines $L$ = \{ $l_1$, $l_2$, \dots, $l_n$ \} \newline
+Sort the lines in increasing order of slope: \newline
+let's say the new array is: \{ $l_1$, $l_2$, \dots , $l_n$\} where $l_1$ < $l_2$ < \dots < $l_n$ \newline
+\begin{enumerate}
+\item Divide the array into two halves. \newline
+\item Call the $alg$ recursively on both the halves to return set of visible lines in each half \newline
+\item Merge both the halves to get final set of visible lines \newline
+\end{enumerate}
+{\bf Merge Step:} \newline
+Lets say we have two halves: \newline
 
+$L_l$ = \{ $l_1$, $l_2$, \dots, $l_{n/2}$ \}  and $L_r$ = \{ $l_{n/2+1}$, \dots, $l_n$ \}  \newline
+where slope of $l_1$ < $l_2$ < \dots < $l_n$
+
+Now, for each $i^{th}$ element in $L_l$ (start from right to left) and $j^{th}$ element in $L_r$ (start from left to right) \newline
+Compare intersection point of ($l_i$, $l_{i-1}$) = $P_0$ and  ($l_i$, $r_j$) = $P_1$ and do the following: \newline
+\begin{enumerate}
+\item If $P_1$ is to the right of $P_0$: \newline
+Append $r_j$ to the right of left array, $L_l$ and increment j by 1 (move on to next element of right array $L_r$) \newline
+\item If $P_1$ is to the left of $P_0$: \newline
+Delete all entries to the right of i in left array $L_l$ and all entries to the left of right array $L_r$ \newline
+In other words delete \{ $l_i$, $l_{i+1}$, \dots , $l_{n/2}$ \} and \{ $l_{n/2+1}$, \dots, $l_{j-1}$ \} \newline
+append $j^{th}$ element of right array, $r_j$, to the right most of left array, $L_l$, and move on to next
+element of right array (j=j+1). \newline
+\end{enumerate}
+The final array will give us all the lines which are visible.   \newline
+{\bf Accuracy explanation:}\newline
+We will use the following lemma to prove the correctness of $\alg$.
+
+\begin{lemma}\label{visible-lines-lemma}
+\end{lemma}
+
+\begin{proof}
+
+\noindent {\bf Claim 1:} 
+\begin{proof}
+{\bf proof by contradiction:} 
+\end{proof}
+\noindent {\bf Claim 2:} 
+\begin{proof}
+{\bf proof by contradiction:} 
+\end{proof}
+\end{proof}
+
+{\bf Time Complexity:}\newline
+Step 1: We split the array $L$ into 2 subarrays $L_l$ and $L_r$ of half the size and recursively solve each of them. \newline
+Step 2: For each recusrion, the merge step traverse the array once, and in the worst ccase traverse whole of it. \newline
+So, this step takes $\O(n)$ time. \newline
+Thus, T(n) = 2 T(n/2) + $\O(n)$ \newline
+By Master theorem: time complexity of this step is $\O(n\log n)$ \newline
 
 \end{document}
