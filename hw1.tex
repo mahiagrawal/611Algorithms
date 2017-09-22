@@ -338,6 +338,10 @@ Finally, we take the minimum weight over all combinations of including or exclud
 \end{proof}
 
 
+\section{Solution to Question 5}
+
+{/bf solution A:}
+
 Suppose we have n lines $L$ = \{ $l_1$, $l_2$, \dots, $l_n$ \} \newline
 Sort the lines in increasing order of slope: \newline
 let's say the new array is: \{ $l_1$, $l_2$, \dots , $l_n$\} where $l_1$ \textless $l_2$ \textless \dots \textless $l_n$ \newline
@@ -386,11 +390,13 @@ hence, visible region of smaller slope line always exists to the left of larger 
 \end{proof}
 
 Now, consider the following two claims which will establish the correctness of the algorithm: \newline
+
 \noindent {\bf Claim 1:} If a line on the right half cuts a line on the left half such that the intersection point of two lines
 lies to the left of visible portion(segment in visible part) of line in the left, then it will eclipse all the lines 
 having smaller slopes than itself but larger slopes than the line under consideration. \newline
 In other words, we need to prove that if If $P_1$ is to the left of $P_0$ then we should delete all lines
 to the right of i(left half) and all lines to the left of j(right half)
+
 \begin{proof}
 This follows directly from Lemma~\ref{visible-lines-lemma}. Since it is true for any pair of lines
 and all lines from $l_i$ to $r_{j-1}$ have smaller slope than $r_j$ \newline
@@ -399,12 +405,19 @@ $r_j$ with any one line from \{ $l_i$, $l_{i+1}$, \dots , $l_{n/2}$ \} and \{ $r
 if intersection point lies to the left of visible portion of smaller slope implies the larger slope line will
 eclipse the smaller slope line.
 \end{proof}
+
 \noindent {\bf Claim 2:} If a line on the right half cuts a line on the left half such that the intersection point of two lines
 lies to the right of visible portion(segment in visible part) of line in the left, then it can never eclipse any line that 
 exists in the left half. \newline
 \begin{proof}
-{\bf proof by contradiction:} 
+At the intersection point of $r_j$ and $l_i$, sincce slope of $l_i$ \textless slope of $r_j$
+at any point to the left, y-coordinate of $l_i$ \textgreater y of $r_j$ \newline
+and since all other lines to the left of $l_i$ have even smaller slope 
+and lies to further left of intersection point (since they are visible lines from last recursion) \newline
+there will be no point to the left where y coordinate of $r_j$ \textgreater y of $l_i$. 
 \end{proof}
+
+Both  these claims combine to prove the correctness of the merge algirithm. \newline
 
 {\bf Time Complexity:)} (Same as merge sort) \newline
 Step 1: We split the array $L$ into 2 subarrays $L_l$ and $L_r$ of half the size and recursively solve each of them. 
