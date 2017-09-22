@@ -35,15 +35,15 @@
 
 \section{Solution to Question 1}
 Let $A = \{a_1, \dots, a_n\}$ be the array that we need to count the inversion for.
-Consider the following algorithm $\alg$ for determining whether $A$ is boring or not:
+Consider the following algorithm $\alg$ for counting the number of inverted pairs in $A$:
 \begin{enumerate}
   \item Divide the array into 2 equal parts: $A_l = \{a_1, \dots, a_{n/2}\}$ and $A_r = \{a_{n/2+1}, \dots, a_n\}$
   \item Recursively count the number of inversions in each half by calling the algorithm on $A_l$ and $A_r$
   \item Merge the two halves into a sorted whole(increasing order) and count the number of inversions across
-the two halves(from $A_l$ to $A_r$).
-\item Return the sum of three counts. \newline
+the two halves (from $A_l$ to $A_r$).
+\item Return the sum of three counts.
  \end{enumerate}
-{\bf Procedure:}\newline
+{\bf Procedure:}\\
 CountInversion(\{$a_1$, \dots, $a_n$\}) \newline
 if n==1 return count = 0 \newline
 \newline
