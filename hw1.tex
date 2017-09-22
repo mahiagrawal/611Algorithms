@@ -293,7 +293,7 @@ Compare intersection point of ($l_i$, $l_{i-1}$) = $P_0$ and  ($l_i$, $r_j$) = $
 \item If $P_1$ is to the right of $P_0$: \newline
 Append $r_j$ to the right of left array, $L_l$ and increment j by 1 (move on to next element of right array $L_r$) \newline
 \item If $P_1$ is to the left of $P_0$: \newline
-Delete all entries to the right of i in left array $L_l$ and all entries to the left of right array $L_r$ \newline
+Delete all entries to the right of i in left array $L_l$ and all entries to the left of j in right array $L_r$ \newline
 In other words delete \{ $l_i$, $l_{i+1}$, \dots , $l_{n/2}$ \} and \{ $l_{n/2+1}$, \dots, $l_{j-1}$ \} \newline
 append $j^{th}$ element of right array, $r_j$, to the right most of left array, $L_l$, and move on to next
 element of right array (j=j+1). \newline
@@ -317,9 +317,10 @@ We will use the following lemma to prove the correctness of $\alg$.
 \end{proof}
 \end{proof}
 
-{\bf Time Complexity:}\newline
-Step 1: We split the array $L$ into 2 subarrays $L_l$ and $L_r$ of half the size and recursively solve each of them. \newline
-Step 2: For each recusrion, the merge step traverse the array once, and in the worst ccase traverse whole of it. \newline
+{\bf Time Complexity:)} (Same as merge sort) \newline
+Step 1: We split the array $L$ into 2 subarrays $L_l$ and $L_r$ of half the size and recursively solve each of them. 
+So, T(n) = 2 T(n/2) + \dots \newline
+Step 2: For each recursion, the merge step traverse the array once, and in the worst ccase traverse whole of it. \newline
 So, this step takes $\O(n)$ time. \newline
 Thus, T(n) = 2 T(n/2) + $\O(n)$ \newline
 By Master theorem: time complexity of this step is $\O(n\log n)$ \newline
