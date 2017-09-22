@@ -58,8 +58,8 @@ return  $count_l$ + $count_r$ + Merge(sorted $A_l$, sorted $A_r$)
 Let us suppose we have two sorted halves $A$ and $B$ in increasing order of elements. Then do the following: \newline
 Start with the first element of $A$ and $B$ and move towards right. \newline
 Compare $a_i$ and $b_j$ \newline
-If $a_i$ < $b_j$, count = count + 0. No inversion of $a_i$. Move on to next element of $A$. \newline
-If $a_i$ > $b_j$, count = count + all elements remaining in A. Move on to the next element of $A$ and next  element of $B$ \newline
+If $a_i$ \textless  $b_j$, count = count + 0. No inversion of $a_i$. Move on to next element of $A$. \newline
+If $a_i$ \textgreater $b_j$, count = count + all elements remaining in A. Move on to the next element of $A$ and next  element of $B$ \newline
 Keep appending the smaller of the two elements $a_i$ and $b_j$ to the sorted list $C$. \newline
 {\bf Accuracy explanation:}\newline
 
@@ -68,26 +68,26 @@ We will use the following lemma to prove the correctness of $\alg$.
 \begin{lemma}\label{inversion-count-lemma}
 If $A = \{a_1, \dots, a_{n/2}\}$ and $B = \{b_1, \dots, b_{n/2}\}$ are two sorted arrays in increasing order where 
 $A$ is the left half while $B$ is the right half, then \newline
-if $a_i$ < $b_j$: inversion count for $a_i$ beyond this point = 0 \newline
-while if $a_i$ > $b_j$: inversion count for this $b_j$ = rest of the elements in $A$. ($\frac{n}{2}$ - i)
+if $a_i$ \textless $b_j$: inversion count for $a_i$ beyond this point = 0 \newline
+while if $a_i$ \textgreater $b_j$: inversion count for this $b_j$ = rest of the elements in $A$. ($\frac{n}{2}$ - i)
 \end{lemma}
 
 \begin{proof}
 Since $A$ and $B$ are sorted in increasing order: \newline
-$a_1$ < $a_2$ <  $a_3$ < \dots < $a_{n/2}$ \newline
-and  $b_1$ < $b_2$ <  $b_3$ < \dots < $b_{n/2}$ \newline
+$a_1$ \textless $a_2$ \textless  $a_3$ \textless \dots \textless $a_{n/2}$ \newline
+and  $b_1$ \textless $b_2$ \textless  $b_3$ \textless \dots \textless $b_{n/2}$ \newline
 
 Since we are dividing the array into two halves, all elements in the left half will hae index less than all elements in the right half.
 Thus, for inversion, element in the left half should be greater than element in the right half. \newline
 
-So, if $a_i$ > $b_j$ and $a_i$ < $a_{i+1}$ < \dots < $a_{n/2}$ \newline
-  $(\Rightarrow)$ $a_{n/2}$ > $a_{n/2-1}$ > \dots > $a_{i+1}$ > $a_i$ > $b_j$ \newline
+So, if $a_i$ \textgreater $b_j$ and $a_i$ \textless $a_{i+1}$ \textless \dots \textless $a_{n/2}$ \newline
+  $(\Rightarrow)$ $a_{n/2}$ \textgreater $a_{n/2-1}$ \textgreater \dots \textgreater $a_{i+1}$ \textgreater $a_i$ \textgreater $b_j$ \newline
 
 So count of inversion will increase by number of elements remaining in $A$ beyond i. We now will move on to $a_{i+1}$ 
 and $b_{j+1}$
 
- if $a_i$ < $b_j$ and $b_j$ < $b_{j+1}$ < \dots < $b_{n/2}$  \newline
-  $(\Rightarrow)$   $a_i$ < $b_j$ < $b_{j+1}$ < \dots < $b_{n/2}$ \newline
+ if $a_i$ \textless $b_j$ and $b_j$ \textless $b_{j+1}$ \textless \dots \textless $b_{n/2}$  \newline
+  $(\Rightarrow)$   $a_i$ \textless $b_j$ \textless $b_{j+1}$ \textless \dots \textless $b_{n/2}$ \newline
 
 So count of inversion will increase by zero,  since index of $a_i$ is less and its value is also smaller. There will  be no more inversion
 pair for $a_i$ and thus we move on to $a_{i+1}$.
@@ -221,7 +221,7 @@ prove that if $a_f$ exists then this algorithm will always return $a_f$:
 
 \begin{proof}
 If $a_f$ makes the array boring and it occurs at a total of $k$ times, then: \newline
-k > $\frac{n}{2}$ \newline
+k \textgreater $\frac{n}{2}$ \newline
 Now, consider the following claims: \newline
 \noindent {\bf Claim 1:} There will always be atleast one pair with both elements $a_f$
 \begin{proof}
@@ -233,7 +233,7 @@ pair of $a_f$.
 \noindent {\bf Claim 2:} If there are x number of pairs such that both elements are equal to a value other than $a_f$
 then there will be x+1 number of pairs of $a_f$.
 \begin{proof}
-{\bf proof by contradiction:} Let us assume that there are y pair of $a_f$ in $A$ and y < x+1.  \newline
+{\bf proof by contradiction:} Let us assume that there are y pair of $a_f$ in $A$ and y \textless  x+1.  \newline
 So total number of $a_f$ = 2y \newline
 and total number of elements other than $a_y$ = 2x \newline
 Note: we don't have to consider other elements as no other pair exists thus every other pair will be of the form ($a_f$, $~a_f$)
@@ -241,11 +241,11 @@ Note: we don't have to consider other elements as no other pair exists thus ever
 So,  ratio of $a_f$ in total array = $\frac{2x}{2x+2y}$ \newline
 we know that $a_f$ occurs more than n/2 times. So, \newline
 
-$\frac{2y}{2x+2y}$  > $\frac{1}{2}$
+$\frac{2y}{2x+2y}$  \textgreater $\frac{1}{2}$
 
-thus 2y > x + y \newline
+thus 2y \textgreater x + y \newline
 
-y > x But we assumed that y < x + 1 and y is an integer which is not possible \newline
+y \textgreater x But we assumed that y \textless  x + 1 and y is an integer which is not possible \newline
 Thus, contradiciton to our assumption. \newline
 Hence, there will be atleast x+1 pair of $a_f$ in $A$ if there are x pairs of elements other than $a_f$.
 \end{proof}
@@ -275,7 +275,7 @@ Thus time complexity is $\O(log n)$+ $\O(n)$ \newline
 
 Suppose we have n lines $L$ = \{ $l_1$, $l_2$, \dots, $l_n$ \} \newline
 Sort the lines in increasing order of slope: \newline
-let's say the new array is: \{ $l_1$, $l_2$, \dots , $l_n$\} where $l_1$ < $l_2$ < \dots < $l_n$ \newline
+let's say the new array is: \{ $l_1$, $l_2$, \dots , $l_n$\} where $l_1$ \textless $l_2$ \textless \dots \textless $l_n$ \newline
 \begin{enumerate}
 \item Divide the array into two halves. \newline
 \item Call the $alg$ recursively on both the halves to return set of visible lines in each half \newline
@@ -285,7 +285,7 @@ let's say the new array is: \{ $l_1$, $l_2$, \dots , $l_n$\} where $l_1$ < $l_2$
 Lets say we have two halves: \newline
 
 $L_l$ = \{ $l_1$, $l_2$, \dots, $l_{n/2}$ \}  and $L_r$ = \{ $l_{n/2+1}$, \dots, $l_n$ \}  \newline
-where slope of $l_1$ < $l_2$ < \dots < $l_n$
+where slope of $l_1$ \textless $l_2$ \textless \dots \textless $l_n$
 
 Now, for each $i^{th}$ element in $L_l$ (start from right to left) and $j^{th}$ element in $L_r$ (start from left to right) \newline
 Compare intersection point of ($l_i$, $l_{i-1}$) = $P_0$ and  ($l_i$, $r_j$) = $P_1$ and do the following: \newline
@@ -303,18 +303,30 @@ The final array will give us all the lines which are visible.   \newline
 We will use the following lemma to prove the correctness of $\alg$.
 
 \begin{lemma}\label{visible-lines-lemma}
+If $V = \{ l_1, l_2, \dots , l_{k} \}$ is a set of all the visible lines sorted in increasing order of their slopes then
+the visible portion of smaller slope line will always exists to the left of visible potion of higher slope lines.
 \end{lemma}
 
 \begin{proof}
+If $a_f$ makes the array boring and it occurs at a total of $k$ times, then: \newline
+k \textgreater $\frac{n}{2}$ \newline
+Now, consider the following claims: \newline
+\end{proof}
 
-\noindent {\bf Claim 1:} 
+No, consider the following two claims which will establish the correctness of the algorithm: \newline
+\noindent {\bf Claim 1:} If a line on the right half cuts a line on the left half such that the intersection point of two lines
+lies to the left of visible portion(segment in visible part) of line in the left, then it will eclipse all the lines 
+having smaller slopes than itself but larger slopes than the line under consideration. \newline
+In other words, we need to prove that if If $P_1$ is to the left of $P_0$ then we should delete all lines
+to the right of i(left half) and all lines to the left of j(right half)
 \begin{proof}
 {\bf proof by contradiction:} 
 \end{proof}
-\noindent {\bf Claim 2:} 
+\noindent {\bf Claim 2:} If a line on the right half cuts a line on the left half such that the intersection point of two lines
+lies to the right of visible portion(segment in visible part) of line in the left, then it can never eclipse any line that 
+exists in the left half. \newline
 \begin{proof}
 {\bf proof by contradiction:} 
-\end{proof}
 \end{proof}
 
 {\bf Time Complexity:)} (Same as merge sort) \newline
