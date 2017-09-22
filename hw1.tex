@@ -33,8 +33,76 @@
 \maketitle
 
 \section{Solution to Question 1}
+Let $A = \{a_1, \dots, a_n\}$ be the array that we need to count the inversion for.
+Consider the following algorithm $\alg$ for determining whether $A$ is boring or not:
+\begin{enumerate}
+  \item Divide the array into 2 equal parts: $A_l = \{a_1, \dots, a_{n/2}\}$ and $A_r = \{a_{n/2+1}, \dots, a_n\}$
+  \item Recursively count the number of inversions in each half by calling the algorithm on $A_l$ and $A_r$
+  \item Merge the two halves into a sorted whole(increasing order) and count the number of inversions across 
+the two halves(from $A_l$ to $A_r$). 
+\item Return the sum of three counts. \newline
+ \end{enumerate}
+{\bf Procedure:}\newline
+CountInversion(\{$a_1$, \dots, $a_n$\}) \newline
+if n==1 return count = 0 \newline
+\newline
+else:
 
+ $count_l$ = CountInversion(\{$a_1$, \dots,$a_{n/2}$\}) 
 
+ $count_r$ = CountInversion(\{$a_{n/2+1}$, \dots, $a_n$\}) 
+
+return  $count_l$ + $count_r$ + Merge(sorted $A_l$, sorted $A_r$) 
+
+{\bf Merge Step:} \newline
+Let us suppose we have two sorted halves $A$ and $B$ in increasing order of elements. Then do the following: \newline
+Start with the first element of $A$ and $B$ and move towards right. \newline
+Compare $a_i$ and $b_j$ \newline
+If $a_i$ < $b_j$, count = count + 0. No inversion of $a_i$. Move on to next element of $A$. \newline
+If $a_i$ > $b_j$, count = count + all elements remaining in A. Move on to the next element of $A$ and next  element of $B$ \newline
+Keep appending the smaller of the two elements $a_i$ and $b_j$ to the sorted list $C$. \newline
+{\bf Accuracy explanation:}\newline
+
+We will use the following lemma to prove the correctness of $\alg$.
+
+\begin{lemma}\label{inversion-count-lemma}
+If $A = \{a_1, \dots, a_{n/2}\}$ and $B = \{b_1, \dots, b_{n/2}\}$ are two sorted arrays in increasing order where 
+$A$ is the left half while $B$ is the right half, then \newline
+if $a_i$ < $b_j$: inversion count for $a_i$ beyond this point = 0 \newline
+while if $a_i$ > $b_j$: inversion count for this $b_j$ = rest of the elements in $A$. ($\frac{n}{2}$ - i)
+\end{lemma}
+
+\begin{proof}
+Since $A$ and $B$ are sorted in increasing order: \newline
+$a_1$ < $a_2$ <  $a_3$ < \dots < $a_{n/2}$ \newline
+and  $b_1$ < $b_2$ <  $b_3$ < \dots < $b_{n/2}$ \newline
+
+Since we are dividing the array into two halves, all elements in the left half will hae index less than all elements in the right half.
+Thus, for inversion, element in the left half should be greater than element in the right half. \newline
+
+So, if $a_i$ > $b_j$ and $a_i$ < $a_{i+1}$ < \dots < $a_{n/2}$ \newline
+  $(\Rightarrow)$ $a_{n/2}$ > $a_{n/2-1}$ > \dots > $a_{i+1}$ > $a_i$ > $b_j$ \newline
+
+So count of inversion will increase by number of elements remaining in $A$ beyond i. We now will move on to $a_{i+1}$ 
+and $b_{j+1}$
+
+ if $a_i$ < $b_j$ and $b_j$ < $b_{j+1}$ < \dots < $b_{n/2}$  \newline
+  $(\Rightarrow)$   $a_i$ < $b_j$ < $b_{j+1}$ < \dots < $b_{n/2}$ \newline
+
+So count of inversion will increase by zero,  since index of $a_i$ is less and its value is also smaller. There will  be no more inversion
+pair for $a_i$ and thus we move on to $a_{i+1}$.
+
+Thus, we will find the total inversion count accross $A$ and $B$ by traversing the array once (
+travresing completely in the worst case). \newline
+Adding three inversion count will give us the total inversion count for whole array.
+\end{proof}
+
+{\bf Time Complexity:}\newline
+Step 1: We split the array $A$ into 2 subarrays $A$ and $B$ of half the size. 
+T(n) = 2 T(n/2) + $\O(Merge)$ \newline
+Step 2: To merge, we only need to traverse the halves once, and for a maximum of $n$ elements at each recursion level. \newline
+So, T(n) = 2 T(n/2) + $\O(n)$ \newline
+By Master theorem: time complexity is $\O(n \log n)$ \newline
 
 \section{Solution to Question 2}
 
@@ -106,8 +174,97 @@ Suppose that $i + j = n$ and let $m = \max \{a_i, b_j\}$. Then $m$ is the $n$th 
 \begin{proof}
   For each $k$, the $k$th index update halves the size of the interval $I_k$ in which the desired index lies, so there may be at most $\log_{2}n = \O(\log n)$ iterations before the algorithm terminates due to the extremal case of $i \in \{1, n\}$.
 \end{proof}
+
 \section{Solution to Question 3}
 
+For clarity, let the elements of $A$ be indexed as $A = \{a_1, \dots, a_n\}$.
+Consider the following algorithm $\alg$ for determining whether $A$ is boring or not:
+\begin{enumerate}
+  \item Divide the array into 2 equal parts: $A_l = \{a_1, \dots, a_{n/2}\}$ and $A_r = \{a_{n/2+1}, \dots, a_n\}$
+  \item Recursively solve the two halves by calling the algorithm on $A_l$ and $A_r$.
+  \item Let's say that element that make $A_l$ boring is $a_l$ and that make $A_r$ boring is $a_r$, then return $a_l$ if $a_l$=$a_r$ else
+return NULL \newline
+  $(\Rightarrow)$ return $a_l$ == $a_r$ ? $a_l$ : NULL. 
+However if any one is NULL and other is not null then return the not null element.
+\item If the final answer($a_f$) is NULL then array is not boring else check for the count of $a_f$ in original array and if it is greater than
+$n/2$, array is boring otherwise non-boring.
+\end{enumerate}
+{\bf Procedure:}\newline
+CheckIfBoring(\{$a_1$, \dots, $a_n$\}) \newline
+if n==1 return $a_1$ \newline
+\newline
+else:
+
+ $a_l$ = checkIfBoring(\{$a_1$, \dots,$a_{n/2}$\}) 
+
+ $a_r$ = checkIfBoring(\{$a_{n/2+1}$, \dots, $a_n$\}) 
+
+ if $a_l$ = NULL and $a_r$ = NULL return NULL (Non-boring array) 
+
+else if $a_l$ = NULL and $a_r$ NOT NULL return $a_r$ 
+
+else if $a_l$ NOT  NULL and $a_r$ = NULL return $a_l$ 
+
+else return $a_l$==$a_r$ ? $a_l$ : NULL\newline
+Count the occurences of returned element in the whole array and if it is greater than $\frac{n}{2}$ array is boring else non-
+boring.\newline
+{\bf Accuracy explanation:}\newline
+We will use the following lemma to prove the correctness of $\alg$.
+
+\begin{lemma}\label{boring-array-lemma}
+If $A = \{a_1, \dots, a_n\}$ is an array, then this algorithm(through divide and conquer) will always compare a pair of consecutive elements
+and ignore(or delete) them if they are non-matching. It will keep on doing this recursively until it is left with one or no element(NULL) at
+which point it will count the number of occurences of final element in the original array and return if the array is boring or not.
+Suppose $A = \{a_1, \dots, a_n\}$ is a boring array with element $a_f$. Now, to prove the correctness of this algorithm, it is sufficient to
+prove that if $a_f$ exists then this algorithm will always return $a_f$:
+\end{lemma}
+
+\begin{proof}
+If $a_f$ makes the array boring and it occurs at a total of $k$ times, then: \newline
+k > $\frac{n}{2}$ \newline
+Now, consider the following claims: \newline
+\noindent {\bf Claim 1:} There will always be atleast one pair with both elements $a_f$
+\begin{proof}
+{\bf proof by contradiction:} Let us assume that there are no pair of $a_f$ in $A$. That means at the maximum $a_f$ can only
+occur at every alternate index. So total count of $a_f$ = $\frac{n}{2}$ \newline
+But we know that $a_f$ occurs more than $\frac{n}{2}$ times. hence, contradiction to our assumption. Thus there is atleast one 
+pair of $a_f$.
+\end{proof}
+\noindent {\bf Claim 2:} If there are x number of pairs such that both elements are equal to a value other than $a_f$
+then there will be x+1 number of pairs of $a_f$.
+\begin{proof}
+{\bf proof by contradiction:} Let us assume that there are y pair of $a_f$ in $A$ and y < x+1.  \newline
+So total number of $a_f$ = 2y \newline
+and total number of elements other than $a_y$ = 2x \newline
+Note: we don't have to consider other elements as no other pair exists thus every other pair will be of the form ($a_f$, $~a_f$)
+, in  other words, one element will be $a_f$ while other with be something other than $a_f$. \newline
+So,  ratio of $a_f$ in total array = $\frac{2x}{2x+2y}$ \newline
+we know that $a_f$ occurs more than n/2 times. So, \newline
+
+$\frac{2y}{2x+2y}$  > $\frac{1}{2}$
+
+thus 2y > x + y \newline
+
+y > x But we assumed that y < x + 1 and y is an integer which is not possible \newline
+Thus, contradiciton to our assumption. \newline
+Hence, there will be atleast x+1 pair of $a_f$ in $A$ if there are x pairs of elements other than $a_f$.
+\end{proof}
+Thus, for every element(or element pair) not equal to  $a_f$ there is atleast one $a_f$ (or one pair of $a_f$) that will cancel it out and
+finally we will be left with one extra pair of $a_f$. \newline
+Hence, if $a_f$ exists, then alogrithm will always return $a_f$ and no other elements.
+Then we can determine the count of $a_f$ in the array and check whether  the array is boring or not.
+\end{proof}
+
+{\bf Time Complexity:}\newline
+Step 1: We split the array $A$ into 2 subarrays $A_l$ and $A_r$ of half the size. We choose the majority element $a_l$ and $a_r$
+and compare them. If they are same we return the element else we return NULL\newline
+Note: comparison takes constant time.\newline
+T(n) = 2 T(n/2) + $\O(1)$ \newline
+By Master theorem: time complexity of this step is $\O(\log n)$ \newline
+Step 2: We count the number of times the returned element $a_f$ occur in the array $A$ \newline
+This step takes $\O(n)$ time \newline
+Thus time complexity is $\O(log n)$+ $\O(n)$ \newline
+= $\O(n)$
 
 
 \section{Solution to Question 4}
