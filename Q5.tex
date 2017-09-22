@@ -1,0 +1,76 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage} % better margins
+\usepackage{amsthm,amssymb,amsmath} % useful math commands
+\usepackage{graphicx} % figures
+\usepackage{xfrac} % inline fractions
+\usepackage{enumitem} % custom enum symbols
+
+% Define some useful shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\E}{\mathcal{E}}
+\renewcommand{\O}{\mathcal{O}}
+% if you want to use \alg and \opt in text, wrap them in math mode to make the spacing work
+% e.g. We have shown that $\alg$ runs in $\O(n)$
+\newcommand{\alg}{\textsc{alg}}
+\newcommand{\opt}{\textsc{opt}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Solutions for 611 Homework 1}
+
+\author{Mahim Agarwal, Hanwen Xiong, and Jackson Warley}
+
+\begin{document}
+
+\maketitle
+
+\section{Solution to Question 5}
+
+\subsection{Algorithm}
+\emph{Useful definition}:
+\begin{itemize}
+	\item $l_{max}$: the line with maximum slope
+	\item $l_{min}$: the line with minimum slope
+	\item $l_{nextmax}$: the line with maximum slope in the rest of two subarrays
+	\item $l_{nextmin}$: the line with minimum slope in the rest of two subarrays
+	\item ``visible area": $\{y>=l_{max}, y>=l_{min}\}$
+	\item $P_{ri}$: x coordinate of intersection of $l_{i}$ and $l_{max}$
+	\item $P_{li}$: x coordinate of intersection of $l_{i}$ and $l_{min}$
+\end{itemize}
+\emph{Algorithm}:
+\begin{enumerate}
+	\item Divide the array of lines into 2 halves evenly
+	\item Sort the two subarrays by slope in non-increasing order
+	\item Find the intersection of $l_{max}$ and $l_{min}$, say$(m, n)$
+	\item Compare $l_{nextmax}(m)$ with $n$,  if $l_{nextmax}(m) \textless n$, throw it; if $l_{nextmax}(m) \textgreater n$, put $l_{max}$ into ``left\_visible" array and update $l_{max} := l_{nextmax}$. Go to step 3 if there's $l_{nextmax}$, put the rest 2 lines into ``left\_visible" array and go to next step when there's no lines left
+	\item Find the intersection of $l_{min}$ and $l_{max}$, say$(m, n)$
+	\item Compare $l_{nextmin}(m)$ with $n$,  if $l_{nextmin}(m) \textless n$, throw it; if $l_{nextmin}(m) \textgreater n$, put $l_{min}$ into ``right\_visible" array and update $l_{min} := l_{nextmin}$. Go to step 5 if there's $l_{nextmin}$, put the rest 2 lines into ``right\_visible" array and go to next step when there's no lines left
+	\item ``visible" array=``left\_visible" array $\cap$ ``right\_visible" array. Basically, ``left\_visible" array is in non-increasing order slope-wise and ``right\_visible" array is in non-decreasing order slope-wise. Thus, it's easy to do the intersection by traversing the two arrays reversely
+\end{enumerate}
+
+\subsection{Time Complexity}
+	Divide: Since we divide the array into 2 subarrays and solve them recursively, we have 2 subproblems of size $n/2$\newline
+	Conquer: We have to find at most $2(n-1)$ intersections and always $2(n-1)$ comparisons, which takes $\O(n)$. Besides, we have to intersect two arrays, which includes at most $n$ comparisons, also $\O(n)$\newline
+	So overall we have $T(n) = 2T(n/2) + \O(n)$, according to Master's Theorem we get $T(n) = \O(nlogn)$
+\subsection{Proof}
+	\emph{Lemma 5.3.1}: $l_{max}$ and $l_{min}$ are always ``visible" within its correspoding scope(i.e. array)\newline
+	\emph{Lemma 5.3.2}: $l$ is ``visible" if and only if it dominates at the intersection of $l_{max}$ and $l_{min}$\newline
+	\emph{Lemma 5.3.3}: A list of non-increasing(slope-wise) lines $\{l_{1}, l_{2}, ..., l_{n}\}$ are visible if and only if the every single line is ``visible" in ``visible area" and the list of $\{P_{r1}, P_{r2}, ...,  P_{rn}\}$ is also in non-increasing order and the list of $\{P_{l1}, P_{l2}, ...,  P_{ln}\}$ is in non-decreasing order\newline
+	\newline
+	Proof of 5.3.1: Let's first consider $l_{max}$: $l_{max}=a_{max}x+b$, here $b$ is the biggest intercept of a series of parallel lines. Pick any line of a set of non-vertical lines $l=a'x+b'$. There's always an intersection $(\frac{b'-b}{a_{max}-a'}, \frac{a_{max}b'-a'b}{a_{max}-a'})$. Let $x'=max\{\frac{b'-b}{a_{max}-a'}\}$, then for any $x\textgreater x'$, $l_{max}$ always dominates. Similarly, there's always a $x''$ on which $l_{min}$ always dominates when $x\textless x''$.\newline
+	\newline
+	Proof of 5.3.2: Assume there's a ``visible" line $l$ that doesn't dominate at the intersection of $l_{max}$ and $l_{min}$, say$(x', y')$. Therefore, $l(x')\textless y'$. Since it's ``visible", we know there's some $x=t$ on which $l$ dominates. Then we can infer $a_{l}=\frac{l(t)-l(x')}{t-x'}$. However, when $t\textgreater x'$, $a_{l}\textgreater a_{max}$; Similarly, when $t\textless x'$, $a_{l}\textless a_{min}$. That's contradictory to our assumption, which means $l$ must dominate at $x=x'$.\newline
+	\newline
+	Proof of 5.3.3: It's obvious that every single line should be ``visible" in the ``visible area" otherwise it'll be dominated by $l_{max}$ or $l_{min}$ forever. Now assume the orderings of the two x coordinate lists are not as suggested, which means there's some $i\textgreater j$, $P_{ri}\textgreater P_{rj}$ and $P_{li}\textgreater P_{lj}$. That way, $l_{i}$ will dominate $l_{j}$ in the ``visible area" and thus makes it ``invisible"\newline
+	\newline
+	Proof of correctness to our algorithm: According to \textit{Lemma 5.3.1} we know it's always safe to keep the two special lines(overall $l_{min}, l_{max}$). According to \textit{Lemma 5.3.2}, every time we throw a line, that line is forever dominated by the current $l_{max}$ and $l_{min}$. By doing the throwing step we're getting as many ``invisible" lines as possible. Finally, our algorithm will generate a set of lines conforming \textit{Lemma 5.3.3}. So we know the array we get has all the ``visible" lines.
+	
+\end{document}
