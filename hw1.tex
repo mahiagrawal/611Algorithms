@@ -4,6 +4,7 @@
 \usepackage{graphicx} % figures
 \usepackage{xfrac} % inline fractions
 \usepackage{enumitem} % custom enum symbols
+\usepackage{algpseudocode}
 
 % Define some useful shortcuts
 \newcommand{\R}{\mathbb{R}}
@@ -38,8 +39,8 @@ Consider the following algorithm $\alg$ for determining whether $A$ is boring or
 \begin{enumerate}
   \item Divide the array into 2 equal parts: $A_l = \{a_1, \dots, a_{n/2}\}$ and $A_r = \{a_{n/2+1}, \dots, a_n\}$
   \item Recursively count the number of inversions in each half by calling the algorithm on $A_l$ and $A_r$
-  \item Merge the two halves into a sorted whole(increasing order) and count the number of inversions across 
-the two halves(from $A_l$ to $A_r$). 
+  \item Merge the two halves into a sorted whole(increasing order) and count the number of inversions across
+the two halves(from $A_l$ to $A_r$).
 \item Return the sum of three counts. \newline
  \end{enumerate}
 {\bf Procedure:}\newline
@@ -48,11 +49,11 @@ if n==1 return count = 0 \newline
 \newline
 else:
 
- $count_l$ = CountInversion(\{$a_1$, \dots,$a_{n/2}$\}) 
+ $count_l$ = CountInversion(\{$a_1$, \dots,$a_{n/2}$\})
 
- $count_r$ = CountInversion(\{$a_{n/2+1}$, \dots, $a_n$\}) 
+ $count_r$ = CountInversion(\{$a_{n/2+1}$, \dots, $a_n$\})
 
-return  $count_l$ + $count_r$ + Merge(sorted $A_l$, sorted $A_r$) 
+return  $count_l$ + $count_r$ + Merge(sorted $A_l$, sorted $A_r$)
 
 {\bf Merge Step:} \newline
 Let us suppose we have two sorted halves $A$ and $B$ in increasing order of elements. Then do the following: \newline
@@ -66,7 +67,7 @@ Keep appending the smaller of the two elements $a_i$ and $b_j$ to the sorted lis
 We will use the following lemma to prove the correctness of $\alg$.
 
 \begin{lemma}\label{inversion-count-lemma}
-If $A = \{a_1, \dots, a_{n/2}\}$ and $B = \{b_1, \dots, b_{n/2}\}$ are two sorted arrays in increasing order where 
+If $A = \{a_1, \dots, a_{n/2}\}$ and $B = \{b_1, \dots, b_{n/2}\}$ are two sorted arrays in increasing order where
 $A$ is the left half while $B$ is the right half, then \newline
 if $a_i$ \textless $b_j$: inversion count for $a_i$ beyond this point = 0 \newline
 while if $a_i$ \textgreater $b_j$: inversion count for this $b_j$ = rest of the elements in $A$. ($\frac{n}{2}$ - i)
@@ -77,13 +78,13 @@ Since $A$ and $B$ are sorted in increasing order: \newline
 $a_1$ \textless $a_2$ \textless  $a_3$ \textless \dots \textless $a_{n/2}$ \newline
 and  $b_1$ \textless $b_2$ \textless  $b_3$ \textless \dots \textless $b_{n/2}$ \newline
 
-Since we are dividing the array into two halves, all elements in the left half will hae index less than all elements in the right half.
+Since we are dividing the array into two halves, all elements in the left half will have index less than all elements in the right half.
 Thus, for inversion, element in the left half should be greater than element in the right half. \newline
 
 So, if $a_i$ \textgreater $b_j$ and $a_i$ \textless $a_{i+1}$ \textless \dots \textless $a_{n/2}$ \newline
   $(\Rightarrow)$ $a_{n/2}$ \textgreater $a_{n/2-1}$ \textgreater \dots \textgreater $a_{i+1}$ \textgreater $a_i$ \textgreater $b_j$ \newline
 
-So count of inversion will increase by number of elements remaining in $A$ beyond i. We now will move on to $a_{i+1}$ 
+So count of inversion will increase by number of elements remaining in $A$ beyond i. We now will move on to $a_{i+1}$
 and $b_{j+1}$
 
  if $a_i$ \textless $b_j$ and $b_j$ \textless $b_{j+1}$ \textless \dots \textless $b_{n/2}$  \newline
@@ -98,7 +99,7 @@ Adding three inversion count will give us the total inversion count for whole ar
 \end{proof}
 
 {\bf Time Complexity:}\newline
-Step 1: We split the array $A$ into 2 subarrays $A$ and $B$ of half the size. 
+Step 1: We split the array $A$ into 2 subarrays $A$ and $B$ of half the size.
 T(n) = 2 T(n/2) + $\O(Merge)$ \newline
 Step 2: To merge, we only need to traverse the halves once, and for a maximum of $n$ elements at each recursion level. \newline
 So, T(n) = 2 T(n/2) + $\O(n)$ \newline
@@ -184,7 +185,7 @@ Consider the following algorithm $\alg$ for determining whether $A$ is boring or
   \item Recursively solve the two halves by calling the algorithm on $A_l$ and $A_r$.
   \item Let's say that element that make $A_l$ boring is $a_l$ and that make $A_r$ boring is $a_r$, then return $a_l$ if $a_l$=$a_r$ else
 return NULL \newline
-  $(\Rightarrow)$ return $a_l$ == $a_r$ ? $a_l$ : NULL. 
+  $(\Rightarrow)$ return $a_l$ == $a_r$ ? $a_l$ : NULL.
 However if any one is NULL and other is not null then return the not null element.
 \item If the final answer($a_f$) is NULL then array is not boring else check for the count of $a_f$ in original array and if it is greater than
 $n/2$, array is boring otherwise non-boring.
@@ -195,15 +196,15 @@ if n==1 return $a_1$ \newline
 \newline
 else:
 
- $a_l$ = checkIfBoring(\{$a_1$, \dots,$a_{n/2}$\}) 
+ $a_l$ = checkIfBoring(\{$a_1$, \dots,$a_{n/2}$\})
 
- $a_r$ = checkIfBoring(\{$a_{n/2+1}$, \dots, $a_n$\}) 
+ $a_r$ = checkIfBoring(\{$a_{n/2+1}$, \dots, $a_n$\})
 
- if $a_l$ = NULL and $a_r$ = NULL return NULL (Non-boring array) 
+ if $a_l$ = NULL and $a_r$ = NULL return NULL (Non-boring array)
 
-else if $a_l$ = NULL and $a_r$ NOT NULL return $a_r$ 
+else if $a_l$ = NULL and $a_r$ NOT NULL return $a_r$
 
-else if $a_l$ NOT  NULL and $a_r$ = NULL return $a_l$ 
+else if $a_l$ NOT  NULL and $a_r$ = NULL return $a_l$
 
 else return $a_l$==$a_r$ ? $a_l$ : NULL\newline
 Count the occurences of returned element in the whole array and if it is greater than $\frac{n}{2}$ array is boring else non-
@@ -227,7 +228,7 @@ Now, consider the following claims: \newline
 \begin{proof}
 {\bf proof by contradiction:} Let us assume that there are no pair of $a_f$ in $A$. That means at the maximum $a_f$ can only
 occur at every alternate index. So total count of $a_f$ = $\frac{n}{2}$ \newline
-But we know that $a_f$ occurs more than $\frac{n}{2}$ times. hence, contradiction to our assumption. Thus there is atleast one 
+But we know that $a_f$ occurs more than $\frac{n}{2}$ times. hence, contradiction to our assumption. Thus there is atleast one
 pair of $a_f$.
 \end{proof}
 \noindent {\bf Claim 2:} If there are x number of pairs such that both elements are equal to a value other than $a_f$
@@ -269,7 +270,72 @@ Thus time complexity is $\O(log n)$+ $\O(n)$ \newline
 
 \section{Solution to Question 4}
 
+\noindent Let $L$ and $R$ denote the left and right subtrees of $T$, respectively.
+We define an algorithm $\alg$ to return the weight of a minimum vertex cover by recursively comparing the weights of minimum covers of $L$ and $R$.
+To this end, $\alg$ takes an additional parameter -- a sum type encoding a Yes/No/Maybe distinction -- which determines whether it includes the root of the current tree in its cover.
+Finally, we take the minimum weight over all combinations of including or excluding the root in the cover.
 
+\begin{algorithmic}
+  \Function{alg}{$T = (r, L, R)$, includeRoot}
+    \If{includeRoot = Yes}
+      \If{$|T| \leq 3$}
+        \State \Return $w(r)$
+      \Else
+      \State \Return $w(r) + \alg(L, \operatorname{Maybe}) + \alg(R, \operatorname{Maybe})$
+      \EndIf
+    \ElsIf{includeRoot = No}
+      \If{$|T| \leq 3$}
+        \State \Return sum of weights of leaves of $T$
+      \Else
+        \State \Return $\alg(L, \operatorname{Yes}) + \alg(R, \operatorname{Yes})$
+      \EndIf
+    \ElsIf{includeRoot = Maybe}
+      \If{$|T| \leq 3$}
+        \State \Return $\min\{w(r), \textnormal{sum of weights of leaves of } T\}$
+      \Else
+        \State \Return $\min$ of:
+        \State \hspace{7em} $W_0 = w(r) + \alg(L, \operatorname{Yes}) + \alg(R, \operatorname{No})$
+        \State \hspace{7em} $W_1 = w(r) + \alg(L, \operatorname{No}) + \alg(R, \operatorname{Yes})$
+        \State \hspace{7em} $W_2 = w(r) + \alg(L, \operatorname{No}) + \alg(R, \operatorname{No})$
+        \State \hspace{7em} $W_3 = \alg(L, \operatorname{Yes}) + \alg(R, \operatorname{Yes})$
+      \EndIf
+    \EndIf
+  \EndFunction
+\end{algorithmic}
+
+\noindent {\bf Claim 1:} $\alg(T, \operatorname{Maybe})$ will return the minimum weight of a cover of $T$.
+
+\begin{proof}
+  For the sake of analysis, it is convenient to talk about $\alg$ as though it computes a cover, even though it technically only computes the weight of that cover.
+  We could easily modify $\alg$ to return the cover itself by storing the identity of a vertex when it includes its weight in a sum, so the convenience of identifying a vertex with its weight does not cause a problem for the argument.
+  Our strategy is to show first that $\alg$ finds minimum covers in the base case of $n \leq 3$, and second that whenever $\alg$ merges the covers of two subtrees, it does so in a way that results in a minimum cover of the parent tree.
+  If $|T| \leq 3$, then $\alg$ either returns the root or the two leaves.
+  Both of these sets are covers of $T$, so $\alg$ returns a cover for trees where $n \leq 3$.
+  Furthermore, if $n \leq 3$ and $\alg(T, \operatorname{Maybe})$ is called, $\alg$ will choose the result with minimum weight.
+  Therefore, $\alg$ returns minimum covers for base-case trees.
+
+  Now, it suffices to show that when $\alg$ merges two subtree covers, the resulting set is a minimum cover of the parent tree.
+  Whenever $\alg$ is called on a tree with $n \geq 3$ and a Maybe argument, it returns one of the covers associated with $W_0, W_1, W_2,$ or $W_3$ -- whichever has the smallest weight.
+  By inspection, we can see that all of these options are indeed covers.
+  Therefore, $\alg$ returns a minimum cover unless there is some additional cover $C \notin \{W_0, W_1, W_2, W_3\}$, which has lesser weight.
+  However, since the lower covers in the tree are fixed, the only other possibilities are $C = \{r, \operatorname{root}(L), \operatorname{root}(R)\}$ and $|C| \leq 1$ with $C \neq \{r\}$.
+  In the first case, $w(C) > w(W_0)$ since $W_0 \subset C$.
+  In the second case, $C$ is not actually a cover, because at least one of $(r, \operatorname{root}(L))$ and $(r, \operatorname{root}(R))$ is uncovered.
+  Therefore the result of a merge event must always be a cover of minimum weight.
+\end{proof}
+
+\noindent {\bf Claim 2:} $\alg$ runs in $\O(n^2)$ time.
+
+\begin{proof}
+  Since $\alg$ has the structure of a typical divide-and-conquer algorithm, we can appeal to the Master Theorem.
+  $\alg$ works by returning the minimum of four sums composed of the quantities $w(r), \alg(L, \operatorname{No}), \alg(L, \operatorname{Yes}), \alg(R, \operatorname{No}),$ and $\alg(R, \operatorname{Yes})$.
+  The first, $w(r)$ takes constant time to compute.
+  The remaining four involve recursive calls to $\alg$.
+  Since $T$ is balanced, each of these four calls is made on a tree with size $\O(\frac{n}{2})$.
+  The remaining work -- summing up the results and taking the minimum -- is $\O(1)$.
+  In other words, we divide the problem into four sub-problems of size $\frac{n}{2}$ each, with constant-time work to recombine their solutions into a solution for an instance of size $n$.
+  Therefore, the Master Theorem gives that since $2 > 2^0$, $\alg$ runs in $\O(n^{\log_{2}(4)}) = \O(n^2)$.
+\end{proof}
 
 \section{Solution to Question 5}
 
