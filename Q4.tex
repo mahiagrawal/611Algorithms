@@ -1,0 +1,315 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage} % better margins
+\usepackage{amsthm,amssymb,amsmath} % useful math commands
+\usepackage{graphicx} % figures
+\usepackage{xfrac} % inline fractions
+\usepackage{enumitem} % custom enum symbols
+
+% Define some useful shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\E}{\mathcal{E}}
+\renewcommand{\O}{\mathcal{O}}
+% if you want to use \alg and \opt in text, wrap them in math mode to make the spacing work
+% e.g. We have shown that $\alg$ runs in $\O(n)$
+\newcommand{\alg}{\textsc{alg}}
+\newcommand{\opt}{\textsc{opt}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Solutions for 611 Homework 1}
+
+\author{Mahim Agarwal, Hanwen Xiong, and Jackson Warley}
+
+\begin{document}
+
+\maketitle
+
+\section{Solution to Question 1}
+Let $A = \{a_1, \dots, a_n\}$ be the array that we need to count the inversion for.
+Consider the following algorithm $\alg$ for determining whether $A$ is boring or not:
+\begin{enumerate}
+  \item Divide the array into 2 equal parts: $A_l = \{a_1, \dots, a_{n/2}\}$ and $A_r = \{a_{n/2+1}, \dots, a_n\}$
+  \item Recursively count the number of inversions in each half by calling the algorithm on $A_l$ and $A_r$
+  \item Merge the two halves into a sorted whole(increasing order) and count the number of inversions across 
+the two halves(from $A_l$ to $A_r$). 
+\item Return the sum of three counts. \newline
+ \end{enumerate}
+{\bf Procedure:}\newline
+CountInversion(\{$a_1$, \dots, $a_n$\}) \newline
+if n==1 return count = 0 \newline
+\newline
+else:
+
+ $count_l$ = CountInversion(\{$a_1$, \dots,$a_{n/2}$\}) 
+
+ $count_r$ = CountInversion(\{$a_{n/2+1}$, \dots, $a_n$\}) 
+
+return  $count_l$ + $count_r$ + Merge(sorted $A_l$, sorted $A_r$) 
+
+{\bf Merge Step:} \newline
+Let us suppose we have two sorted halves $A$ and $B$ in increasing order of elements. Then do the following: \newline
+Start with the first element of $A$ and $B$ and move towards right. \newline
+Compare $a_i$ and $b_j$ \newline
+If $a_i$ < $b_j$, count = count + 0. No inversion of $a_i$. Move on to next element of $A$. \newline
+If $a_i$ > $b_j$, count = count + all elements remaining in A. Move on to the next element of $A$ and next  element of $B$ \newline
+Keep appending the smaller of the two elements $a_i$ and $b_j$ to the sorted list $C$. \newline
+{\bf Accuracy explanation:}\newline
+
+We will use the following lemma to prove the correctness of $\alg$.
+
+\begin{lemma}\label{inversion-count-lemma}
+If $A = \{a_1, \dots, a_{n/2}\}$ and $B = \{b_1, \dots, b_{n/2}\}$ are two sorted arrays in increasing order where 
+$A$ is the left half while $B$ is the right half, then \newline
+if $a_i$ < $b_j$: inversion count for $a_i$ beyond this point = 0 \newline
+while if $a_i$ > $b_j$: inversion count for this $b_j$ = rest of the elements in $A$. ($\frac{n}{2}$ - i)
+\end{lemma}
+
+\begin{proof}
+Since $A$ and $B$ are sorted in increasing order: \newline
+$a_1$ < $a_2$ <  $a_3$ < \dots < $a_{n/2}$ \newline
+and  $b_1$ < $b_2$ <  $b_3$ < \dots < $b_{n/2}$ \newline
+
+Since we are dividing the array into two halves, all elements in the left half will hae index less than all elements in the right half.
+Thus, for inversion, element in the left half should be greater than element in the right half. \newline
+
+So, if $a_i$ > $b_j$ and $a_i$ < $a_{i+1}$ < \dots < $a_{n/2}$ \newline
+  $(\Rightarrow)$ $a_{n/2}$ > $a_{n/2-1}$ > \dots > $a_{i+1}$ > $a_i$ > $b_j$ \newline
+
+So count of inversion will increase by number of elements remaining in $A$ beyond i. We now will move on to $a_{i+1}$ 
+and $b_{j+1}$
+
+ if $a_i$ < $b_j$ and $b_j$ < $b_{j+1}$ < \dots < $b_{n/2}$  \newline
+  $(\Rightarrow)$   $a_i$ < $b_j$ < $b_{j+1}$ < \dots < $b_{n/2}$ \newline
+
+So count of inversion will increase by zero,  since index of $a_i$ is less and its value is also smaller. There will  be no more inversion
+pair for $a_i$ and thus we move on to $a_{i+1}$.
+
+Thus, we will find the total inversion count accross $A$ and $B$ by traversing the array once (
+travresing completely in the worst case). \newline
+Adding three inversion count will give us the total inversion count for whole array.
+\end{proof}
+
+{\bf Time Complexity:}\newline
+Step 1: We split the array $A$ into 2 subarrays $A$ and $B$ of half the size. 
+T(n) = 2 T(n/2) + $\O(Merge)$ \newline
+Step 2: To merge, we only need to traverse the halves once, and for a maximum of $n$ elements at each recursion level. \newline
+So, T(n) = 2 T(n/2) + $\O(n)$ \newline
+By Master theorem: time complexity is $\O(n \log n)$ \newline
+
+\section{Solution to Question 2}
+
+For clarity, let the elements of $A$ and $B$ be indexed as $A = \{a_1, \dots, a_n\}$ and $B = \{b_1, \dots, b_n\}$.
+Consider the following algorithm $\alg$ for determining the $n$th smallest element of $A \cup B$:
+\begin{enumerate}
+  \item Let $i = j = \frac{n}{2}$ be indices into $A$ and $B$, respectively, which may be updated in later steps.
+  \item If it is the case that $a_i < b_{j+1}$ and $b_j < a_{i+1}$, return $\max \{a_i, b_j\}$.
+  \item Otherwise, if $a_i > b_{j+1}$, update $i$ and $j$ so that $i \mapsto \frac{1}{2}i$ and $j \mapsto \frac{1}{2}(j + n)$.
+    If, on the other hand, $b_j > a_{i+1}$, update the indices so that $i \mapsto \frac{1}{2}(i + n)$ and $j \mapsto \frac{1}{2}j$.
+    If $i$ (resp. $j$) is equal to $n$, return $a_i$ (resp. $b_j$); otherwise, return to step $2$.
+\end{enumerate}
+We will use the following lemma to prove the correctness of $\alg$.
+
+\begin{lemma}\label{nth-smallest-lemma}
+Suppose that $i + j = n$ and let $m = \max \{a_i, b_j\}$. Then $m$ is the $n$th smallest element of $A \cup B$ if and only if $a_i < b_{j+1}$ and $b_j < a_{i+1}$.
+\end{lemma}
+
+\begin{proof}
+  $(\Rightarrow)$ Suppose that $m$ is the $n$th smallest element of $A \cup B$.
+  Then $m$ is larger than exactly $n - 1$ elements of $A \cup B$.
+  Where can these elements possibly be located in their lists?
+  If $m = a_i$, then $m$ is greater than exactly $i - 1$ elements of $A$ (since $A$ is sorted).
+  Thus $m$ must be greater than exactly $(n - 1) - (i - 1) = (i + j - 1) - (i - 1) = j$ elements of $B$.
+  In fact, since $B$ is sorted, $m$ must be greater than the first $j$ elements of $B$.
+  In particular, this means we have $a_{i + 1} > a_i = m > b_j$, giving us one of the desired inequalities.
+  Moreover, $m > b_{j+1}$ would imply the presence of an $n$th element of $A \cup B$ which is smaller than $m$, contradicting that $m$ is the $n$th smallest element of $A \cup B$.
+  Thus, we have shown $a_i = m \leq b_{j+1}$, and, since the elements are distinct, this inequality must be strict, as desired.
+  A symmetrical argument yields the same result in the case that $m = b_j$, completing one direction of the proof.
+
+  $(\Leftarrow)$ Now suppose that $a_i < b_{j+1}$ and $b_j < a_{i+1}$.
+  Since $m \geq a_i$, it is greater than at least $i - 1$ elements of $A$.
+  Likewise, since $m \geq b_j$, it is greater than at least $j - 1$ elements of $B$.
+  In fact, since $m = \max\{a_i, b_j\}$, one of these inequalities is strict and the other is actually an equality.
+  Without loss of generality (the other possible choice is dealt with by a symmetrical argument), suppose $m = a_i$ and $m > b_j$.
+  Then $m$ is greater than exactly $i - 1$ elements of $A$ and at least $j$ elements of $B$, so $m$ is greater than at lest $(i - 1) + j = n - 1$ elements of $A \cup B$.
+  We initially supposed that $m = a_i < b_{j+1}$, so this lower bound is actually tight.
+  Since $m$ is greater than exactly $n - 1$ elements of $A \cup B$, $m$ is the $n$th smallest element of $A \cup B$.
+\end{proof}
+
+\noindent {\bf Claim 1:} $\alg$ always terminates and returns the $n$th largest element of $A \cup B$.
+
+\begin{proof}
+  Firstly, note that initially we have $i = j = \frac{n}{2}$, so $i + j = n$.
+  When we update the indices, we do so by $(i, j) \mapsto \left(\frac{1}{2}i, \frac{1}{2}(j + n)\right)$.
+  Since \[\frac{1}{2}i + \frac{1}{2}(j + n) = \frac{1}{2}(i + j) + \frac{1}{2}n = n\] we have that $i + j = n$ is an invariant of $\alg$.
+  Finally, because $n$ is a power of $2$, each subsequent image of $i$ is a multiple of $2$, so we always have $i, j \in \N$, and in particular $i$ and $j$ are always valid as indices.
+  This allows us to apply Lemma~\ref{nth-smallest-lemma} at any time during our analysis of $\alg$.
+
+  The updating of $i$ and $j$ amounts to a binary search for the correct index configuration.
+  Since the position of $j$ is completely determined by the position of $i$ (lest we violate the invariant $i + j = n$), it suffices to constrain our analysis to the trajectory of $i$ under iteration of the map that updates the indices over the course of a run.
+  The value of $i$ begins at $\frac{n}{2}$ and is only ever updated by either $i \mapsto \frac{i}{2}$ or $i \mapsto \frac{1}{2}(i + n)$.
+  In partiuclar, $i$ begins in the inverval $I_1 = [1, n]$, and is mapped into an interval $I_2 \in \left\{[1, \frac{n}{2}], [\frac{n}{2} + 1, n]\right\}$ after the first update.
+  In general, the $k$th time it is updated, $i$ is mapped into an interval $I_{k+1} \subseteq I_k$ of size $\frac{|I_k|}{2}$.
+  Since the intervals containing $i$ must be nested, and $n$ is finite, there may only be a finite number of updates in a single run of $\alg$.
+  Since we must return if we cannot update $i$, $\alg$ always terminates.
+
+  Now, we claim that if $\alg$ terminates, it returns the correct answer.
+  In the case that we return in Step $2$, our answer is correct by Lemma~\ref{nth-smallest-lemma}.
+  If we return in Step $3$, then $i = n$ without loss of generality.
+  Since $A$ is sorted, $i = n$ implies the existence of $n - 1$ elements of $A$ which are smaller than $a_i$.
+  If $b_j = b_1 < a_i$, then in the previous iteration we would have had $b_1 < a_{i+1}$, so we would have terminated in Step $2$.\footnote{This looks off-by-one at first glance, but because the lists are $1$-indexed, this final iteration maps $j = 1$ to $j = 1$ and $i = n - 1$ to $i = n$.}
+  Thus we have shown there are exactly $n - 1$ elements of $A \cup B$ which are less than $a_n$, so $a_n$ must be the $n$th smallest element.
+  This completes the proof of correctness.
+\end{proof}
+
+\noindent {\bf Claim 2:} $\alg$ runs in $\O(\log n)$ time.
+
+\begin{proof}
+  For each $k$, the $k$th index update halves the size of the interval $I_k$ in which the desired index lies, so there may be at most $\log_{2}n = \O(\log n)$ iterations before the algorithm terminates due to the extremal case of $i \in \{1, n\}$.
+\end{proof}
+
+\section{Solution to Question 3}
+
+For clarity, let the elements of $A$ be indexed as $A = \{a_1, \dots, a_n\}$.
+Consider the following algorithm $\alg$ for determining whether $A$ is boring or not:
+\begin{enumerate}
+  \item Divide the array into 2 equal parts: $A_l = \{a_1, \dots, a_{n/2}\}$ and $A_r = \{a_{n/2+1}, \dots, a_n\}$
+  \item Recursively solve the two halves by calling the algorithm on $A_l$ and $A_r$.
+  \item Let's say that element that make $A_l$ boring is $a_l$ and that make $A_r$ boring is $a_r$, then return $a_l$ if $a_l$=$a_r$ else
+return NULL \newline
+  $(\Rightarrow)$ return $a_l$ == $a_r$ ? $a_l$ : NULL. 
+However if any one is NULL and other is not null then return the not null element.
+\item If the final answer($a_f$) is NULL then array is not boring else check for the count of $a_f$ in original array and if it is greater than
+$n/2$, array is boring otherwise non-boring.
+\end{enumerate}
+{\bf Procedure:}\newline
+CheckIfBoring(\{$a_1$, \dots, $a_n$\}) \newline
+if n==1 return $a_1$ \newline
+\newline
+else:
+
+ $a_l$ = checkIfBoring(\{$a_1$, \dots,$a_{n/2}$\}) 
+
+ $a_r$ = checkIfBoring(\{$a_{n/2+1}$, \dots, $a_n$\}) 
+
+ if $a_l$ = NULL and $a_r$ = NULL return NULL (Non-boring array) 
+
+else if $a_l$ = NULL and $a_r$ NOT NULL return $a_r$ 
+
+else if $a_l$ NOT  NULL and $a_r$ = NULL return $a_l$ 
+
+else return $a_l$==$a_r$ ? $a_l$ : NULL\newline
+Count the occurences of returned element in the whole array and if it is greater than $\frac{n}{2}$ array is boring else non-
+boring.\newline
+{\bf Accuracy explanation:}\newline
+We will use the following lemma to prove the correctness of $\alg$.
+
+\begin{lemma}\label{boring-array-lemma}
+If $A = \{a_1, \dots, a_n\}$ is an array, then this algorithm(through divide and conquer) will always compare a pair of consecutive elements
+and ignore(or delete) them if they are non-matching. It will keep on doing this recursively until it is left with one or no element(NULL) at
+which point it will count the number of occurences of final element in the original array and return if the array is boring or not.
+Suppose $A = \{a_1, \dots, a_n\}$ is a boring array with element $a_f$. Now, to prove the correctness of this algorithm, it is sufficient to
+prove that if $a_f$ exists then this algorithm will always return $a_f$:
+\end{lemma}
+
+\begin{proof}
+If $a_f$ makes the array boring and it occurs at a total of $k$ times, then: \newline
+k > $\frac{n}{2}$ \newline
+Now, consider the following claims: \newline
+\noindent {\bf Claim 1:} There will always be atleast one pair with both elements $a_f$
+\begin{proof}
+{\bf proof by contradiction:} Let us assume that there are no pair of $a_f$ in $A$. That means at the maximum $a_f$ can only
+occur at every alternate index. So total count of $a_f$ = $\frac{n}{2}$ \newline
+But we know that $a_f$ occurs more than $\frac{n}{2}$ times. hence, contradiction to our assumption. Thus there is atleast one 
+pair of $a_f$.
+\end{proof}
+\noindent {\bf Claim 2:} If there are x number of pairs such that both elements are equal to a value other than $a_f$
+then there will be x+1 number of pairs of $a_f$.
+\begin{proof}
+{\bf proof by contradiction:} Let us assume that there are y pair of $a_f$ in $A$ and y < x+1.  \newline
+So total number of $a_f$ = 2y \newline
+and total number of elements other than $a_y$ = 2x \newline
+Note: we don't have to consider other elements as no other pair exists thus every other pair will be of the form ($a_f$, $~a_f$)
+, in  other words, one element will be $a_f$ while other with be something other than $a_f$. \newline
+So,  ratio of $a_f$ in total array = $\frac{2x}{2x+2y}$ \newline
+we know that $a_f$ occurs more than n/2 times. So, \newline
+
+$\frac{2y}{2x+2y}$  > $\frac{1}{2}$
+
+thus 2y > x + y \newline
+
+y > x But we assumed that y < x + 1 and y is an integer which is not possible \newline
+Thus, contradiciton to our assumption. \newline
+Hence, there will be atleast x+1 pair of $a_f$ in $A$ if there are x pairs of elements other than $a_f$.
+\end{proof}
+Thus, for every element(or element pair) not equal to  $a_f$ there is atleast one $a_f$ (or one pair of $a_f$) that will cancel it out and
+finally we will be left with one extra pair of $a_f$. \newline
+Hence, if $a_f$ exists, then alogrithm will always return $a_f$ and no other elements.
+Then we can determine the count of $a_f$ in the array and check whether  the array is boring or not.
+\end{proof}
+
+{\bf Time Complexity:}\newline
+Step 1: We split the array $A$ into 2 subarrays $A_l$ and $A_r$ of half the size. We choose the majority element $a_l$ and $a_r$
+and compare them. If they are same we return the element else we return NULL\newline
+Note: comparison takes constant time.\newline
+T(n) = 2 T(n/2) + $\O(1)$ \newline
+By Master theorem: time complexity of this step is $\O(\log n)$ \newline
+Step 2: We count the number of times the returned element $a_f$ occur in the array $A$ \newline
+This step takes $\O(n)$ time \newline
+Thus time complexity is $\O(log n)$+ $\O(n)$ \newline
+= $\O(n)$
+
+
+\section{Solution to Question 4}
+
+
+
+\section{Solution to Question 5}
+
+\subsection{Algorithm}
+\emph{Useful definition}:
+\begin{itemize}
+	\item $l_{max}$: the line with maximum slope
+	\item $l_{min}$: the line with minimum slope
+	\item $l_{nextmax}$: the line with maximum slope in the rest of two subarrays
+	\item $l_{nextmin}$: the line with minimum slope in the rest of two subarrays
+	\item ``visible area": $\{y>=l_{max}, y>=l_{min}\}$
+	\item $P_{ri}$: x coordinate of intersection of $l_{i}$ and $l_{max}$
+	\item $P_{li}$: x coordinate of intersection of $l_{i}$ and $l_{min}$
+\end{itemize}
+\emph{Algorithm}:
+\begin{enumerate}
+	\item Divide the array of lines into 2 halves evenly
+	\item Sort the two subarrays by slope in non-increasing order
+	\item Find the intersection of $l_{max}$ and $l_{min}$, say$(m, n)$
+	\item Compare $l_{nextmax}(m)$ with $n$,  if $l_{nextmax}(m) \textless n$, throw it; if $l_{nextmax}(m) \textgreater n$, put $l_{max}$ into ``left\_visible" array and update $l_{max} := l_{nextmax}$. Go to step 3 if there's $l_{nextmax}$, put the rest 2 lines into ``left\_visible" array and go to next step when there's no lines left
+	\item Find the intersection of $l_{min}$ and $l_{max}$, say$(m, n)$
+	\item Compare $l_{nextmin}(m)$ with $n$,  if $l_{nextmin}(m) \textless n$, throw it; if $l_{nextmin}(m) \textgreater n$, put $l_{min}$ into ``right\_visible" array and update $l_{min} := l_{nextmin}$. Go to step 5 if there's $l_{nextmin}$, put the rest 2 lines into ``right\_visible" array and go to next step when there's no lines left
+	\item ``visible" array=``left\_visible" array $\cap$ ``right\_visible" array. Basically, ``left\_visible" array is in non-increasing order slope-wise and ``right\_visible" array is in non-decreasing order slope-wise. Thus, it's easy to do the intersection by traversing the two arrays reversely
+\end{enumerate}
+
+\subsection{Time Complexity}
+	Divide: Since we divide the array into 2 subarrays and solve them recursively, we have 2 subproblems of size $n/2$\newline
+	Conquer: We have to find at most $2(n-1)$ intersections and always $2(n-1)$ comparisons, which takes $\O(n)$. Besides, we have to intersect two arrays, which includes at most $n$ comparisons, also $\O(n)$\newline
+	So overall we have $T(n) = 2T(n/2) + \O(n)$, according to Master's Theorem we get $T(n) = \O(nlogn)$
+\subsection{Proof}
+	\emph{Lemma 5.3.1}: $l_{max}$ and $l_{min}$ are always ``visible" within its correspoding scope(i.e. array)\newline
+	\emph{Lemma 5.3.2}: $l$ is ``visible" if and only if it dominates at the intersection of $l_{max}$ and $l_{min}$\newline
+	\emph{Lemma 5.3.3}: A list of non-increasing(slope-wise) lines $\{l_{1}, l_{2}, ..., l_{n}\}$ are visible if and only if the every single line is ``visible" in ``visible area" and the list of $\{P_{r1}, P_{r2}, ...,  P_{rn}\}$ is also in non-increasing order and the list of $\{P_{l1}, P_{l2}, ...,  P_{ln}\}$ is in non-decreasing order\newline
+	\newline
+	Proof of 5.3.1: Let's first consider $l_{max}$: $l_{max}=a_{max}x+b$, here $b$ is the biggest intercept of a series of parallel lines. Pick any line of a set of non-vertical lines $l=a'x+b'$. There's always an intersection $(\frac{b'-b}{a_{max}-a'}, \frac{a_{max}b'-a'b}{a_{max}-a'})$. Let $x'=max\{\frac{b'-b}{a_{max}-a'}\}$, then for any $x\textgreater x'$, $l_{max}$ always dominates. Similarly, there's always a $x''$ on which $l_{min}$ always dominates when $x\textless x''$.\newline
+	\newline
+	Proof of 5.3.2: Assume there's a ``visible" line $l$ that doesn't dominate at the intersection of $l_{max}$ and $l_{min}$, say$(x', y')$. Therefore, $l(x')\textless y'$. Since it's ``visible", we know there's some $x=t$ on which $l$ dominates. Then we can infer $a_{l}=\frac{l(t)-l(x')}{t-x'}$. However, when $t\textgreater x'$, $a_{l}\textgreater a_{max}$; Similarly, when $t\textless x'$, $a_{l}\textless a_{min}$. That's contradictory to our assumption, which means $l$ must dominate at $x=x'$.\newline
+	\newline
+	Proof of 5.3.3: It's obvious that every single line should be ``visible" in the ``visible area" otherwise it'll be dominated by $l_{max}$ or $l_{min}$ forever. Now assume the orderings of the two x coordinate lists are not as suggested, which means there's some $i\textgreater j$, $P_{ri}\textgreater P{rj}$ and $P_{li}\textgreater P{lj}$. That way, $l_{i}$ will dominate $l_{j}$ in the ``visible area" and thus makes it ``invisible"\newline
+	\newline
+	Proof of correctness to our algorithm: According to \textit{Lemma 5.3.1} we know it's always safe to keep the two special lines(overall $l_{min}, l_{max}$). According to \textit{Lemma 5.3.2}, every time we throw a line, that line is forever dominated by the current $l_{max}$ and $l_{min}$. By doing the throwing step we're getting as many ``invisible" lines as possible. Finally, our algorithm will generate a set of lines conforming \textit{Lemma 5.3.3}. So we know the array we get has all the ``visible" lines.
+	
+\end{document}
