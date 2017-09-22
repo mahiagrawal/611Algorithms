@@ -337,7 +337,6 @@ Finally, we take the minimum weight over all combinations of including or exclud
   Therefore, the Master Theorem gives that since $2 > 2^0$, $\alg$ runs in $\O(n^{\log_{2}(4)}) = \O(n^2)$.
 \end{proof}
 
-\section{Solution to Question 5}
 
 Suppose we have n lines $L$ = \{ $l_1$, $l_2$, \dots, $l_n$ \} \newline
 Sort the lines in increasing order of slope: \newline
@@ -374,12 +373,19 @@ the visible portion of smaller slope line will always exists to the left of visi
 \end{lemma}
 
 \begin{proof}
-If $a_f$ makes the array boring and it occurs at a total of $k$ times, then: \newline
-k \textgreater $\frac{n}{2}$ \newline
-Now, consider the following claims: \newline
+Consider three lines $l_1$ : y = $a_1$x + $b_1$ , $l_2$ : y = $a_2$x + $b_2$ 
+and $l_3$ : y = $a_3$x + $b_3$  where $a_1$ \textless $a_2$ \textless $a_3$.
+If lines $l_2$ and $l_3$ intersects at a point $P_{23}$ ($x_0$, $y_0$) then to the right of $P_23$
+$l_3$ \textgreater $l_2$ always since it has larger slope. \newline
+On the other hand, If lines $l_1$ and $l_2$ intersects at a point $P_{12}$ ($x_1$, $y_1$) then to the left of $P_{12}$
+$l_1$ \textgreater $l_2$ always since it has smaller slope. \newline
+
+So, if $x_0$ \textless $x_1$ then to its right, $l_3$ \textgreater $l_2$ while to its left $l_1$ \textgreater $l_2$ \newline
+Thus, $l_2$ cannot be visible anymore.\newline
+hence, visible region of smaller slope line always exists to the left of larger slope lines.
 \end{proof}
 
-No, consider the following two claims which will establish the correctness of the algorithm: \newline
+Now, consider the following two claims which will establish the correctness of the algorithm: \newline
 \noindent {\bf Claim 1:} If a line on the right half cuts a line on the left half such that the intersection point of two lines
 lies to the left of visible portion(segment in visible part) of line in the left, then it will eclipse all the lines 
 having smaller slopes than itself but larger slopes than the line under consideration. \newline
