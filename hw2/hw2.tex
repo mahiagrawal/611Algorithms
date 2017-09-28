@@ -35,7 +35,13 @@
 
 \section{Solution to Question 1}
 
-
+Let $\M = (E, \I)$. For all $i \in [k]$, we have $|\emptyset \cap E_i| = 0 \leq 1$, so $\emptyset \in \I$.
+To prove heredity, let $S \in \I$ and suppose $R \subseteq S$.
+Then, if $i \in [k]$, we have $R \cap E_i \subseteq S \cap E_i$, implying $|R \cap E_i| \leq |S \cap E_i| \leq 1$.
+To prove exchange, first note the following property: because the (nonempty) sets $E_1, \dots, E_k$ partition $E$ and each independent set intersects any $E_i$ in at most one element, any $S \in \I$ has nontrivial intersection with exactly $|S|$ of the sets $E_1, \dots, E_k$.
+Suppose $A, B \in \I$ with $|A| < |B|$.
+Then $B$ intersects $|B| > |A|$ of the sets $E_1, \dots, E_k$, so there must be some $i$ such that $E_i \cap A = \emptyset$ and $E_i \cap B = \{b\}$.
+Then $A \cup \{b\} \in \I$, since $|(A \cup \{b\}) \cap E_i| = 1$, proving that $\M$ is a matroid.
 
 \section{Solution to Question 2}
 
