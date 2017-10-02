@@ -3,7 +3,7 @@
 \usepackage{amsthm,amssymb,amsmath} % useful math commands
 \usepackage{graphicx} % figures
 \usepackage{xfrac} % inline fractions
-\usepackage{enumitem} % custom enum symbols
+\usepackage{enumerate} % custom enum symbols
 \usepackage{algpseudocode} % for pseudocode
 
 % Define some useful shortcuts
@@ -49,7 +49,36 @@ Then $A \cup \{b\} \in \I$, since $|(A \cup \{b\}) \cap E_i| = 1$, proving that 
 
 \section{Solution to Question 3}
 
+\begin{enumerate}[\indent (1)]
+  \item $(\Rightarrow)$ We prove the contrapositive.
+      Let $S \subseteq J$ and suppose that there exists some $d \in [n]$ for which $S_d > d$.
+      Then, by the pigeonhole principle, in any ordering of $S$ there must be some job $s_i$ with $i > d$ and $d_{s_i} < d$.
+      Since we can idenfity an overdue job $s_i$ for any ordering of $S$, $S$ must not be good.
 
+      $(\Leftarrow)$ Let $S \subseteq J$ with $S_d \leq d$ for all $d \in [n]$ and suppose toward a contradiction that $S$ is not good.
+      Then in any ordering of $S$, there is some overdue job.
+      Let $d + 1$ be the index of the first overdue job in $S$ and choose the ordering $S = \{s_1, \dots, s_k\}$ that maximizes $d$.
+      Then $S$ is of the form $S = \{s_1, \dots, s_d, s_{d+1}, \dots, s_k\}$ where jobs $s_1$ through $s_{d}$ yield bonuses and $s_{d+1}$ does not.
+      Suppose that for some $i \in [d]$, we have $d_{s_i} > d$.
+      Then we could exchange $s_i$ with $s_{d+1}$, after which $s_{d+1}$ would yield a bonus, and, since $d_{s_i} > d$, so would $s_i$.
+      However, this would contradict the maximality of $d$, since it would result in an ordering in which the first $d+1$ jobs yield bonuses.
+      This means that for all $i \in [d]$, $d_{s_i} \leq d$, implying that $S_d \geq d$.
+      But we also have $d_{s_{d+1}} \leq d$, since $s_{d+1}$ is overdue.
+      Thus $S_d > d$, a contradiction, whereby $S$ must be good.
+
+    \item To prove heredity, suppose that $A \in \I$.
+      Let $A = \{a_1, \dots, a_k\}$ be a good ordering of $A$, and let $B \subseteq A$ be ordered identically up to removal of elements.
+      Since $B$ is obtained by removing jobs from $A$, the index in $B$ of any job in $A \cap B$ is at most its index in $A$, so any job that yielded a bonus in $A$ still yields one in $B$.
+      Thus, since $A$ was good, so is $B$, whence $B \in \I$ as desired.
+
+      Now, to prove exchange, let $A, B \in \I$ with $|A| < |B|$.
+      Suppose that $A = \{a_1, \dots, a_k\}$ and $B = \{b_1, \dots, b_j\}$.
+      Let $A' = A \cup \{b_j\}$.
+      Since $B \in \I$, we must have $d_{b_j} \geq j \geq k + 1$, therefore $b_j$ yields a bonus in $A'$.
+      The other jobs in $A'$ have not moved from their positions in $A$, so they still yield bonuses.
+      Thus $A' \in \I$, implying $(J, \I)$ has independence.
+
+\end{enumerate}
 
 \section{Solution to Question 4}
 
