@@ -45,12 +45,37 @@ Then $A \cup \{b\} \in \I$, since $|(A \cup \{b\}) \cap E_i| = 1$, proving that 
 
 \section{Solution to Question 2}
 
+We will present the algorithm first, followed by the analysis.
+\begin{algorithmic}
+  \Function{alg}{$P = \{p_1, p_2, \dots, p_n\}$}
+    \State $I \gets \{[p_1, p_1 + 1]\}$
+    \For{$p \in P$ left to right}
+      \State $[a, b] \gets \operatorname{last}(I)$
+      \If{$p > b$}
+      \State $I \gets I \cup \{[p, p + 1]\}$
+      \EndIf
+    \EndFor
+  \EndFunction
+\end{algorithmic}
+
+\noindent {\bf Claim 1:} $\alg$ terminates and returns the smallest possible set of intervals covering all the points in $P$.
+\begin{proof}
+  Since $\alg$ terminates exactly when we have considered every point in $P$, and $P$ is finite, $\alg$ must terminate.
+  When it does, $I$ will contain some number of intervals, greater than $1$.
+  If $\alg$ ever encounters a point $p$ that is not covered by an interval already in $I$, it adds an interval containing $p$ to $I$.
+  Thus, since every point is considered, all points are covered when $\alg$ terminates.
+  Finally, we must show that $P$ cannot be covered using fewer than $|I|$ (after $\alg$ has run to completion) unit-length intervals.
+  Let $P' = \{p \in P \mid [p, p + 1] \in I\}$.
+  Since every interval in $I$ begins with a point from $P$, $|P'| = |I|$.
+  Furthermore, since $\alg$ only constructs a new interval when the nearest endpoint is further than $1$ away from the point under consideration, no two points in $P'$ are within $1$ of each other.
+  Thus, any cover of $P'$ must include at least $|P'| = |I|$ intervals, and in particular the solution yielded by $\alg$ is optimal.
+\end{proof}
 
 
 \section{Solution to Question 3}
 
 \begin{enumerate}[\indent (1)]
-  \item $(\Rightarrow)$ We prove the contrapositive.
+    \item $(\Rightarrow)$ We prove the contrapositive.
       Let $S \subseteq J$ and suppose that there exists some $d \in [n]$ for which $S_d > d$.
       Then, by the pigeonhole principle, in any ordering of $S$ there must be some job $s_i$ with $i > d$ and $d_{s_i} < d$.
       Since we can idenfity an overdue job $s_i$ for any ordering of $S$, $S$ must not be good.
