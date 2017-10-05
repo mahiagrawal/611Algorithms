@@ -60,7 +60,7 @@ We will present the algorithm first, followed by the analysis.
 \end{algorithmic}
 \end{algorithm}
 
-\noindent {\bf Claim 1:} $\alg$ runs in $\O(n)$ time and returns the smallest possible set of intervals covering all the points in $P$.
+\noindent {\bf Claim:} $\alg$ runs in $\O(n)$ time and returns the smallest possible set of intervals covering all the points in $P$.
 \begin{proof}
   Since $\alg$ terminates exactly when we have considered every point in $P$, and $P$ is finite, $\alg$ must terminate.
   When it does, $I$ will contain some number of intervals, greater than $1$.
@@ -70,8 +70,8 @@ We will present the algorithm first, followed by the analysis.
   Now, we must show that $P$ cannot be covered using fewer than $|I|$ (after $\alg$ has run to completion) unit-length intervals.
   Let $P' = \{p \in P \mid [p, p + 1] \in I\}$.
   Since every interval in $I$ begins with a point from $P$, $|P'| = |I|$.
-  Furthermore, since $\alg$ only constructs a new interval when the nearest endpoint is further than $1$ away from the point under consideration, no two points in $P'$ are within $1$ of each other.
-  Thus, any cover of $P'$ must include at least $|P'| = |I|$ intervals, and in particular the solution yielded by $\alg$ is optimal.
+  Furthermore, since $\alg$ only constructs a new interval when the nearest endpoint is further than $1$ away from the point under consideration, no two points in $P'$ are within unit distance of each other.
+  Thus, any cover of $P'$ by unit intervals must include at least $|P'| = |I|$ intervals, and in particular the solution yielded by $\alg$ is optimal.
 
   Finally, $\alg$ considers each point in $P$ exactly once.
   The work of comparing the points and retrieving the most recently added interval requires only constant time, so considering a single point is $\O(1)$.
@@ -114,7 +114,58 @@ We will present the algorithm first, followed by the analysis.
 
     \item Let $w(j) = b_j$ for all $j \in J$.
     Since $(J, \I)$ is a matroid, we know that we can apply the matroid greedy algorithm to find a maximum-weight independent set.
+    If $J$ is the set of jobs (somehow tied to their deadlines and bonuses so that both can be accessed in constant time), and $\textsc{mga}$ is the matroid greedy algorithm with the weight function $w(j) = b_j$, our algorithm is as follows:
+    \begin{algorithm}
+      \begin{algorithmic}
+        \Function{alg}{$J$}
+          \State call $\textsc{mga}(J)$ to find a maximum-weight good set $S$
+          \State sort $S$ in non-decreasing order by deadline
+          \State append $J \setminus S$ to $S$ in any order
+          \State \Return the resulting list
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
 \end{enumerate}
+
+\noindent {\bf Claim 1:} $\alg$ terminates in $\O(n \log n)$ time.
+\begin{proof}
+  The total runtime of $\alg$ is the runtime of $\textsc{mga}$ plus the $\O(n \log n)$ required to sort $S$ and append $J \setminus S$ to it (the latter operation is at most linear in $n$).
+  $\textsc{mga}$ first requires $\O(n \log n)$ to sort the jobs by bonus.
+  Next, it considers each job once, choosing whether to include it or not based on whether it maintains the independence of the accumulator set.
+  By Part (1), we can check whether the inclusion of a job maintains independence in constant time; we merely keep track of $S_d$ as elements are added, and check only the new candidate element to determine its inclusion.
+  Thus, the remaining work done by $\textsc{mga}$ requires only $\O(n)$ time, so the total runtime of $\textsc{mga}$, and therefore also of $\alg$, is $\O(n \log n)$.
+\end{proof}
+
+\begin{lemma}\label{lem:earliest}
+  If $S$ is a good set, the earliest-deadline-first ordering completes every job in $S$.
+\end{lemma}
+
+\begin{proof}
+  Let $S = \{s_1, \dots, s_k\}$ be any ordering that completes every job in $S$.
+  If this ordering is not the earliest-deadline-first ordering, there is some pair of jobs $s_i$ and $s_j$ so that $i < j$ and $d_{s_i} > d_{s_j}$.
+  Exchanging the positions of these two jobs does not cause any jobs to become overdue, since $s_j$ is completed earlier than it previously was, $s_i$ is due after $s_j$ (which was not overdue in its original position), and the other jobs are unaffected.
+  Since we can perform these exchanges until no more such pairs exist, we can transform any witness ordering of a good set into the earliest-deadline-first ordering without causing any jobs to become overdue.
+\end{proof}
+
+\begin{lemma}\label{lem:max-good-set}
+  If $S$ is a maximum-weight good set, then any ordering of $J$ that completes every job in $S$ yields the maximum bonus amount.
+\end{lemma}
+\begin{proof}
+  Let $J = \{j_1, \dots, j_n\}$ be an ordering of $J$ that completes every job in $S$.
+  Suppose toward a contradiction that there is some other ordering $J' = \{j'_1, \dots, j'_n\}$ of the same jobs that yields a greater sum of bonuses than $J$.
+  Let $Q = \{j' \in J' \mid j' \textnormal{ is completed on time in } J'\}$.
+  Then $Q$ is a good set, as witnessed by the ordering given by removing $J' \setminus Q$ from $J'$ and reindexing its remaining elements in the order they originally appeared.
+  But, since the removed elements were not completed on time, they did not contribute to the sum of bonuses yielded by $J'$.
+  Thus, $Q$ is a good set yielding the same sum of bonuses as $J'$, and in particular it yields more than $J$, which completed every item in the maximum-yield good set.
+  Thus $Q$ contradicts the maximality of $S$, and therefore there must be no ordering of $J$ that yields more in total than $J$.
+\end{proof}
+
+\noindent {\bf Claim 2:} $\alg$ returns an ordering that yields the maximum possible bonus.
+\begin{proof}
+  By construction, the ordering returned by $\alg$ includes the maximum-weight good set, in earliest-deadline-first order.
+  By Lemma~\ref{lem:earliest}, every job in this maximum-yield set is completed.
+  By Lemma~\ref{lem:max-good-set}, this implies that $\alg$ gives the ordering that maximizes the total bonus yield.
+\end{proof}
 
 \section{Solution to Question 4}
 
