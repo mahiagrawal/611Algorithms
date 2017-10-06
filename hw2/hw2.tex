@@ -292,6 +292,56 @@ else we go to next smaller.
 
 \section{Solution to Question 6}
 
+Given n servers with their copying cost, we want to find the optimal number of servers and the optimum combination of servers
+such that our cost function is minimized. \newline
+{\bf We will use the concept of dynamic programming similar to how we used in the previous question.} \newline
+For any server $S_i$ \in $S_1, \dots , S_n$, we will find the optimal soultion for sub-list of servers of $S_i$
+to $S_n$ {\bf with $S_i$ included}  using already found optimal solution at a server later than i and before n. \newline
+Here is how it works:  \newline
+for $i \in (1,n)$ after having chosen $S_i$ let us suppose in the optimal solution for $S_i$, the next server chosen is $S_k$
+where $k \in (i+1 , n)$ and it is given that we know optimal solutions for all k.  \newline
+So, optimum cost function will be: \newline
 
+opt\_cost(i) = $C_i$ + \min_{\forall k \in (i+1,n)} (\frac{(k-i)(k-i-1)}{2} + opt\_Cost(k))
+
+Once, we have found $opt\_cost(i) \forall i \in (1,n)$ we can traverse the whole opt\_cost array to find the minimum cost.
+
+\noindent{\bf Algorithm:} Consider two additional arrays , apart from $S$  and $C$: \newline
+minimum cost array {\bf $opt\_cost$} : length n with all elements initialized to $\infty$ and where \newline
+opt\_cost(i) gives us the minimium cost of storing the file on $S_i$ to $S_n$ servers with $S_i$ chosen. \newline
+and optimal combination {\bf $opt\_servers$} array \newline 
+where $opt\_servers$(i) gives us the combination of selected servers for optimal solution including $S_i$.
+\newline
+Now,
+\begin{enumerate}
+  \item For i = n to 1:
+
+  \item {\bf Base case} \newline
+  if i==n: opt\_cost(i) = $c_n$ = 0
+  end if
+
+else: {\bf Dynamic case:} \newline
+	  for j = i+1 to n: \newline
+		  min = $\infty$ \newline
+		  $min\_index = j$ \newline
+		  if ($\frac{(j-i)(j-i-1)}{2} + $opt\_Cost(j)$) < min:$ \newline
+			  min = ($\frac{(j-i)(j-i-1)}{2} + opt\_Cost(j)$) \newline
+			  min\_index = j  \newline
+      end if \newline
+    end for \newline
+
+$opt\_Cost(i)$ = $(\frac{(min\_index-i)(min\_index-i-1)}{2} + opt\_Cost(min\_index))$ \newline
+$opt\_servers(i)$ = $S_i$ + $opt\_servers(min\_index)$ ({\bf append strings}) \newline
+end else
+
+\item Once we are done with the iterations, traverse the whole array $opt\_cost$ to find the index(k) of the min cost.
+\item output opt\_cost(k) and opt\_servers(k)
+ \end{enumerate}
+
+{\bf Complexity Analysis:} \newline
+determining entire array of $opt\_cost$ using looping on i and j: O($n^2$) \newline
+traversing whole array to find the minimum cost: O(n)
+
+So time complexity = O($n^2$) + O(n) = O($n^2$)
 
 \end{document}
