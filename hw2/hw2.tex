@@ -296,11 +296,11 @@ Case 2: $S_i \in \{1,2, \dots, n\}$; Then we recurse to  its next smaller elemen
 \begin{algorithm}
 \begin{algorithmic}
   \State Create a list $c[n]$ which stores $(c_i+i-1, i)$ in its $i-th$ entry. Index starts from 1
-  \State Sort the list by the first element of each tuple, get the sorted array $c_{sorted}[n]$
+  \State Sort the list by the first element of each tuple in non-decreasing order, get the sorted array $c_{sorted}[n]$
   \State create an empty list $L$, a variable $i = 0$
   \For{$c' \in c_{sorted}[n]$}
-    \If{the second element of $c' > i$}
-      \State $L$.append$(c')$, update $i = c'$ 
+    \If{$c'[2] > i$}
+      \State $L$.append$(c'[2])$, update $i = c'[2]$ 
     \EndIf
   \EndFor
 \end{algorithmic}
