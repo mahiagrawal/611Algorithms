@@ -234,7 +234,61 @@ It's obvious that our algorithm covers all the cases, and it chooses the maximum
 
 \section{Solution to Question 5}
 
+Let us suppose, input array $P$ = $\{P_1, \dots, P_n\}$ and we need to find Longest decreasing subsequence (LDS). 
+We will use the concept of dynamic programming where we will find the LDS for $\{P_i, \dots, P_n\}$ 
+given that we know LDS for $\{P_{i+1}, \dots, P_n\}$ \newline
 
+Here is our proposed algorithm: \newline
+
+\noindent{\bf Algorithm:} Consider three arrays as follows: \newline
+input array $P$ = $\{P_1, \dots, P_n\}$ \newline
+dynamic programming array $D$ = $\{D_1, \dots, D_n\}$ with all elements initialized to 1 and
+where $D_i$ is the longest decresing sub-sequence length from $P_i$ to $P_n$ {\bf WITH $P_i$ INCLUDED}
+\newline
+predecessor array $S$ = $\{S_1, \dots, S_n\}$  with all elements initialized to -1 and
+where $S_i$ is the index of the element that is the predecessor to $P_i$ in the longest
+decreasing subsequence for $P_i$ to $P_n$ \newline
+Now, algorithm is as follows:
+\begin{enumerate}
+  \item For i = n-1 to 1:
+ 
+  \item for j = n to i+1:
+
+  \item if ($P_i$ \textgreater $P_j$ and $D_i$ \textgreater 1 + $D_j$)
+
+$D_i$ = $D_j$ + 1, $S_i$ = j \newline
+else: j = j-1
+\item Once we are done with the iterations, traverse the whole array $D$ to find the index(k) of the max element \newline
+\item append $P_k$ to the result sub-sequence, find index of its predecessor from $S_k$ to append the element to final list\newline
+and keep appending the predecessors until $S_x$ = -1, at which point we will return since it is the last element of resulting LDS.
+ \end{enumerate}
+
+{\bf Time complexity :} \newline
+i = n-1 to 1 : O(n) \newline
+j = n to i+1: O(n) \newline
+Traversing the $D$ array: O(n) \newline
+Traversing the predecessor $S$ array: O(n) \newline
+So total time complexity : O(nxn) + O(n) + O(n) = O(n^2) \newline
+
+{\bf Accuracy explanation:} \newline
+
+{\bf proof of concept}
+We know that for every iteration on $P_i$, $D_{i+1}$ to $D_n$ contains length of LDS including that particular $D_j$. \newline
+So, when we traverse from $P_n$ to $P_{i+1}$, for any element $P_j$, if LDS is $P_j, P_l, P_o$ and if $P_i$ \textgreater $P_j$: \newline
+then $P_i$ \textgreater $P_j$ \textgreater $P_l$  \textgreater  $P_o$ \newline
+and thus LDS at $P_i$ is $P_i, P_j, P_l, P_o$ which has length 1 greater than LDS length at $P_j$. \newline
+Also, since we only update the $D_i$ when new length is greater than the existing one, we will find the sequence with
+the longest LDS at $D_i$ with element at index i included. \newline
+Oce, we reach the max possible length of LDS, we can produce the final sequence by traversing through the 
+predecessor array ($S$), since for every time we update $D_i$, $S_i$ contains the next element of the LDS starting from $P_i$ \newline
+ 
+{\bf proof of termination}
+Since, we have intialized $S$ array with -1, for every $S_x$ the value is either -1 or an index from $P$ array (1 to n). \newline
+Case 1: {\bf $S_i$ = -1} This means that this element has no element to its right which is smaller than $P_i$. 
+So, this must be the smallest element of any LDS which includes it and  thus our algorithm should terminate here which it does.
+
+Case 2: {\bf $S_i$ \in (1,2, \dots, n)} Then we recurse to  its next smaller element and if its the smallest we terminate
+else we go to next smaller.
 
 \section{Solution to Question 6}
 
