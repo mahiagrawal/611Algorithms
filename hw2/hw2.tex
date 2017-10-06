@@ -258,8 +258,8 @@ decreasing subsequence from $P_i$ to $P_n$
 \begin{algorithmic}
   \For{$i \in \{n-1, n-2, \dots, 1\}$}
     \For{$j \in \{n, n-1, \dots, i+1\}$}
-      \If{$P_i > P_j$ and $D_i > 1 + D_j$}
-        \State$D_i += 1, S_i = j$
+      \If{$P_i > P_j$ and $D_i < 1 + D_j$}
+        \State$D_i = 1 + D_j, S_i = j$
       \EndIf
     \EndFor
   \EndFor
