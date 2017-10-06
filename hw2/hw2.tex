@@ -316,7 +316,9 @@ Now,
 \begin{enumerate}
   \item For i = n to 1:
 
-  \item {\bf Base case} if i==n: opt\_cost(i) = $c_n$ = 0
+  \item {\bf Base case} \newline
+  if i==n: opt\_cost(i) = $c_n$ = 0
+  end if
 
 else: {\bf Dynamic case:} \newline
 	  for j = i+1 to n: \newline
@@ -327,8 +329,10 @@ else: {\bf Dynamic case:} \newline
 			  min\_index = j  \newline
       end if \newline
     end for \newline
+
 $opt\_Cost(i)$ = $(\frac{(min\_index-i)(min\_index-i-1)}{2} + opt\_Cost(min\_index))$ \newline
-$opt\_servers(i)$ = $S_i$ + $opt\_servers(min\_index)$ ({\bf append strings})
+$opt\_servers(i)$ = $S_i$ + $opt\_servers(min\_index)$ ({\bf append strings}) \newline
+end else
 
 \item Once we are done with the iterations, traverse the whole array $opt\_cost$ to find the index(k) of the min cost.
 \item output opt\_cost(k) and opt\_servers(k)
