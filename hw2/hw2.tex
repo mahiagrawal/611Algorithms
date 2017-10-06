@@ -208,9 +208,9 @@ Obviously the Maximal Sequence Sum at $a_i$ is the larger one of case 1 and case
 \begin{algorithm}
 \begin{algorithmic}
   \State 1.Divide the Sequence into equal halves, get two sub-MSS $MSS_l$ and $MSS_r$
-  \State 2.Keep adding nubmers from the boder of $MSS_l$ and $MSS_r$ to its left until we hit the begining of $MSS_l$, record the maximum sum as $MSS_{bl}$
-  \State 3.Keep adding nubmers from the boder of $MSS_l$ and $MSS_r$ to its right until we hit the end of $MSS_r$, record the maximum sum as $MSS_{br}$
-  \State 4.return $max\{MSS_l, MSS_r, MSS_{bl}+MSS_{br}\}$
+  \State 2.Keep adding nubmers from the boder to its left until we hit the begining of $MSS_l$, record the maximum sum as $MSS_{bl}$ and the index of the end and begining of $MSS_{bl}$
+  \State 3.Keep adding nubmers from the boder to its right until we hit the end of $MSS_r$, record the maximum sum as $MSS_{br}$ and the index of the end and begining of $MSS_{bl}$
+  \State 4.return $max\{MSS_l, MSS_r, MSS_{bl}+MSS_{br}\}$ and the corresponding index
 \end{algorithmic}
 \end{algorithm}
 
