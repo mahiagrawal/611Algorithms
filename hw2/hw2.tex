@@ -171,9 +171,9 @@ We will present the algorithm first, followed by the analysis.
 \section{Solution to Question 4}
 
 \subsection{Dynamic Approach}
-\noindent {\bf Definition 4.1.1}: {\it Maximal Sequence Sum of $\{a_1, \dots, a_i\}$ is the optimal sequence sum when we're at the $a_i$ entry
+\noindent {\bf Definition 4.1.1}: {\it Maximal Sequence Sum of $\{a_1, \dots, a_i\}$ is the optimal sequence sum when we're at the $a_i$ entry}
 
-\noindent {\bf Definition 4.1.2}: $S_i = ${\it the optimal sequence sum of $\{a_1, \dots, a_i\}$ including $a_i$
+  \noindent {\bf Definition 4.1.2}: $S_i = $ {\it the optimal sequence sum of $\{a_1, \dots, a_i\}$ including $a_i$}
 
 \noindent{\bf Algorithm:}
 
@@ -254,7 +254,7 @@ Now, algorithm is as follows:
  
   \item for j = n to i+1:
 
-  \item if ($P_i$ \textgreater $P_j$ and $D_i$ \textgreater 1 + $D_j$)
+  \item if ($P_i > P_j$ and $D_i > 1 + D_j$)
 
 $D_i$ = $D_j$ + 1, $S_i$ = j \newline
 else: j = j-1
@@ -268,7 +268,7 @@ i = n-1 to 1 : O(n) \newline
 j = n to i+1: O(n) \newline
 Traversing the $D$ array: O(n) \newline
 Traversing the predecessor $S$ array: O(n) \newline
-So total time complexity : O(nxn) + O(n) + O(n) = O(n^2) \newline
+So total time complexity : $\O(n \times n) + \O(n) + \O(n) = \O(n^2)$ \newline
 
 {\bf Accuracy explanation:} \newline
 
@@ -287,7 +287,7 @@ Since, we have intialized $S$ array with -1, for every $S_x$ the value is either
 Case 1: {\bf $S_i$ = -1} This means that this element has no element to its right which is smaller than $P_i$. 
 So, this must be the smallest element of any LDS which includes it and  thus our algorithm should terminate here which it does.
 
-Case 2: {\bf $S_i$ \in (1,2, \dots, n)} Then we recurse to  its next smaller element and if its the smallest we terminate
+Case 2: {\bf $S_i \in (1,2, \dots, n)$} Then we recurse to  its next smaller element and if its the smallest we terminate
 else we go to next smaller.
 
 \section{Solution to Question 6}
