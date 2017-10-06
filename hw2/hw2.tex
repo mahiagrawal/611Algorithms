@@ -93,8 +93,7 @@ We will present the algorithm first, followed by the analysis.
       Then in any ordering of $S$, there is some overdue job.
       Let $d + 1$ be the index of the first overdue job in $S$ and choose the ordering $S = \{s_1, \dots, s_k\}$ that maximizes $d$.
       Then $S$ is of the form $S = \{s_1, \dots, s_d, s_{d+1}, \dots, s_k\}$ where jobs $s_1$ through $s_{d}$ yield bonuses and $s_{d+1}$ does not.
-      \underline{Suppose that for some $i \in [d]$, we have $d_{s_i} > d$.}
-      \textbf{Comment: I think we can't always find $d_{s_i} > d$ because the assumption here is that we have $S_d \leq d$. Thus, jobs $s_1$ through $s_d$ may all have deadline at most d.}
+      Suppose that for some $i \in [d]$, we have $d_{s_i} > d$.
       Then we could exchange $s_i$ with $s_{d+1}$, after which $s_{d+1}$ would yield a bonus, and, since $d_{s_i} > d$, so would $s_i$.
       However, this would contradict the maximality of $d$, since it would result in an ordering in which the first $d+1$ jobs yield bonuses.
       This means that for all $i \in [d]$, $d_{s_i} \leq d$, implying that $S_d \geq d$.
@@ -292,17 +291,46 @@ else we go to next smaller.
 
 \section{Solution to Question 6}
 
+\subsection{Solution H}
+
+\noindent{\bf Algorithm:}
+
+\begin{algorithm}
+\begin{algorithmic}
+  \State Create a list $c[n]$ which stores $(c_i+i-1, i)$ in its $i-th$ entry. Index starts from 1
+  \State Sort the list by the first element of each tuple, get the sorted array $c_{sorted}[n]$
+  \State create an empty list $L$, a variable $i = 0$
+  \For{$c' \in c_{sorted}[n]$}
+    \If{the second element of $c' > i$}
+      \State $L$.append$(c')$, update $i = c'$ 
+    \EndIf
+  \EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\noindent{\bf Definition 6.H.1}: {\it $Cost(i, j) = c_j + \sum_{j \in [n]} u_j$}. This is the cost of storing file on server $S_i$ plus the cost of some user(s) accessing file on server $S_j$
+
+\begin{proof}
+  Suppose a user wants to access server $S_i$. The user can either find the file on $S_i$ or on some $S_j$ where $j > i$. The $Cost(i, j) = c_j + (j-i)$.
+  Consider the condition where we have to find the file elsewhere. Then for the cost to be cheapest, we have to satisfy $Cost(i, j) < Cost(i, i)$, i.e. $c_j + (j-i) < c_i$ and $Cost(i, j)$ is the minimum $\forall j > i$. It's not hard to find for all access between $S_i$ and $S_j$, the cheapest cost will always be achieved by saving the file on $S_j$. Because if not, there exists $Cost(m, n) < Cost(m, j)$ where $i< m \leq n < j \Rightarrow c_n + (n-m) < c_j + (j-m) \Rightarrow c_n + (n-m) -i + i < c_j + (j-m) -i + i \Rightarrow c_n + (n-i) < c_j + (j-i) \Rightarrow Cost(i, n) < Cost(i, j)$. This contradicts to our assumption that $Cost(i, j)$ is the minimum
+
+For our algorithm, we first sort the list $c[n]$. The element in it is well designed so that $\forall Cost(i, j) < Cost(i, i), c[j] < c[i]$. Therefore, everytime we get an element out of $c_{sorted}[n]$, we don't consider any server with a subscript less than the current subscirpt. Finally we may get an $L = \{l_1, l_2 \dotsb l_m\}$. From the proof above we know access to $S_{l_i}$ can always find the file at its corresponding interval. Since the user won't access from right to left we are assured the cost is always cheapest.
+\end{proof}
+
+\noindent {\bf Time Complexity}: Creating and intializing the list costs $\O(n)$. Sorting the list costs $\O(nlogn)$. Traverse the sorted list costs $\O(n)$. So the overall complexity of this algorithm is $O(nlogn)$
+
+\subsection{Solution M}
 Given n servers with their copying cost, we want to find the optimal number of servers and the optimum combination of servers
 such that our cost function is minimized. \newline
 {\bf We will use the concept of dynamic programming similar to how we used in the previous question.} \newline
-For any server $S_i$ \in $S_1, \dots , S_n$, we will find the optimal soultion for sub-list of servers of $S_i$
+For any server $S_i \in S_1, \dots , S_n$, we will find the optimal soultion for sub-list of servers of $S_i$
 to $S_n$ {\bf with $S_i$ included}  using already found optimal solution at a server later than i and before n. \newline
 Here is how it works:  \newline
 for $i \in (1,n)$ after having chosen $S_i$ let us suppose in the optimal solution for $S_i$, the next server chosen is $S_k$
 where $k \in (i+1 , n)$ and it is given that we know optimal solutions for all k.  \newline
 So, optimum cost function will be: \newline
 
-opt\_cost(i) = $C_i$ + \min_{\forall k \in (i+1,n)} (\frac{(k-i)(k-i-1)}{2} + opt\_Cost(k))
+$opt\_cost(i) = C_i + \min_{\forall k \in (i+1,n)} (\frac{(k-i)(k-i-1)}{2} + opt\_Cost(k))$
 
 Once, we have found $opt\_cost(i) \forall i \in (1,n)$ we can traverse the whole opt\_cost array to find the minimum cost.
 
