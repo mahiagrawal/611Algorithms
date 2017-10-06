@@ -93,7 +93,8 @@ We will present the algorithm first, followed by the analysis.
       Then in any ordering of $S$, there is some overdue job.
       Let $d + 1$ be the index of the first overdue job in $S$ and choose the ordering $S = \{s_1, \dots, s_k\}$ that maximizes $d$.
       Then $S$ is of the form $S = \{s_1, \dots, s_d, s_{d+1}, \dots, s_k\}$ where jobs $s_1$ through $s_{d}$ yield bonuses and $s_{d+1}$ does not.
-      Suppose that for some $i \in [d]$, we have $d_{s_i} > d$.
+      \underline{Suppose that for some $i \in [d]$, we have $d_{s_i} > d$.}
+      \textbf{Comment: I think we can't always find $d_{s_i} > d$ because the assumption here is that we have $S_d \leq d$. Thus, jobs $s_1$ through $s_d$ may all have deadline at most d.}
       Then we could exchange $s_i$ with $s_{d+1}$, after which $s_{d+1}$ would yield a bonus, and, since $d_{s_i} > d$, so would $s_i$.
       However, this would contradict the maximality of $d$, since it would result in an ordering in which the first $d+1$ jobs yield bonuses.
       This means that for all $i \in [d]$, $d_{s_i} \leq d$, implying that $S_d \geq d$.
@@ -157,7 +158,7 @@ We will present the algorithm first, followed by the analysis.
   Then $Q$ is a good set, as witnessed by the ordering given by removing $J' \setminus Q$ from $J'$ and reindexing its remaining elements in the order they originally appeared.
   But, since the removed elements were not completed on time, they did not contribute to the sum of bonuses yielded by $J'$.
   Thus, $Q$ is a good set yielding the same sum of bonuses as $J'$, and in particular it yields more than $J$, which completed every item in the maximum-yield good set.
-  Thus $Q$ contradicts the maximality of $S$, and therefore there must be no ordering of $J$ that yields more in total than $J$.
+  Thus $Q$ contradicts the maximality of $S$, and therefore there must be no ordering of $J'$ that yields more in total than $J$.
 \end{proof}
 
 \noindent {\bf Claim 2:} $\alg$ returns an ordering that yields the maximum possible bonus.
@@ -215,14 +216,14 @@ Obviously the Maximal Sequence Sum at $a_i$ is the larger one of case 1 and case
 \end{algorithm}
 
 \begin{proof}
-When we merge the two sequences it's possible for us to get a even larger MSS than $MSS_l$ and $MSS_r$. And we can only do this by crossing the middle. Because if we can add more numbers from the two "sides" then we'd get a larger $MSS_l$ or $MSS_r$ which results in contradiction.
+When we merge the two sequences it's possible for us to get a even larger MSS than $MSS_l$ and $MSS_r$. And we can only do this by crossing the middle. Because if we can add more numbers from the two ``sides" then we'd get a larger $MSS_l$ or $MSS_r$ which results in contradiction.
 
 From above we can conclude that there're 4 cases:
 \begin{itemize}
-\item $MSS_l +$ some sequence to its right in the "middle"
-\item $MSS_r +$ some sequence to its left in the "middle"
-\item $MSS_l +$ "middle" sequence + $MSS_r$"
-\item some sequence in the "middle" and is not right next to $MSS_l$ or $MSS_r$
+\item $MSS_l +$ some sequence to its right in the ``middle"
+\item $MSS_r +$ some sequence to its left in the ``middle"
+\item $MSS_l +$ ``middle" sequence + $MSS_r$
+\item some sequence in the ``middle" and is not right next to $MSS_l$ or $MSS_r$
 \end{itemize}
 
 It's obvious that our algorithm covers all the cases, and it chooses the maximum of $MSS_l$, $MSS_r$ and $MSS_{bl}+MSS_{br}$. So if there's a larger sequence crossing the middle we'll find and return that
