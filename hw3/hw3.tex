@@ -57,22 +57,22 @@ here, $i$ and $j$ range from $0$ to $n$ where n is the total number of elements 
 \begin{enumerate}
 	\item Initialize dynamic programming array, $d$, such that first row(index $0$) is zero and first column(index $0$) is all ones.
 	
-	\indent (2) $d[0][:] = 0(false) and d[:][0] = 1(true) and sum = 0$ \\
-	In other words, we cannot create any sum using no($0$) elements and thus first row should be $0$ while we can create $sum = 0$ 
-	using any  number of elements and thus first column is $1$
+	\indent (2) $d[0][:] = 0(false)$ and $d[:][0] = 1(true)$ and $sum = 0$ \\
+	In other words, we cannot create any sum using 0 elements and thus first row should be $0$ while we can create $sum = 0$ using
+	any  number of elements and thus first column is $1$
 	\item for $(i = 1$ to $n)$: \\
 	\indent (2) $sum = sum + T_i$
-	\item if $(sum is not divisible by 3)$: \\
+	\item if (sum is not divisible by 3): \\
 	\indent return False
 	\item for $(k = 1$ to $2)$ \\
 	\indent for $(j = 1$ to $sum/3$): \\
 	\indent \indent for $(i = 1$ to $n$): \\
 	\indent \indent \indent if $(T_i > j)$: \\
 	\indent \indent \indent \indent $d[i][j] = d[i-1][j]$ i.e. We cannot select this($i^{th}$) element to create a sum of $j$ and 
-	thus whatever is the value(true or false) for using $i-1$ elements to create sum $j$ will also be the value of using $i$ 
+	thus whatever is the value(true or false) above, for using $i-1$ elements to create sum $j$ will also be the value of using $i$
 	elements. \\
 	\indent else: \\
-	\indent  $d[i][j] = d[i-1][j] or d[i-1][j-T_i]$ i.e. Either we select this element to make the sum $j$ or we 
+	\indent  $d[i][j] = d[i-1][j]$ or $d[i-1][j-T_i]$ i.e. either we select this element to make the sum $j$ or we 
 	don't select this element.
 	\item If $(d[n][sum/3] == 0)$ return False \\
 	\indent else del\_elements(d, T) i.e. Determine all the elements which make up the $sum = sum/3$ (using Algorithm below), delete 
@@ -80,9 +80,30 @@ here, $i$ and $j$ range from $0$ to $n$ where n is the total number of elements 
 	\item return True
 \end{enumerate}
 
-\textbf{del\_elements:}
+\textbf{del\_elements:} \\
+According to the algorithm, for any particular sum we only update the value from 0 to 1 when we have included that particular element
+to create the sum otherwise we either keep inserting zeros or ones depending on the value above (at $[i-1][j]$).\\
+Thus, to find the elements which constitute the sum, we traverse the last column of $d$ starting from the bottom most $(d[n][sum/3])$
+to find the index($k$) where 1 occurs for the last time, i.e. above which there are all zeros. \\
+We know that this element is included in creating the required sum. We delete it and move to $d[k-1][sum/3 - T_k]$ .\\
+Continue doing this until we reach zero sum. \\
+\textbf{Algorithm} \\
+index is the set of indexes of elements that needs to be deleted. \\
+\begin{enumerate}
+	\item $index \leftarrow \phi$
+	\item for $j = sum/3$ to $0$: \\
+	\indent for $i = n$ to $1$: \\
+	\indent 	if($d[i-1][j] == 0$): \\
+	\indent 		$index \leftarrow index + i$ \\
+	\indent 		$j = j - T_i$
+	\item return $T(1....n)$ excluding the indexes in $index$.
+\end{enumerate}
 
-
+\textbf{Time Complexity} \\
+Running time for calculating total $sum = O(N)$ \\
+Running time for one iteration to create dynamic array, $d = O(N*sum/3)$ \\
+Running time for deleting selected elements of first iteration = $O(N*sum/3)$ \\
+So, total running time = $O(N) + 2*O(N*sum/3) + O(N*sum/3)$ = $O(N*sum/3)$
 
 \section{Solution to Question 2}
 
