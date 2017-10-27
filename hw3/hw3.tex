@@ -354,17 +354,35 @@ We show that the following are equivalent:
 \begin{proof}
   $(3 \iff 4)$ For the forward direction, suppose a minimum cut has capacity $n$.
   Let $S \subseteq L$.
-  Then $(A, B) = (S \cup \{s\}, (L \setminus S) \cup R \cup \{t\})$ is a cut, so its capacity is at least $n$.
-  Let $K$ be the set of edges from $A$ to $B$.
-  Every vertex in $L$ is either in $S$ or not.
-  If so, then its outgoing edges are in $K$; if not, then its incoming edges are in $K$.
-  By construction, $K$ only includes edges incident to vertices in $L$, so because every edge has unit capacity, we have the identity \[|K| = C(A, B) = |\Gamma(S)| + |L \setminus S|\] for any $S \subseteq L$.
-  Thus, we have \[|\Gamma(S)| = C(A, B) - |L \setminus S| \geq n - |L \setminus S| = |L| - |L \setminus S| = |S|\]
-  as desired.
+  Then $(A, B) = (S \cup \{s\} \cup \Gamma(S), (L \setminus S) \cup (R \setminus \Gamma(S)) \cup \{t\})$ is a cut, so its capacity is at least $n$.
+  The only edges in the graph are those from $s$ to $L$, those from $L$ to $R$, and those from $R$ to $t$.
+  Therefore we have
+  \begin{align*}
+    C(A, B) = |\Gamma(S)| + |L \setminus S| &\geq n\\
+    |\Gamma(S)| + (n - |S|) &\geq n\\
+    |\Gamma(S)| &\geq |S|
+  \end{align*} as desired.
 
-  For the backward direction, suppose $|\Gamma(S)| \geq |S|$ for all $S \subseteq L$.
-  Let $(A, B)$ be any $s-t$ cut, and let $S = A \cap L$.
-
+  For the backward direction, we will use the chain of implications we've already proven, and show that (4) implies (1).
+  Given (4), we can construct a matching by induction on $n$.
+  If $n = 1$ then we have $|\Gamma(S)| = 1$, so the single existing edge is a perfect matching.
+  Suppose that $(4)$ holds for $n \leq k$.
+  We either have $|\Gamma(S)| = |S|$ for some $S$, or we have $|\Gamma(S)| > |S|$ for all $S \subseteq L$.
+  In the first case, let $S^*$ be a subset of $L$ with $|\Gamma(S^*)| = |S^*|$.
+  Then there is a unique perfect matching from $S^*$ to $\Gamma(S^*)$ including all the edges between them.
+  Suppose toward a contradiction that there is some set $T \subseteq (L \setminus S^*)$ with fewer than $|T|$ neighbors in $(R \setminus \Gamma(S^*))$.
+  Then
+  \begin{align*}
+    |\Gamma(S^* \cup T)| &= |\Gamma(S^*)| + |\Gamma(T) \setminus \Gamma(S^*)|\\
+    &= |S^*| + |\Gamma(T) \setminus \Gamma(S^*)|\\
+    &< |S^*| + |T| = |S^* \cup T|
+  \end{align*} since $S^*$ and $T$ are disjoint.
+  This contradicts that (4) held for the original graph, so it must not be the case that such a $T$ exists.
+  Therefore (4) holds in the subgraph with vertices $(L \setminus S^*) \cup (R \setminus \Gamma(S^*))$, and we can find a perfect matching for this subgraph by induction.
+  Since the two matchings we've found are disjoint, their union is a perfect matching for $G$.
+  We conclude that (4) implies (1), and therefore it implies (3).
 \end{proof}
+
+The fact that (1) and (4) are equivalent gives us the desired result.
 
 \end{document}
