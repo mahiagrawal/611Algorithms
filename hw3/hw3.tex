@@ -57,25 +57,33 @@ here, $i$ and $j$ range from $0$ to $n$ where n is the total number of elements 
 \begin{enumerate}
 	\item Initialize dynamic programming array, $d$, such that first row(index $0$) is zero and first column(index $0$) is all ones.
 	
-	\indent (2) $d[0][:] = 0(false)$ and $d[:][0] = 1(true)$ and $sum = 0$ \\
+	\hspace{10mm} $d[0][:] = 0(false)$ and $d[:][0] = 1(true)$ and $sum = 0$ \\
 	In other words, we cannot create any sum using 0 elements and thus first row should be $0$ while we can create $sum = 0$ using
 	any  number of elements and thus first column is $1$
-	\item for $(i = 1$ to $n)$: \\
-	\indent (2) $sum = sum + T_i$
-	\item if (sum is not divisible by 3): \\
-	\indent return False
-	\item for $(k = 1$ to $2)$ \\
-	\indent for $(j = 1$ to $sum/3$): \\
-	\indent \indent for $(i = 1$ to $n$): \\
-	\indent \indent \indent if $(T_i > j)$: \\
-	\indent \indent \indent \indent $d[i][j] = d[i-1][j]$ i.e. We cannot select this($i^{th}$) element to create a sum of $j$ and 
+	\item for $(i = 1$ to $n)$:
+
+	\hspace{10mm} $sum = sum + T_i$
+	\item if (sum is not divisible by 3):
+	
+	\hspace{10mm} return False
+	\item for $(k = 1$ to $2)$
+	
+	\hspace{5mm} for $(j = 1$ to $sum/3$):
+	
+	\hspace{10mm} for $(i = 1$ to $n$):
+	
+	\hspace{15mm} if $(T_i > j)$:
+	
+	\hspace{20mm} $d[i][j] = d[i-1][j]$ i.e. We cannot select this($i^{th}$) element to create a sum of $j$ and 
 	thus whatever is the value(true or false) above, for using $i-1$ elements to create sum $j$ will also be the value of using $i$
-	elements. \\
-	\indent else: \\
-	\indent  $d[i][j] = d[i-1][j]$ or $d[i-1][j-T_i]$ i.e. either we select this element to make the sum $j$ or we 
+	elements.
+	
+	\hspace{15mm} else:
+	
+	\hspace{20mm}  $d[i][j] = (d[i-1][j]$ or $d[i-1][j-T_i])$ i.e. either we select this element to make the sum $j$ or we 
 	don't select this element.
-	\item If $(d[n][sum/3] == 0)$ return False \\
-	\indent else del\_elements(d, T) i.e. Determine all the elements which make up the $sum = sum/3$ (using Algorithm below), delete 
+	\item If $(d[n][sum/3] == 0)$: return False \\
+	else del\_elements(d, T) i.e. Determine all the elements which make up the $sum = sum/3$ (using Algorithm below), delete 
 	them and re-run the algorithm($step 4$ to $step 5$) on the remaining elements.
 	\item return True
 \end{enumerate}
@@ -91,11 +99,15 @@ Continue doing this until we reach zero sum. \\
 index is the set of indexes of elements that needs to be deleted. \\
 \begin{enumerate}
 	\item $index \leftarrow \phi$
-	\item for $j = sum/3$ to $0$: \\
-	\indent for $i = n$ to $1$: \\
-	\indent 	if($d[i-1][j] == 0$): \\
-	\indent 		$index \leftarrow index + i$ \\
-	\indent 		$j = j - T_i$
+	\item for $j = sum/3$ to $0$:
+	
+	\hspace{5mm} for $i = n$ to $1$:
+	
+	\hspace{10mm} 	if($d[i-1][j] == 0$):
+	
+	\hspace{15mm} 		$index \leftarrow index + i$
+	
+	\hspace{15mm} 		$j = j - T_i$
 	\item return $T(1....n)$ excluding the indexes in $index$.
 \end{enumerate}
 
@@ -103,7 +115,7 @@ index is the set of indexes of elements that needs to be deleted. \\
 Running time for calculating total $sum = O(N)$ \\
 Running time for one iteration to create dynamic array, $d = O(N*sum/3)$ \\
 Running time for deleting selected elements of first iteration = $O(N*sum/3)$ \\
-So, total running time = $O(N) + 2*O(N*sum/3) + O(N*sum/3)$ = $O(N*sum/3)$
+So, total running time = $O(N) + 2*O(N*sum/3) + O(N*sum/3)$ = $O(N*sum)$
 
 \newpage
 \section{Solution to Question 2}
@@ -284,7 +296,7 @@ Consider following lemmas:
 	Hence, $|$maximum matching$| = |$minimum vertex cover$|$	
 \end{proof}
 Consider alternating paths from free vertices of L: \\
-Using $Lemma 2.1$ we can say that, all the vertices of R in this path will have one matching edge and one non-matching edge(either to 
+Using $Lemma 5.1$ we can say that, all the vertices of R in this path will have one matching edge and one non-matching edge(either to 
 the free vertex in L or to the matching vertex in L). Thus, selecting these vertices as cover will include all the edges from: \\
 \begin{enumerate}
 	\item free vertices of L
@@ -292,7 +304,7 @@ the free vertex in L or to the matching vertex in L). Thus, selecting these vert
 \end{enumerate}
 Thus, $R \cap K_r$ will give us these required vertices of R which are in minimum vertex cover. \\
 Similarly, consider alternating paths from free vertices of R: \\
-Using $Lemma 2.1$ we can say that, all the vertices of L in this path will have one matching edge and one non-matching edge(either to 
+Using $Lemma 5.1$ we can say that, all the vertices of L in this path will have one matching edge and one non-matching edge(either to 
 the free vertex in R or to the matching vertex in R). Thus, selecting these vertices as cover will include all the edges from: \\
 \begin{enumerate}
 	\item free vertices of R
@@ -304,7 +316,7 @@ vertices which only have one matching edge. \\
 Running time to find the maximum matching = $O(|E|$ min($|L|, |R|))$ \\
 Running time to find the alternating paths = $O(|E| |$free vertices in L $|)$ \\
 Running time return the final vertex cover by union and intersection = $O(|L|+|R|)$ \\
-So, total running time = minimum of $(O(|E|$ min($|L|, |R|))$, $O(|E| |$free vertices in L $|)$, $O(|L|+|R|))$
+So, total running time = maximum of $(O(|E|$ min($|L|, |R|))$, $O(|E| |$free vertices in L $|)$, $O(|L|+|R|))$
 
 \newpage
 \section{Solution to Question 6}
