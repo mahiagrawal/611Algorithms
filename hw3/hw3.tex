@@ -39,7 +39,48 @@
 
 \section{Solution to Question 2}
 
+Our algorithm is as follows.
 
+\begin{algorithm}
+  \begin{algorithmic}
+    \Function{alg}{$G = (V, E)$}
+      \State run Floyd-Warshall on $G$
+      \State let $D$ be the resulting table
+      \For{$(u, v) \in E$}
+        \If{$w(u, v) > D[u, v]$}
+          \State set $w(u, v) = D[u, v]$
+        \EndIf
+      \EndFor
+      \State \Return $G$ with the updated weights
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\noindent {\bf Claim 1:} $\alg$ terminates in polynomial time.
+\begin{proof}
+  Since Floyd-Warshall always terminates, and nothing can cause $\alg$ to consider an edge more than once, $\alg$ will terminate after it has inspected every edge.
+  The single run of Floyd-Warshall requires $\O(|V|^3)$ time, as we showed in class.
+  The remaining work to be done is a single scan through the edges of the graph, with the constant time work of updating $w(e)$ done for each edge.
+  Thus the runtime of $\alg$ is $\O(|V|^3 + |E|) = \O(|V|^3)$ since $|E| = \O(|V|^2)$.
+\end{proof}
+
+\noindent {\bf Claim 2:} $\alg$ produces a graph in which every edge satisfies the triangle inequality.
+\begin{proof}
+  We call an edge $e$ {\em bad\/} in $G$ if it violates the triangle inequality in $G$.
+  Otherwise, we say $e$ is {\em good}.
+
+  Firstly, any time an edge weight is reduced by $\alg$, the number of bad edges decreases by one.
+  As proof, suppose that on some iteration of the loop, $e = (u, v)$ has its weight reduced from $w_{old}$ to $D[u, v]$.
+  Since $D[u, v]$ is the shortest path between $u$ and $v$ by definition, $e$ is no longer bad, so $G$ has lost one bad edge.
+  However, it could be that reducing $w(e)$ caused some previously good edge $e' = (u', v')$ to become bad.
+  To see that this is not the case, first note that the only way reducing $w(e)$ could have affected $\delta(u', v')$ is if the shortest path $P$ between $u'$ and $v'$ used $e$.
+  If this was the case, then $P$ originally incurred the distance $w_{old}$ to travel from $u$ to $v$ (or vice versa).
+  But we reduced $w(e)$ to $D[u, v] < w_{old}$, meaning that there was already a path $Q$ of length $D[u, v]$ between $u$ and $v$, which would contradict the assumption that $P$ was the shortest path between $u'$ and $v'$ (since $P$ could have taken $Q$ instead of $e$ and been shorter).
+  Thus, decreasing $w(e)$ removed one bad edge from the graph and preserved the number of good edges.
+
+  Secondly, note that any time $\alg$ examines an edge but does not reduce its weight, the number of bad edges is unchanged, since no modifications were made to the graph.
+  Since every edge is either good or bad and every edge is either reduced or not reduced by $\alg$, we may now conclude that the number of bad edges in $G$ never increases, and it decreases by one for each bad edge in $G$ -- in other words, there are no bad edges remaining after $\alg$ terminates.
+\end{proof}
 
 \section{Solution to Question 3}
 
@@ -49,12 +90,71 @@
 
 
 
-\section{Solution to Question 5}
+\section{Solution to Question 5} 
 
 
 
 \section{Solution to Question 6}
 
+Let $V' = V \cup \{s, t\}$, $E' = E \cup \{(s, u)\}_{u \in L} \cup \{(v, t)\}_{v \in R}$, and $G' = {(V', E')}$.
+Assign a direction to each edge in $E'$ such that $s$ is a source, $t$ is a sink, and edges in $E$ are directed from $L$ to $R$.
+Finally, give every edge unit capacity for the purpose of defining a flow on $G'$.
+We show that the following are equivalent:
 
+\begin{enumerate}
+  \item There exists a perfect matching in $G$.
+  \item A maximum flow $f$ on $G'$ has size $n$.
+  \item A minimum cut $C$ on $G'$ has capacity $n$.
+  \item For all $S \subseteq L$, $|\Gamma(S)| \geq |S|$.
+\end{enumerate}
+
+\begin{proof}
+  \noindent $(1 \iff 2)$ Suppose $G$ has a perfect matching $M$.
+  Define the flow \[f(u, v) = \begin{cases}
+    1 & \textnormal{if $(u,v) \in M$}\\
+    1 & \textnormal{if $u = s$ and $v \in L$}\\
+    1 & \textnormal{if $v = t$ and $u \in R$}\\
+    -1 & \textnormal{if $f(v, u) = 1$}\\
+    0 & \textnormal{otherwise} \end{cases}\] on $G'$.
+  It is immediate from the definition that $f$ is skew-symmetric.
+  Since $c_{uv} = 1$ for all edges $(u, v) \in E'$, $f_{uv} \leq c_{uv}$.
+  For each $u \in L$, $u$ has a single incoming unit of flow, since there is exactly one edge from $s$ to $u$ and no edges from $t$ or $R$ to $u$ by construction, and no edges from $L$ to $u$ because $G$ is bipartite.
+  Since $M$ is perfect, there is exactly one $v \in R$ adjacent to $u$, and by construction $u$ is emitting one unit of flow along $(u, v)$.
+  A similar argument applies to vertices in $R$, concluding the proof that $f$ is indeed a flow.
+  Now, we have \begin{align*}
+    |f| &= \sum_{v \in V} f(s, v)\\
+    &= \sum_{v \in L} f(s, v) + \sum_{v \in R} f(s,v) + f(s, s) + f(s, t)\\
+    &= n + 0 + 0 + 0.
+  \end{align*}
+  Finally, note that $f$ is maximum, since there are only $n$ edges of unit capacity exiting $s$, which concludes the forward direction.
+
+  For the other direction, suppose that some maximum flow $f$ on $G'$ has size $n$.
+  Since $t$ has indegree $n$, and each incoming edge has unit capacity, it must be the case that every edge into $t$ carries unit flow, and equivalently, each $v \in R$ emits unit flow.
+  By conservation of flow, each $v \in R$ must receive unit flow, as well.
+  Since the edges out of $s$ have unit capacity, no vertex in $L$ receives more than unit flow.
+  Thus no two vertices in $R$ recieve flow from the same vertex in $L$.
+  Since our flow is integral, no two vertices in $L$ can supply the same vertex in $R$ with flow.
+  Thus we have constructed a bijection between the vertices in $R$ and those in $L$, which exactly identifies a perfect matching.
+\end{proof}
+
+\begin{proof}
+  $(2 \iff 3)$ This is the max-flow min-cut theorem.
+\end{proof}
+
+\begin{proof}
+  $(3 \iff 4)$ For the forward direction, suppose a minimum cut has capacity $n$.
+  Let $S \subseteq L$.
+  Then $(A, B) = (S \cup \{s\}, (L \setminus S) \cup R \cup \{t\})$ is a cut, so its capacity is at least $n$.
+  Let $K$ be the set of edges from $A$ to $B$.
+  Every vertex in $L$ is either in $S$ or not.
+  If so, then its outgoing edges are in $K$; if not, then its incoming edges are in $K$.
+  By construction, $K$ only includes edges incident to vertices in $L$, so because every edge has unit capacity, we have the identity \[|K| = C(A, B) = |\Gamma(S)| + |L \setminus S|\] for any $S \subseteq L$.
+  Thus, we have \[|\Gamma(S)| = C(A, B) - |L \setminus S| \geq n - |L \setminus S| = |L| - |L \setminus S| = |S|\]
+  as desired.
+
+  For the backward direction, suppose $|\Gamma(S)| \geq |S|$ for all $S \subseteq L$.
+  Let $(A, B)$ be any $s-t$ cut, and let $S = A \cap L$.
+
+\end{proof}
 
 \end{document}
