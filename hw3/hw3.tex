@@ -370,7 +370,8 @@ We show that the following are equivalent:
   $(3 \iff 4)$ For the forward direction, suppose a minimum cut has capacity $n$.
   Let $S \subseteq L$.
   Then $(A, B) = (S \cup \{s\} \cup \Gamma(S), (L \setminus S) \cup (R \setminus \Gamma(S)) \cup \{t\})$ is a cut, so its capacity is at least $n$.
-  The only edges in the graph are those from $s$ to $L$, those from $L$ to $R$, and those from $R$ to $t$.
+  The only edges in the graph are those from $s$ to $L$, those from $L$ to $R$, and those from $R$ to $t$, and the edges that contribute to $C(A, B)$ are those from $A$ to $B$.
+  By construction, all of these contributing edges are of the form $(s, u)$ or $(v, t)$, where $u \in S$ and $v \in \Gamma(S)$.
   Therefore we have
   \begin{align*}
     C(A, B) = |\Gamma(S)| + |L \setminus S| &\geq n\\
