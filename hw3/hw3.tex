@@ -51,7 +51,76 @@
 
 \section{Solution to Question 5}
 
-
+\textbf{Main Idea:}
+The size of minimum cover of a bipartite graph is equal to the size of its maximum matching.
+\textbf{Pseudo Code:}
+\begin{enumerate}
+	\item Find maximum matching of the bipartite graph: \\
+	\indent $M \leftarrow \phi$ \\
+			while there exists an augmenting path P \\
+				$M \leftarrow M \bigoplus P$ \\
+			return M
+	\item For each of the free vertices(if any) on the $L$ side, find an alternating path of non-matching and matching edges
+	starting from the free vertex until the path terminates.
+	\item Let $K_l$ = \{all the vertices of L that are in this alternating path, including the free vertices\} and 
+			  $K_r$ = \{all the vertices of R that are in this alternating path\}
+	\item return ($L - K_l) \cup (R \cap K_r)$ 
+\end{enumerate}
+\textbf{Proof of Concept:}
+Consider following lemmas:
+\begin{lemma}
+	In the maximum matching graph, any alternating path starting at a free vertex of L must terminate at a matching
+	vertex in L while the alternating path starting at a free vertex of R must terminate at a matching vertex in R.
+\end{lemma}
+\begin{proof}
+	Consider an alternating path starting from a free vertex in L. Suppose, for the sake of contradiction, it terminates at a 
+	vertex in R. \\
+	Case 1: The R vertex is a free vertex(or non-matching vertex). That means, the alternating path starts and ends at free vertices, 
+	so it is an augmenting path	which is not possible since we already have the maximum matching. Thus, case 1 is invalid. \\
+	Case 2: The R vertex is a matching vertex. If it is a matching vertex then it should have a matching edge going towards L
+	as the alternating path only accounted for the non-matching edge up till now.
+	Thus, the path cannot terminate at R. \\
+	Hence, any alternating path starting from free vertex in L must end at a matching vertex in L. \\
+	Similar proof holds for the R side.
+\end{proof}
+\begin{lemma}
+	The size of minimum vertex cover of a bipartite graph is equal to the size of its maximum matching.
+\end{lemma} 
+\begin{proof}
+	In any matching of the graph, we will need at least one vertex to cover all the matching edges since no two matching edges
+	have same vertex. \\
+	So, $|matching| <= |minimum vertex cover|$ because each matching edge has at least one vertex which we need to consider for
+	cover. \\
+	Now, let |maximum matching| < |minimum vertex cover|. \\
+	So, for maximum matching containing e number of edges, we will have e + f number of vertex to have a cover. Here e is one vertex 
+	for each of the matching edge while f are extra vertices required to have a cover. \\ 
+	Now, using $Lemma 2.1$, these f number of vertices should have an edge to a matching vertex on the other side(L or R) otherwise they
+	will lead to an augmenting path. \\
+	Case 1: If this edge is a matching edge, then we have already accounted its vertex cover in e.\\
+	Case 2: If this edge is a non-matching edge, then it will be followed by a matching edge from other side back to its own side.
+	For e.g.  if L_1 R_3 is a non-matching edge then there should be a R_3 L_5 matching edge. According to our definition
+	e should contain either R_3 or L_5. If it contains R_3, then both the edges are already covered. If it contains L_5
+	we can swap it and instead make R_3 the cover. \\
+	Thus $f = 0$ and  |maximum matching| < |minimum vertex cover|is not possible. \\
+	Hence, |maximum matching| = |minimum vertex cover|	
+\end{proof}
+Consider alternating paths from free vertices of L: \\
+Using $Lemma 2.1$ we can say that, all the vertices of R in this path will have one matching edge and one non-matching edge(either to 
+the free vertex in L or to the matching vertex in L). Thus, selecting these vertices as cover will include all the edges from: \\
+\begin{enumerate}
+	\item free vertices of L
+	\item and edges from those matching vertices of L which are not connected to any free vertex of R
+\end{enumerate}
+Thus, $R \cap K_r$ will give us these required vertices of R which are in minimum vertex cover. \\
+Similarly, consider alternating paths from free vertices of R: \\
+Using $Lemma 2.1$ we can say that, all the vertices of L in this path will have one matching edge and one non-matching edge(either to 
+the free vertex in R or to the matching vertex in R). Thus, selecting these vertices as cover will include all the edges from: \\
+\begin{enumerate}
+	\item free vertices of R
+	\item and edges from those matching vertices of R which are not connected to any free vertex of L
+\end{enumerate}
+Thus, $L - K_l$ will give us all these required vertices of L which are not in minimum vertex cover. This  will also include those L
+vertices which only have one matching edge.
 
 \section{Solution to Question 6}
 
