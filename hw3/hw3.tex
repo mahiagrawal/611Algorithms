@@ -34,6 +34,53 @@
 \maketitle
 
 \section{Solution to Question 1}
+	
+\textbf{Main Idea:}
+Consider $T = (T_1, T_2, ...., T_n)$ be the array containing time required($T_i$) to finish $i^{th}$ problem. \\
+\begin{enumerate}
+	\item Traverse through complete array and  determine the sum of all elements in $T$. i.e. $Sum = \sum_{i=1}^{n} T_i$
+	\item If sum is not divisible by $3$ ($sum\%3 != 0$), return False as we can not divide the array such that $3$ students spend 
+	same amount of time on solving the problems.
+	\item else find the subset of the input array which gives us the sum of $sum/3$ using Dynamic Programming, similar to 
+	knapsack problem.
+	\item delete the items that sums up to $sum/3$ from above and re-run the dynamic programming step ($Step 3$).
+	\item If after second iteration $Step 4$ returns True, then return true as the final result else return False.
+\end{enumerate}
+So we are essentially finding two disjoint subsets of the original array which sums up to $sum/3$ where sum is the total sum of 
+all elements in the array.
+
+\textbf{Pseudo code:}
+
+$T = \{T_1, T_2,...., T_n \}$ is the input array and we create a new dynamic programming array $d$ where $d[i][j]$ is true 
+if a sum of $j$ can be created using first $i$ elements of $T$, elements in $T$ from $T_1$ to $T_i$. \\
+here, $i$ and $j$ range from $0$ to $n$ where n is the total number of elements in $T$.
+\begin{enumerate}
+	\item Initialize dynamic programming array, $d$, such that first row(index $0$) is zero and first column(index $0$) is all ones.
+	
+	\indent (2) $d[0][:] = 0(false) and d[:][0] = 1(true) and sum = 0$ \\
+	In other words, we cannot create any sum using no($0$) elements and thus first row should be $0$ while we can create $sum = 0$ 
+	using any  number of elements and thus first column is $1$
+	\item for $(i = 1$ to $n)$: \\
+	\indent (2) $sum = sum + T_i$
+	\item if $(sum is not divisible by 3)$: \\
+	\indent return False
+	\item for $(k = 1$ to $2)$ \\
+	\indent for $(j = 1$ to $sum/3$): \\
+	\indent \indent for $(i = 1$ to $n$): \\
+	\indent \indent \indent if $(T_i > j)$: \\
+	\indent \indent \indent \indent $d[i][j] = d[i-1][j]$ i.e. We cannot select this($i^{th}$) element to create a sum of $j$ and 
+	thus whatever is the value(true or false) for using $i-1$ elements to create sum $j$ will also be the value of using $i$ 
+	elements. \\
+	\indent else: \\
+	\indent  $d[i][j] = d[i-1][j] or d[i-1][j-T_i]$ i.e. Either we select this element to make the sum $j$ or we 
+	don't select this element.
+	\item If $(d[n][sum/3] == 0)$ return False \\
+	\indent else del\_elements(d, T) i.e. Determine all the elements which make up the $sum = sum/3$ (using Algorithm below), delete 
+	them and re-run the algorithm($step 4$ to $step 5$) on the remaining elements.
+	\item return True
+\end{enumerate}
+
+\textbf{del\_elements:}
 
 
 
@@ -52,7 +99,7 @@
 \section{Solution to Question 5}
 
 \textbf{Main Idea:}
-The size of minimum cover of a bipartite graph is equal to the size of its maximum matching.
+The size of minimum cover of a bipartite graph is equal to the size of its maximum matching. \\
 \textbf{Pseudo Code:}
 \begin{enumerate}
 	\item Find maximum matching of the bipartite graph: \\
@@ -75,8 +122,9 @@ Consider following lemmas:
 \begin{proof}
 	Consider an alternating path starting from a free vertex in L. Suppose, for the sake of contradiction, it terminates at a 
 	vertex in R. \\
-	Case 1: The R vertex is a free vertex(or non-matching vertex). That means, the alternating path starts and ends at free vertices, 
-	so it is an augmenting path	which is not possible since we already have the maximum matching. Thus, case 1 is invalid. \\
+	Case 1: The R vertex is a free vertex(or non-matching vertex). That means, the alternating path starts and ends at free 
+	vertices, so it is an augmenting path which is not possible since we already have the maximum matching. Thus, case 1 is invalid.
+	
 	Case 2: The R vertex is a matching vertex. If it is a matching vertex then it should have a matching edge going towards L
 	as the alternating path only accounted for the non-matching edge up till now.
 	Thus, the path cannot terminate at R. \\
@@ -89,20 +137,20 @@ Consider following lemmas:
 \begin{proof}
 	In any matching of the graph, we will need at least one vertex to cover all the matching edges since no two matching edges
 	have same vertex. \\
-	So, $|matching| <= |minimum vertex cover|$ because each matching edge has at least one vertex which we need to consider for
+	So, $|matching| <= |$minimum vertex cover$|$ because each matching edge has at least one vertex which we need to consider for
 	cover. \\
-	Now, let |maximum matching| < |minimum vertex cover|. \\
+	Now, let $|$maximum matching$| < |$minimum vertex cover$|$. \\
 	So, for maximum matching containing e number of edges, we will have e + f number of vertex to have a cover. Here e is one vertex 
 	for each of the matching edge while f are extra vertices required to have a cover. \\ 
-	Now, using $Lemma 2.1$, these f number of vertices should have an edge to a matching vertex on the other side(L or R) otherwise they
-	will lead to an augmenting path. \\
+	Now, using $Lemma 2.1$, these f number of vertices should have an edge to a matching vertex on the other side(L or R) otherwise 
+	they will lead to an augmenting path. \\
 	Case 1: If this edge is a matching edge, then we have already accounted its vertex cover in e.\\
 	Case 2: If this edge is a non-matching edge, then it will be followed by a matching edge from other side back to its own side.
-	For e.g.  if L_1 R_3 is a non-matching edge then there should be a R_3 L_5 matching edge. According to our definition
-	e should contain either R_3 or L_5. If it contains R_3, then both the edges are already covered. If it contains L_5
-	we can swap it and instead make R_3 the cover. \\
-	Thus $f = 0$ and  |maximum matching| < |minimum vertex cover|is not possible. \\
-	Hence, |maximum matching| = |minimum vertex cover|	
+	For e.g.  if $L_1 R_3$ is a non-matching edge then there should be a $R_3 L_5$ matching edge. According to our definition
+	e should contain either $R_3$ or $L_5$. If it contains $R_3$, then both the edges are already covered. If it contains $L_5$
+	we can swap it and instead make $R_3$ the cover. \\
+	Thus $f = 0$ and  $|$maximum matching$| < |$minimum vertex cover$|$ is not possible. \\
+	Hence, $|$maximum matching$| = |$minimum vertex cover$|$	
 \end{proof}
 Consider alternating paths from free vertices of L: \\
 Using $Lemma 2.1$ we can say that, all the vertices of R in this path will have one matching edge and one non-matching edge(either to 
@@ -119,8 +167,13 @@ the free vertex in R or to the matching vertex in R). Thus, selecting these vert
 	\item free vertices of R
 	\item and edges from those matching vertices of R which are not connected to any free vertex of L
 \end{enumerate}
-Thus, $L - K_l$ will give us all these required vertices of L which are not in minimum vertex cover. This  will also include those L
-vertices which only have one matching edge.
+Thus, $L - K_l$ will give us all these required vertices of L which are not in minimum vertex cover. This  will also include those L 
+vertices which only have one matching edge. \\
+\textbf{Running Time:} \\
+Running time to find the maximum matching = $O(|E|$ min($|L|, |R|))$ \\
+Running time to find the alternating paths = $O(|E| |$free vertices in L $|)$ \\
+Running time return the final vertex cover by union and intersection = $O(|L|+|R|)$ \\
+So, total running time = minimum of $(O(|E|$ min($|L|, |R|))$, $O(|E| |$free vertices in L $|)$, $O(|L|+|R|))$
 
 \section{Solution to Question 6}
 
