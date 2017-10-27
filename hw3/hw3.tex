@@ -173,7 +173,7 @@ Our algorithm is as follows.
 		\State Create an empty set $D$ and two dictionaries $\delta_1$ and $\delta_2$. Set $\delta_1[t] = 0$
 		\State \#$D$ is used to hold "determined" nodes where we can determine it doesn't underestimate $\delta(u, t)$.
 		\State \#$\delta_1$ is used to hold $\delta(u, t)$ found at current layer breadth-wise
-		\State \#$\delta_2$ is used to compute $\delta(u, t)$ at the next layer using $delta_1$
+		\State \#$\delta_2$ is used to compute $\delta(u, t)$ at the next layer using $\delta_1$
 		\For{$u \in \delta_1$}
 			\If{$\delta_1[u] < d[u]$}
 				\State \Return $-1$
