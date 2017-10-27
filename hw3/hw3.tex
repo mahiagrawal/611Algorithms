@@ -105,6 +105,7 @@ Running time for one iteration to create dynamic array, $d = O(N*sum/3)$ \\
 Running time for deleting selected elements of first iteration = $O(N*sum/3)$ \\
 So, total running time = $O(N) + 2*O(N*sum/3) + O(N*sum/3)$ = $O(N*sum/3)$
 
+\newpage
 \section{Solution to Question 2}
 
 Our algorithm is as follows.
@@ -150,15 +151,80 @@ Our algorithm is as follows.
   Since every edge is either good or bad and every edge is either reduced or not reduced by $\alg$, we may now conclude that the number of bad edges in $G$ never increases, and it decreases by one for each bad edge in $G$ -- in other words, there are no bad edges remaining after $\alg$ terminates.
 \end{proof}
 
+\newpage
 \section{Solution to Question 3}
 
+\noindent {\bf Algorithm:}
 
+\begin{algorithm}
+	\begin{algorithmic}
+		\State Create an empty set $D$ and two dictionaries $\delta_1$ and $\delta_2$. Set $\delta_1[t] = 0$
+		\For{$u \in \delta_1$}
+			\If{$\delta_1[u] < d[u]$}
+				\State \Return $-1$
+			\ElsIf{$\delta_1[u] == d[u]$}
+				\State $D.add(u)$
+			\EndIf
+			\For{$v$ pointing to $u$}
+				\If{$\delta_2[v]$ exists} 
+					\State $\delta_2[v] = min\{\delta_1[u] + w(v, u), \delta_2[v]\}$
+				\Else
+					\State $\delta_2[v] = \delta_1[u] + w(v, u)$
+				\EndIf
+			\EndFor
+			\If{$\delta_1$ is empty}
+				\State $\delta_1 = \delta_2$, empty $\delta_2$
+			\EndIf
+		\EndFor
+		\State \Return $0$ if $len(D) == |V|$ else $-1$
+	\end{algorithmic}
+\end{algorithm}
 
+\noindent {\bf Proof of Correctness:}\\
+
+\noindent {\bf Claim 1:} $\delta_1[v] = \delta(v, t)$ at some point $\forall v \in V$.
+
+\begin{proof}
+	
+Suppose the shortest path of value $\delta(v, t)$ contains $n$ edges. Since we traverse from path containing one edge from $t$, two edges from $t$ ... all the way up to the furthest edges , say $max$ edges from $t$ where $max \geq n$. Thus, when we are at the $n$th egdes away from $t$ $\delta_1[v] = \delta(v, t)$ since we always pick the shortest path at each layer.	
+
+\end{proof}
+
+\noindent {\bf Claim 2:} Our algorithm will only return $0$ when $d[v] = \delta(v, t) \forall v \in V$.
+
+\begin{proof}
+	
+Since $D$ will only add node v when $d[v] \geq \delta(v, t)$, we know $D$ doesn't take into account underestimation of $\delta(v, t)$. So the size of $D = |d[v] \geq \delta(v, t) \forall v \in V|$. From Claim 1 we can infer the algorithm will return $-1$ when it finds $d[v] > \delta(v, t)$. Therefore, $D$ only contains correct nodes after exiting the main loop. The claimed $d[v]$ is correct iff it's correct for all nodes. Therefore, when size of $D = |V|$ we know our friend is correct.
+
+\end{proof}
+
+\noindent {\bf Time Complexity:} Traversing all nodes and edges in G costs $\O(|E| + |V|)$. Accessing entries in dictionary takes $\O(1)$. Therefore, $T(n) = \O(|E| + |V|)$. But in this case since we can assume $\O(|V|) \leq \O(|E|)$ we can write $T(n) = \O(|E|)$.
+
+\newpage
 \section{Solution to Question 4}
 
+\noindent{\bf Algorithm:}
 
+\begin{algorithm}
+	\begin{algorithmic}
+		\State Run Ford-Fulkerson Algorithm to find maximum $s-t$ flow $F$
+		\State Get the residual graph $G_F$ of $F$.
+		\State Start from $s$, use BFS to find all nodes reachable by $s$ and put them into set $A$, Other nodes into set $B$.
+		\State Delete $k$ or all edges between $A$ and $B$.
+	\end{algorithmic}
+\end{algorithm}
 
+\noindent {\bf Proof of Correctness:}
+
+We know Ford-Fulkerson will correctly find the maximum $s-t$ flow. Because $A$ and $B$ form an $s-t$ cut of $G$ and nodes in $B$ are not reachable from nodes in $A$ in the residual graph of maximum flow, this cut is a min-cut and $f(A, B) = C(A, B)$. Otherwise there must be an edge from $A$ to $B$ in the residual graph which causes contradiction.
+
+Since every edge in $G$ has unit capacity we can at most reduce the maximum flow by $1$ for each edge we remove. If we remove edges found in min-cut we are guaranteed to reduce the maximum flow by $1$ due to capacity constraints. Therefore, by deleting edges from the min-cut we found in our algorithm will reduce the maximum flow by exactly $min\{k, |F|\}$.\\
+
+\noindent {\bf Time Complexity:} Ford-Fulkerson Algorithm takes $\O(|E|^2|V|)$. It takes $\O(|E|)$ time to get residual graph. BFS takes $\O(|E|)$ in this case. Removing edges takes $\O(|E|)$. In total $T(n) = \O(|E|^2|V|)$
+
+\newpage
 \section{Solution to Question 5} 
+{}
 
 \textbf{Main Idea:}
 The size of minimum cover of a bipartite graph is equal to the size of its maximum matching. \\
@@ -237,6 +303,7 @@ Running time to find the alternating paths = $O(|E| |$free vertices in L $|)$ \\
 Running time return the final vertex cover by union and intersection = $O(|L|+|R|)$ \\
 So, total running time = minimum of $(O(|E|$ min($|L|, |R|))$, $O(|E| |$free vertices in L $|)$, $O(|L|+|R|))$
 
+\newpage
 \section{Solution to Question 6}
 
 Let $V' = V \cup \{s, t\}$, $E' = E \cup \{(s, u)\}_{u \in L} \cup \{(v, t)\}_{v \in R}$, and $G' = {(V', E')}$.
