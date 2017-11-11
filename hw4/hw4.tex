@@ -49,18 +49,24 @@
 To determine the minimum $k$ so that the correct answer is the most frequent output after k runs, consider the following:
 
 The given algorithm gives correct answer with $P = 2/3$ and one of the $n$ other incorrect answers with $P = 1/3$.
-Since nothing is specified for the probability distribution of incorrect answers, we will find the minimum number of trials needed for the worst case possible. 
+Since nothing is specified for the probability distribution of incorrect answers, we will find the minimum number of trials needed for 
+the worst case possible. 
 
-\noindent {\bf Claim 1:} The minimum number of trials($k$) to get the correct answer most number of times will be maximum when the probability distribution of incorrect answers is such that the algorithm always returns one specific wrong answer whenever it returns
+\noindent {\bf Claim 1:} The minimum number of trials($k$) to get the correct answer most number of times will be maximum when the 
+probability distribution of incorrect answers is such that the algorithm always returns one specific wrong answer whenever it returns
 the incorrect answer.
 
 \textbf{Please Note} that the worst case here is on the number of trials(k) required.
 
 \begin{proof}
-	In $k$ runs, if the correct answer is returned $k/2+1$ number of times, then regardless of the probability distribution of incorrect answers, we will always get correct answer as the mode (and final output). Thus, the worst case would be when the correct answer is returned $k/2$ times but it still was not the mode. This can only happen when one particular incorrect answer appeared exactly $k/2$ number of times. \newline
-	Thus, the above claim holds true.
+In $k$ runs, if the correct answer is returned $k/2+1$ number of times, then regardless of the probability distribution of incorrect 
+answers, we will always get correct answer as the mode (and final output). Thus, the worst case would be when the correct 
+answer is returned $k/2$ times but it still was not the mode. This can only happen when one particular incorrect answer appeared exactly 
+$k/2$ number of times. \newline
+Thus, the above claim holds true.
 \end{proof}
-Hence, the worst case on number of trials required is when the algorithm returns the correct answer with $P = 2/3$ while it returns a specific incorrect answer(let's say $x$) with $P = 1/3$. \newline
+Hence, the worst case on number of trials required is when the algorithm returns the correct answer with $P = 2/3$ while it returns a 
+specific incorrect answer(let's say $x$) with $P = 1/3$. \newline
 So to find minimum $k$ for worst case, the probability distribution of the given algorithm is binomial.
 
 Taking analogy to the coin toss problem where heads can occur with probability p, the expected number of times we get incorrect answer
@@ -90,7 +96,6 @@ So, minimum number of runs needed, $k = 250$
 \textbf{Part 2:} When n is very large and each incorrect answer is equally likely.
 
 \section{Solution to Question 3}
-
 
 
 \section{Solution to Question 4}
@@ -132,13 +137,55 @@ So, the smallest value of p should be the first prime number greater than\\ $(m-
 	\textbf{Case 2:} If p is smaller than the above value, then there is a possibility that for some value of r 
 	$f_a(r) - f_b(r) = p$ and thus $h(a) - h(b) = 0$ since p mod p $= 0$\\
 	$i.e. f_a(r) - f_b(r) - p = 0$ which is again a polynomial of degree at most $n-1$. Using Schwartz-Zippel, \\
-	$P(h(a) = h(b)$ when $a \neq b) = P(f_a(r) - f_b(r) = 0 \mid a \neq b) + P(f_a(r) - f_b(r) = p \mid a \neq b)) \leq 2(n-1)/t$
+	$P(h(a) = h(b)$ when $a \neq b) = P(f_a(r) - f_b(r) = 0 \mid a \neq b) + P(f_a(r) - f_b(r) = p \mid a \neq b) \leq 2(n-1)/t$
 	$\Rightarrow P(h(a) \neq h(b) \mid a \neq b) \geq 1 - 2(n-1)/t \geq 1 - 1/n$ \\
 	Thus, $t = 2n(n-1)$ which is more than  the smallest determined value $n(n-1)$ which we do not want. \\
 	Hence the above claim is valid.
 \end{proof}
 
 \textbf{Second Method:}
+To find the smallest possible value of r, we will use the following result: \\
+
+\textbf{Result 1:} Consider two strings: $a = a_{n-1}a_{n-2}.....a_2a_1a_0$ and $a = b_{n-1}b_{n-2}.....b_2b_1b_0$ such that $a_{n-1} 
+\neq b_{n-1}$
+while  remaining $a_i's$ and $b_i's$ can be anything(equal or non-equal). \\
+Now, for any given r, $f_a(r) - f_b(r) =  \sum_{i=0}^{n-1} (a_i-b_i)r^i$ \\
+The minimum value of this difference, given that $a_{n-1} \neq b_{n-1}$ is $ = r^{n-1}$ \\
+when $a_{n-1} - b_{n-1} = 1$ ($\neq 0$ since they are different) and for remaining $i's$ from $0$ to $n-2$ $a_i$ = $b_i$. \\
+Now,  without changing $b_{n-1}$  if we can find some combination of other $b_i's$ such that $a \neq b$ and $f_a(r) = f_b(r)$ \\
+then for those $a, b(new)$, we will always get $h(a) = h(b)$ regardless of any p. \\
+To avoid this, we need to determine a well conditioned r such that this is not possible. \\
+As calculated above, minimum possible value of difference, $diff_{min}$ $f_a(r) - f_b(r) = r^{n-1}$ \\
+while maximum possible value we can add to $f_b(r)$ by changing $(b_{n-2}....b_0)$, $add_{max} = \sum_{i=0}^{n-2}(m-1)r^i$ \\
+
+If $diff_{min} > add_{max}$ then there is no way that we can have $f_a(r) = f_b(r)$ given $a_{n-1} \neq b_{n-1}$ \\
+So, $r^{n-1} > (m-1) \sum_{i=0}^{n-2}r^i$ \\
+$\Rightarrow (m-r)r^{n-1} < m-1$ \\
+which is only true when $r \geq m$ assuming $n > 1$ and $m > 1$.\\
+So, smallest possible value of $r = m$.
+
+\textbf{Note} that the above result is valid for all possible strings irrespective of the fact that ${n-1}^{th}$ index is equal or not 
+in a and b. This can be implied using the following: \\
+Let say first non-matching value of a and b  occurs at index k. Then we need to compensate for the deficit  $(a_k - b_k) r^k$ for 
+$f_a(r) - f_b(r) = 0$ by changing $b_i$: \\
+Case 1: We only change $b_i$ where $i = (0 to k-1)$. In this case we  can never compensate for the deficit, given the above result.\\
+Case 2: We decide to change $b_i$ where $ i \in (k to n-1)$ then we will create a new deficit $(a_i-b_i)r^i$ which again cannot be 
+compensated by changing any of the following indices in b given above result.
+
+To determine smallest possible value of t, we follow the same procedure as done in analysis of first method.\\
+maximum possible value of $f_a(r) - f_b(r) = f_a(m) - f_b(m)$ \\
+$(f_a(m) - f_b(m))_{max} = (m-1) \sum_{i=0}^{n-1} m^i$ \\
+$ \Rightarrow  (f_a(m) - f_b(m))_{max} = m^n-1$ \\
+Now, we know that the number of primes in $(1, m^n) = (m^n)/ln(m^n)$ by prime numbers theorem.\\
+So, any number in $(1, m^n)$ can have at most these many  number of primes as the next prime which we can include will make
+it larger than the maximum range $(m^n-1)$.\\
+let $x =  (m^n)/ln(m^n)$
+So, for some $p$ chosen randomly from a set of first t prime values $(p_1,p_2,p_3,......,p_t)$ \\
+$P(h(a) - h(b) = 0$ when $a \neq b) \leq x/t$ because any difference in the possible range can have maximum x number of primes
+and will result in 0 when mod p for x number of values of p.\\
+$P(h(a) \neq h(b) \mid a \neq b) = 1 - P(h(a) = h(b) \mid a \neq b)$ \\
+$P(h(a) \neq h(b) \mid a \neq b) \geq 1- x/t  \geq 1 - 1/n$ \\
+Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
 
 \section{Solution to Question 5}
 
