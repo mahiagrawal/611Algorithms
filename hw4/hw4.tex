@@ -95,8 +95,99 @@ So, minimum number of runs needed, $k = 250$
 
 \textbf{Part 2:} When n is very large and each incorrect answer is equally likely.
 
+\newpage
+
 \section{Solution to Question 3}
 
+\begin{enumerate}[(1)]
+  \item Even a very simple algorithm will work with high probability:
+
+    \begin{algorithm}
+      \begin{algorithmic}
+        \Function{alg}{$G$}
+        \Loop
+          \State pick $k$ vertices uniformly at random to form $X$
+          \If{$|E(G[X])| \geq \frac{mk(k-1)}{n(n-1)}$}
+            \State \Return $X$
+          \EndIf
+        \EndLoop
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
+
+    Because it always chooses $k$ vertices for $X$ and only terminates when the desired condition is met, $\alg$ is correct.
+    We argue that its expected runtime is polynomial in $n$ and $m$.
+
+    {\bf Claim 1:} If $X \subseteq V$ of size $k$ is selected uniformly at random, the expected number of edges in $G[X]$ is $\frac{mk(k-1)}{n(n-1)}$.
+
+    \begin{proof}
+      For each $(u,v) \in E(G)$, define a random variable \[X_{(u,v)} = \begin{cases}1 & u, v \in X\\ 0 & \textnormal{otherwise}.\end{cases}\]
+      Then the expected number of edges in $G[X]$ is $E\left[\sum_{e \in E(G)}X_e\right]$.
+      If $e = (u,v)$ then \[E[X_e] = P(u \in X) P(v \in X \mid u \in X) = \frac{k}{n}\frac{k-1}{n-1}.\]
+      Thus, \[E\left[\sum_{e \in E(G)}X_e\right] = \sum_{e \in E(G)} E[X_e] = mE[x_e] = \frac{mk(k-1)}{n(n-1)}\] as desired.
+    \end{proof}
+
+    {\bf Claim 2:} $\alg$ has runtime polynomial in $m$ and $n$.
+
+    \begin{proof}
+      Choosing $X$ randomly can be done in multiple ways, but a na\"ive approach requires no more than $\Theta(n)$ time (e.g. by iterating through all the vertices and choosing them or not).
+      Checking whether the candidate set $X$ satisfies the edge count requirement by iterating through the vertices in $X$ and counting edges incident to them incurs another $\Theta(m)$ time.
+      Thus each iteration of the loop requires time linear in $m$ and $n$.
+      The expected runtime of the algorithm is therefore $\Theta(m + n)$ times the expected number of times the loop runs.
+      The latter quantity can be computed as follows.
+      Let $X$ be a random variable equal to the number of edges in $G[X]$ on a given run.
+      Let $p = P(X \geq E[X])$ be the probability of ``success.''
+      Since $X$ is integer-valued, we have
+      \begin{align*}
+        E[X] &\leq (E[X] - 1)P(X \leq E[x] - 1) + Mp\\
+        E[X] &\leq (E[X] - 1)(1 - p) + Mp\\
+        E[X] &\leq (E[X] - 1) + (E[X] - 1)p + Mp\\
+        1 &\leq Mp - (E[X] - 1)p\\
+        \frac{1}{M - E[X] + 1} &\leq p
+      \end{align*} where $M$ is the maximum value $X$ can take (note that dividing by $(M - E[X] + 1)$ is only okay because we know $M \geq E[X]$).
+      Therefore the probability that $\alg$ finds a suitable $X$ on any given attempt is \[p \geq \frac{1}{M - E[X] + 1} = \frac{1}{\binom{k}{2} - \frac{mk(k-1)}{n(n-1)} + 1}.\]
+      The expected number of attempts until a suitable $X$ is found is therefore $\frac{1}{p}$ (geometric distribution), whereby the expected runtime is polynomial in $n$, $m$, and $k$.
+    \end{proof}
+
+  \item We can use a very similar algorithm to the above, this time randomly assigning vertices to create a cut $(A, A^c)$.
+
+    \begin{algorithm}
+      \begin{algorithmic}
+        \Function{alg}{$G$}
+        \Loop
+          \For{$v \in V$}
+            \State include $v$ in $A$ with probability $\frac{1}{2}$
+          \EndFor
+          \If{$|(A, A^c)| \geq \frac{m}{2}$}
+            \State \Return $(A, A^c)$
+          \EndIf
+        \EndLoop
+        \EndFunction
+      \end{algorithmic}
+    \end{algorithm}
+
+    Similarly to (1), this algorithm is correct if it terminates, because it only returns once it has verified its output has the required property.
+
+    {\bf Claim 1:} The expected size of the cut found by a given iteration of $\alg$ is $\frac{m}{2}$.
+
+    \begin{proof}
+      For each edge of $G$, define a random variable \[X_{(u,v)} = \begin{cases}1 & u \in A, v \in A^c\\ 1 & u \in A^c, v \in A\\ 0 & \textnormal{otherwise}.\end{cases}\]
+      Thus, for a given $(u,v) \in E(G)$, \[E[X_{(u,v)}] = P(u \in A)P(v \in A^c \mid u \in A) + P(u \in A^c)P(v \in A \mid u \in A^c) = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}.\]
+      Then \[E\left[|(A, A^c)|\right] = E\left[\sum_{e \in E(G)} X_e\right] = \sum_{e \in E(G)}E[X_e] = mE[X_e] = \frac{m}{2}.\]
+    \end{proof}
+
+    {\bf Claim 2:} $\alg$ has runtime polynomial in $n$ and $m$.
+    \begin{proof}
+      The analysis is very similar to that for (1).
+      We again have \[p = P(X \geq E[X]) \geq \frac{1}{M - E[X] + 1}\] where $X$ is the size of the candidate cut and $M$ is the maximum possible value of $X$.
+      In this case, $E[X] = \frac{1}{2}$ and $M = m$, so we have \[p \geq \frac{2}{m+2}.\]
+      Therefore the expected number of attempts until $\alg$ finds a suitable cut is $\frac{1}{2}(m+2)$.
+      The runtime of each attempt is linear in $n$ and $m$, since creating the candidate cut requires a single iteration through $V(G)$ and checking its size requires $\Theta(m)$ time, since we can do so in a single scan of $E(G)$.
+      Thus, the total expected runtime is polynomial in $m$ and $n$.
+    \end{proof}
+\end{enumerate}
+
+\newpage
 
 \section{Solution to Question 4}
 
@@ -187,6 +278,7 @@ $P(h(a) \neq h(b) \mid a \neq b) = 1 - P(h(a) = h(b) \mid a \neq b)$ \\
 $P(h(a) \neq h(b) \mid a \neq b) \geq 1- x/t  \geq 1 - 1/n$ \\
 Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
 
+\newpage
 \section{Solution to Question 5}
 
 
