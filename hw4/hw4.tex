@@ -359,6 +359,22 @@ Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
         &\geq \left(1 - \frac{2\alpha}{n}\right) \left(1 - \frac{2\alpha}{n-1}\right) \cdots \left(1 - \frac{2\alpha}{2\alpha + 2}\right) \left(1 - \frac{2\alpha}{2\alpha+1}\right)\\
         &\geq \left(\frac{n-2\alpha}{n}\right) \left(\frac{(n-1)-2\alpha}{n-1}\right) \cdots \left(\frac{2}{2\alpha+2}\right) \left(\frac{1}{2\alpha + 1}\right)
     \end{align*}
+
+Now, we see that in this product the denominators decrease from $n$ to $2\alpha+1$ while the numerators decrease from $n-2\alpha$ to $1$ 
+\\
+So, the first term in numerator will cancel out the ${2*\alpha}^{th}$ term in denominator and the next numerator will cancel out the 
+next denominator until the end is reached. \\
+So, we will be left with some small terms in numerator ranging from $1$ to $2\alpha$ \\
+and some large terms in denominator ranging from $n$ to $n-\alpha$ \\
+Thus $P \geq \frac{1x2x3....x2\alpha}{nx(n-1)x....x(n-\alpha)}$ \\
+$\Rightarrow P \geq \frac{2}{n^{\alpha}}$ \\
+Similar to what we done in the previous part, \\
+if the graph has $x$ number of $\alpha \lambda$ cuts. \\
+Then,$P($that any of these cut is returned$) \geq x*\frac{2}{n^{\alpha}}$ \\
+We know that, $P($that any of thse cut is returned$) \leq 1$ \\
+Thus, $x \leq n^{alpha}/2$
+
+Thus, the number of cuts of size $\alpha \lambda$ in such a graph is $\Omega(n^{\alpha})$.
   \item
 \end{enumerate}
 
