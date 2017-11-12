@@ -403,7 +403,50 @@ Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
     As an example of a family of graphs where this bound is tight, consider the cycle on $n$ vertices.
     We know any pair of edges will partition a cycle and there're exactly ${n \choose 2}$ pair of edges in a cycle.
     ${n \choose 2} = \frac{n(n-1)}{2} = \Omega(n^2)$.
-  \item 
+  \item Consider running Karger's algorithm but terminates when there're $2\alpha$ vertices left and return a random partition.
+    Now we argue that for any cut of size $\alpha \lambda$ ($\alpha \ge 1$ since when $\alpha < 1$ the cut doesn't exsit and it's trivial to show that it satisfies the desired property) the probability of it being returned by the random partition is at least $\frac{2\alpha}{n^2}$
+
+    Assume we have a cut $C$ of size $\alpha \lambda$ in graph $G$.
+
+    Define $H_i$ to be the event that cut $C$ isn't hit when there're $i$ vertices left.
+
+    Define $S_i$ to be the event that cut $C$ survives to the point when there're $i$ vertices left.
+
+    Using the same reasoning we have in Karger's algorithm from class:
+
+    \begin{equation*}
+	P(C\ survives\ to\ the\ point\ where\ 2\alpha\ vertices\ are\ left) = \prod_{i = 2\alpha + 1}^{n} P(H_i | S_i)
+    \end{equation*}
+
+    Consider $P(H_i | S_i)$. 
+    When there're $i$ vertices left and the minimum cut is of size $\lambda$.
+    Then we have at least $\frac{i\lambda}{2}$ edges left.
+    Thus the probablity of $C$ being hit after surviving to the point when there're $i$ vertices left is no more than $\frac{\alpha \lambda}{i \lambda / 2} = \frac{2\alpha}{i}$.
+    $P(H_i | S_i) \ge 1 - \frac{2\alpha}{i}$
+
+    By this we know:
+    
+    \begin{align*}
+	\prod_{i = 2\alpha + 1}^{n} P(H_i | S_i) &\ge \left(1-\frac{2\alpha}{n}\right) \left(1-\frac{2\alpha}{n-1}\right) \cdots \left(1-\frac{2\alpha}{2\alpha+1}\right)\\
+	    &= \left(\frac{n - 2\alpha}{n}\right) \left(\frac{n - 2\alpha - 1}{n-1}\right) \cdots \left(\frac{1}{2\alpha+1}\right)\\
+	    &= \frac{(n-2\alpha)!(2\alpha)!}{n!}
+    \end{align*}
+		
+    Now consider the random partition step. Since a vertex can go to either side of the partition we know there're $\frac{1}{2^{2\alpha}}$ partitions and there're two partitions representing $C$.
+    This gives us the probablity that $C$ is returned given $C$ survives to $2\alpha$ vertices left to be $\frac{1}{2 ^ {2\alpha - 1}}$.
+
+    So the probability that $C$ is returned is:
+
+    \begin{align*}
+	P(C\ is\ returned) &= P(H_i | S_i) * \frac{1}{2 ^ {2\alpha - 1}}\\
+			   &\ge \frac{(n - 2\alpha)!}{n!} * \frac{(2\alpha)!}{2 ^ {2\alpha - 1}}\\
+			   &\ge \frac{1}{n(n - 1) \cdots (n - 2\alpha + 1)}\\
+			   &\ge \frac{1}{n ^ {2\alpha}}
+    \end{align*}
+
+    Note that since $\alpha \ge 1$, $(2\alpha)! \ge 2 ^ {2\alpha - 1}$
+    
+    Use the same reasoning in part 1 we conclude $|C| \le n ^ {2\alpha} = \O(n ^ {2\alpha})$
   \item
 \end{enumerate}
 
