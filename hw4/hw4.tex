@@ -32,17 +32,17 @@
 \begin{document}
 
 \maketitle
-
+	
 \section{Solution to Question 1}
-
+	
 Define interted pair to be a pair $(a_i, a_j)$ such that $a_i > a_j$ while $i < j$.
 Observe that each swap eliminates only one inverted pairs. 
 Therefore, the number of swaps we should apply to a list is the number of all inverted pairs in this list.
-
+	
 \noindent We have to do at least no swap when the list is sorted and at most $\frac{n(n-1)}{2}$ swaps when the list is reversely sorted.
 Let $X$ be the number of swaps we have to do in the randomly sorted list.
 Then the expectation of swaps necessary before the list is in sorted order is
-
+	
 \begin{equation*}
 	E(number\ of\ swaps) = \sum_{i = 0}^{\frac{n(n-1)}{2}} iP[X = i]
 \end{equation*}
@@ -50,10 +50,10 @@ Then the expectation of swaps necessary before the list is in sorted order is
 \noindent {\bf Claim: } $P[X = i] = P[X = \frac{n(n-1)}{2} - i]$
 
 \begin{proof}
-	Note that we can do $i$ swaps on a list that has $\frac{n(n-1)}{2} - i$ of inverted pairs to add anthoer $i$ inverted pairs to this list and therefore make it reversely sorted.
-	That is, there're $i$ inverted pairs in the reversely sorted list.
-	Since the sorted list and the reversely sorted list have the same length, the number of their corresponding lists which have $i$ inverted pairs are the same.
-	Thus comes our claim.
+Note that we can do $i$ swaps on a list that has $\frac{n(n-1)}{2} - i$ of inverted pairs to add anthoer $i$ inverted pairs to this list and therefore make it reversely sorted.
+That is, there're $i$ inverted pairs in the reversely sorted list.
+Since the sorted list and the reversely sorted list have the same length, the number of their corresponding lists which have $i$ inverted pairs are the same.
+Thus comes our claim.
 \end{proof}
 
 \noindent Using the claim above, we can add up terms like $iP[X = i]$ and $[\frac{n(n-1)}{2} - i]P[X = \frac{n(n-1)}{2} - i]$ and get something like:
@@ -401,11 +401,11 @@ Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
     We conclude that $|\mathcal{C}| \leq \frac{n^2}{2}$, as desired.
 
     As an example of a family of graphs where this bound is tight, consider the cycle on $n$ vertices.
-    For $k \in [1, n-1]$, any set of $k$ consecutive vertices, together with its complement, forms a cut of size $2$.
-    There are $n$ such sets for each value of $k$, but after $k = \left\lfloor\frac{n}{2}\right\rfloor$ we find they are the complements of already counted sets for lesser values of $k$.
-    Thus, the number of cuts of size $2$ in such a graph is $n\left\lfloor\frac{n}{2}\right\rfloor = \Omega(n^2)$.
+    We know any pair of edges will partition a cycle and there're exactly ${n \choose 2}$ pair of edges in a cycle.
+    ${n \choose 2} = \frac{n(n-1)}{2} = \Omega(n^2)$.
   \item 
   \item
 \end{enumerate}
 
 \end{document}
+ 
