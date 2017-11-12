@@ -281,6 +281,21 @@ Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
 \newpage
 \section{Solution to Question 5}
 
+\begin{enumerate}
+  \item In analyzing Karger's algorithm, we proved that for any min-cut $C$, the probability that Karger's algorithm returns $C$ is at least $\frac{2}{n^2}$.
+    Let $\mathcal{C}$ be the set of all min-cuts of $G$ and let $p$ be the probability that Karger's algorithm returns a min-cut when run on $G$.
+    Observe that
+    \begin{align*}
+    1 \geq p &= \sum_{C \in \mathcal{C}} P(\textnormal{Karger's alg. returns } C) \geq \sum_{C \in \mathcal{C}}\frac{2}{n^2} = \frac{2|\mathcal{C}|}{n^2}
+    \end{align*}
+    We conclude that $|\mathcal{C}| \leq \frac{n^2}{2}$, as desired.
 
+    As an example of a family of graphs where this bound is tight, consider the cycle on $n$ vertices.
+    For $k \in [1, n-1]$, any set of $k$ consecutive vertices, together with its complement, forms a cut of size $2$.
+    There are $n$ such sets for each value of $k$, but after $k = \left\lfloor\frac{n}{2}\right\rfloor$ we find they are the complements of already counted sets for lesser values of $k$.
+    Thus, the number of cuts of size $2$ in such a graph is $n\left\lfloor\frac{n}{2}\right\rfloor = \Omega(n^2)$.
+  \item 
+  \item
+\end{enumerate}
 
 \end{document}
