@@ -351,7 +351,14 @@ Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
     For $k \in [1, n-1]$, any set of $k$ consecutive vertices, together with its complement, forms a cut of size $2$.
     There are $n$ such sets for each value of $k$, but after $k = \left\lfloor\frac{n}{2}\right\rfloor$ we find they are the complements of already counted sets for lesser values of $k$.
     Thus, the number of cuts of size $2$ in such a graph is $n\left\lfloor\frac{n}{2}\right\rfloor = \Omega(n^2)$.
-  \item 
+  \item Let $C$ be a cut of size $\alpha \lambda$.
+    As in the analysis of Karger's algorithm, we have that there are at least $\frac{\lambda \ell}{2} = \frac{k\ell}{2\alpha}$ edges in $G_{\ell}$.
+    Defining terms as in the original analysis, we have
+    \begin{align*}
+      P(C \textnormal{ survives up to } G_{2\alpha}) &= P(S_{2 \alpha}) = \prod_{\ell = 2\alpha + 1}^n P(H_{\ell} \mid S_{\ell})\\
+        &\geq \left(1 - \frac{2\alpha}{n}\right) \left(1 - \frac{2\alpha}{n-1}\right) \cdots \left(1 - \frac{2\alpha}{2\alpha + 2}\right) \left(1 - \frac{2\alpha}{2\alpha+1}\right)\\
+        &\geq \left(\frac{n-2\alpha}{n}\right) \left(\frac{(n-1)-2\alpha}{n-1}\right) \cdots \left(\frac{2}{2\alpha+2}\right) \left(\frac{1}{2\alpha + 1}\right)
+    \end{align*}
   \item
 \end{enumerate}
 
