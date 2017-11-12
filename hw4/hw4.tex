@@ -30,352 +30,353 @@
 \author{Mahim Agarwal, Hanwen Xiong, and Jackson Warley}
 
 \begin{document}
-
-\maketitle
-
-\section{Solution to Question 1}
-
-Define interted pair to be a pair $(a_i, a_j)$ such that $a_i > a_j$ while $i < j$.
-Observe that each swap eliminates only one inverted pairs. 
-Therefore, the number of swaps we should apply to a list is the number of all inverted pairs in this list.
-
-\noindent We have to do at least no swap when the list is sorted and at most $\frac{n(n-1)}{2}$ swaps when the list is reversely sorted.
-Let $X$ be the number of swaps we have to do in the randomly sorted list.
-Then the expectation of swaps necessary before the list is in sorted order is
-
-\begin{equation*}
+	
+	\maketitle
+	
+	\section{Solution to Question 1}
+	
+	Define interted pair to be a pair $(a_i, a_j)$ such that $a_i > a_j$ while $i < j$.
+	Observe that each swap eliminates only one inverted pairs. 
+	Therefore, the number of swaps we should apply to a list is the number of all inverted pairs in this list.
+	
+	\noindent We have to do at least no swap when the list is sorted and at most $\frac{n(n-1)}{2}$ swaps when the list is reversely sorted.
+	Let $X$ be the number of swaps we have to do in the randomly sorted list.
+	Then the expectation of swaps necessary before the list is in sorted order is
+	
+	\begin{equation*}
 	E(number\ of\ swaps) = \sum_{i = 0}^{\frac{n(n-1)}{2}} iP[X = i]
-\end{equation*}
-
-\noindent {\bf Claim: } $P[X = i] = P[X = \frac{n(n-1)}{2} - i]$
-
-\begin{proof}
-	Note that we can do $i$ swaps on a list that has $\frac{n(n-1)}{2} - i$ of inverted pairs to add anthoer $i$ inverted pairs to this list and therefore make it reversely sorted.
-	That is, there're $i$ inverted pairs in the reversely sorted list.
-	Since the sorted list and the reversely sorted list have the same length, the number of their corresponding lists which have $i$ inverted pairs are the same.
-	Thus comes our claim.
-\end{proof}
-
-\noindent Using the claim above, we can add up terms like $iP[X = i]$ and $[\frac{n(n-1)}{2} - i]P[X = \frac{n(n-1)}{2} - i]$ and get something like:
-\begin{equation*}
-		2E(number\ of\ swaps) = \sum_{i = 0}^{\frac{n(n-1)}{2}} [\frac{n(n-1)}{2}]P[X = i] = \frac{n(n-1)}{2} \sum_{i = 0}^{\frac{n(n-1)}{2}} P[X = i] = \frac{n(n-1)}{2}
-\end{equation*}
-
-\noindent So, the final result is:
-\begin{equation*}
-		E(number\ of\ swaps) = \frac{n(n-1)}{4}
-\end{equation*}
-
-\newpage
-
-\section{Solution to Question 2}
-
-\textbf{Part 1:}
-
-\textbf{Algorithm}
-\begin{enumerate}
-	\item Run the given algorithm $k$ number of times. $(k = 250)$
-	\item Return the most frequent output in these k runs.
-\end{enumerate}
-To determine the minimum $k$ so that the correct answer is the most frequent output after k runs, consider the following:
-
-The given algorithm gives correct answer with $P = 2/3$ and one of the $n$ other incorrect answers with $P = 1/3$.
-Since nothing is specified for the probability distribution of incorrect answers, we will find the minimum number of trials needed for 
-the worst case possible. 
-
-\noindent {\bf Claim 1:} The minimum number of trials($k$) to get the correct answer most number of times will be maximum when the 
-probability distribution of incorrect answers is such that the algorithm always returns one specific wrong answer whenever it returns
-the incorrect answer.
-
-\textbf{Please Note} that the worst case here is on the number of trials(k) required.
-
-\begin{proof}
-In $k$ runs, if the correct answer is returned $k/2+1$ number of times, then regardless of the probability distribution of incorrect 
-answers, we will always get correct answer as the mode (and final output). Thus, the worst case would be when the correct 
-answer is returned $k/2$ times but it still was not the mode. This can only happen when one particular incorrect answer appeared exactly 
-$k/2$ number of times. \newline
-Thus, the above claim holds true.
-\end{proof}
-Hence, the worst case on number of trials required is when the algorithm returns the correct answer with $P = 2/3$ while it returns a 
-specific incorrect answer(let's say $x$) with $P = 1/3$. \newline
-So to find minimum $k$ for worst case, the probability distribution of the given algorithm is binomial.
-
-Taking analogy to the coin toss problem where heads can occur with probability p, the expected number of times we get incorrect answer
-in k trials, $E(X) = k/3$, where $X$ is the random variable on number of times we see incorrect answer.
-
-Consider the following random variable: \\
-$X_i = \left \{
-\begin{tabular}{cc}
-1 & when algorithm returns incorrect answer i number of times \\
-0 & otherwise
-\end{tabular}
-\right \}$ \\
-So $X_1, X_2,.....,X_k$ are independent boolean random variables such that \\
-for $X = \sum_{i} X_i$, $\mu = E[X] = k/3$ \\
-Using chernoff bounds: \\
-$P[X \geq (1+\delta)\mu] \leq e^{-\delta^2 \mu/3}$ \\
-Substituting $\delta = 1/2$ and the value of $\mu$ \\
-$P[X \geq k/2] \leq e^{-k/36}$ \\
-$1 - P[X < k/2] \leq e^{-k/36}$ \\
-$P[X < k/2] \geq 1 - e^{-k/36}$ \\
-Now, $P(success) = P($we get the incorrect answer less than half times in k runs$)$ \\
-$\Rightarrow P(success) = P(X < k/2)$ \\
-$\Rightarrow P(success) \geq 1 - e^{-k/36} \geq 0.999$ \\
-$\Rightarrow k > 36ln(1000)$ \\
-So, minimum number of runs needed, $k = 250$
-
-\textbf{Part 2:} When n is very large and each incorrect answer is equally likely. \\
-Since n is very large and any incorrect answer have same probability to occur $(1/(3n))$ , any incorrect answer will have very
-low probability to occur twice. Thus, we can run the algorithm until an output occurs twice and return that output to be the minimum 
-vertex cover. \\
-\textbf{Probability Analysis:} \\
-Let $X$ be the random variable on number of times the output is correct in k trials.\\
-So, the expected number of times we received the correct output, $E(X) = 2k/3$ l=similar to previous part.  \\
-Consider the following random variable: \\
-$X_i = \left \{
-\begin{tabular}{cc}
-1 & when algorithm returns correct answer i number of times \\
-0 & otherwise
-\end{tabular}
-\right \}$ \\
-So $X_1, X_2,.....,X_k$ are independent boolean random variables such that \\
-for $X = \sum_{i} X_i$, $\mu = E[X] = 2k/3$ \\
-Using chernoff bounds: \\
-$P[X \leq (1-\delta)\mu] \leq e^{-\delta^2 \mu/2}$ \\
-Substituting $\delta = 1-3/2k$ and the value of $\mu$ \\
-$P[X \leq 1] \leq e^{-(2k-3)^2/6k}$ \\
-$1 - P[X \leq 1] \leq e^{-(2k-3)^2/6k}$ \\
-$P[X \geq 2] \geq 1 - e^{-(2k-3)^2/6k}$ \\
-Now, $P(success) = P($we get the incorrect answer less than 2 times$)$ \\
-$\Rightarrow P(success) = P(X \geq 2)$ \\
-$\Rightarrow P(success) \geq 1 - e^{-(2k-3)^2/6k} \geq 0.999$ \\
-$\Rightarrow k > 13.87$ \\
-So, minimum number of runs needed, $k = 14$
-
-\newpage
-
-\section{Solution to Question 3}
-
-\begin{enumerate}[(1)]
-  \item Even a very simple algorithm will work with high probability:
-
-    \begin{algorithm}
-      \begin{algorithmic}
-        \Function{alg}{$G$}
-        \Loop
-          \State pick $k$ vertices uniformly at random to form $X$
-          \If{$|E(G[X])| \geq \frac{mk(k-1)}{n(n-1)}$}
-            \State \Return $X$
-          \EndIf
-        \EndLoop
-        \EndFunction
-      \end{algorithmic}
-    \end{algorithm}
-
-    Because it always chooses $k$ vertices for $X$ and only terminates when the desired condition is met, $\alg$ is correct.
-    We argue that its expected runtime is polynomial in $n$ and $m$.
-
-    {\bf Claim 1:} If $X \subseteq V$ of size $k$ is selected uniformly at random, the expected number of edges in $G[X]$ is $\frac{mk(k-1)}{n(n-1)}$.
-
-    \begin{proof}
-      For each $(u,v) \in E(G)$, define a random variable \[X_{(u,v)} = \begin{cases}1 & u, v \in X\\ 0 & \textnormal{otherwise}.\end{cases}\]
-      Then the expected number of edges in $G[X]$ is $E\left[\sum_{e \in E(G)}X_e\right]$.
-      If $e = (u,v)$ then \[E[X_e] = P(u \in X) P(v \in X \mid u \in X) = \frac{k}{n}\frac{k-1}{n-1}.\]
-      Thus, \[E\left[\sum_{e \in E(G)}X_e\right] = \sum_{e \in E(G)} E[X_e] = mE[x_e] = \frac{mk(k-1)}{n(n-1)}\] as desired.
-    \end{proof}
-
-    {\bf Claim 2:} $\alg$ has runtime polynomial in $m$ and $n$.
-
-    \begin{proof}
-      Choosing $X$ randomly can be done in multiple ways, but a na\"ive approach requires no more than $\Theta(n)$ time (e.g. by iterating through all the vertices and choosing them or not).
-      Checking whether the candidate set $X$ satisfies the edge count requirement by iterating through the vertices in $X$ and counting edges incident to them incurs another $\Theta(m)$ time.
-      Thus each iteration of the loop requires time linear in $m$ and $n$.
-      The expected runtime of the algorithm is therefore $\Theta(m + n)$ times the expected number of times the loop runs.
-      The latter quantity can be computed as follows.
-      Let $X$ be a random variable equal to the number of edges in $G[X]$ on a given run.
-      Let $p = P(X \geq E[X])$ be the probability of ``success.''
-      Since $X$ is integer-valued, we have
-      \begin{align*}
-        E[X] &\leq (E[X] - 1)P(X \leq E[x] - 1) + Mp\\
-        E[X] &\leq (E[X] - 1)(1 - p) + Mp\\
-        E[X] &\leq (E[X] - 1) + (E[X] - 1)p + Mp\\
-        1 &\leq Mp - (E[X] - 1)p\\
-        \frac{1}{M - E[X] + 1} &\leq p
-      \end{align*} where $M$ is the maximum value $X$ can take (note that dividing by $(M - E[X] + 1)$ is only okay because we know $M \geq E[X]$).
-      Therefore the probability that $\alg$ finds a suitable $X$ on any given attempt is \[p \geq \frac{1}{M - E[X] + 1} = \frac{1}{\binom{k}{2} - \frac{mk(k-1)}{n(n-1)} + 1}.\]
-      The expected number of attempts until a suitable $X$ is found is therefore $\frac{1}{p}$ (geometric distribution), whereby the expected runtime is polynomial in $n$, $m$, and $k$.
-    \end{proof}
-
-  \item We can use a very similar algorithm to the above, this time randomly assigning vertices to create a cut $(A, A^c)$.
-
-    \begin{algorithm}
-      \begin{algorithmic}
-        \Function{alg}{$G$}
-        \Loop
-          \For{$v \in V$}
-            \State include $v$ in $A$ with probability $\frac{1}{2}$
-          \EndFor
-          \If{$|(A, A^c)| \geq \frac{m}{2}$}
-            \State \Return $(A, A^c)$
-          \EndIf
-        \EndLoop
-        \EndFunction
-      \end{algorithmic}
-    \end{algorithm}
-
-    Similarly to (1), this algorithm is correct if it terminates, because it only returns once it has verified its output has the required property.
-
-    {\bf Claim 1:} The expected size of the cut found by a given iteration of $\alg$ is $\frac{m}{2}$.
-
-    \begin{proof}
-      For each edge of $G$, define a random variable \[X_{(u,v)} = \begin{cases}1 & u \in A, v \in A^c\\ 1 & u \in A^c, v \in A\\ 0 & \textnormal{otherwise}.\end{cases}\]
-      Thus, for a given $(u,v) \in E(G)$, \[E[X_{(u,v)}] = P(u \in A)P(v \in A^c \mid u \in A) + P(u \in A^c)P(v \in A \mid u \in A^c) = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}.\]
-      Then \[E\left[|(A, A^c)|\right] = E\left[\sum_{e \in E(G)} X_e\right] = \sum_{e \in E(G)}E[X_e] = mE[X_e] = \frac{m}{2}.\]
-    \end{proof}
-
-    {\bf Claim 2:} $\alg$ has runtime polynomial in $n$ and $m$.
-    \begin{proof}
-      The analysis is very similar to that for (1).
-      We again have \[p = P(X \geq E[X]) \geq \frac{1}{M - E[X] + 1}\] where $X$ is the size of the candidate cut and $M$ is the maximum possible value of $X$.
-      In this case, $E[X] = \frac{1}{2}$ and $M = m$, so we have \[p \geq \frac{2}{m+2}.\]
-      Therefore the expected number of attempts until $\alg$ finds a suitable cut is $\frac{1}{2}(m+2)$.
-      The runtime of each attempt is linear in $n$ and $m$, since creating the candidate cut requires a single iteration through $V(G)$ and checking its size requires $\Theta(m)$ time, since we can do so in a single scan of $E(G)$.
-      Thus, the total expected runtime is polynomial in $m$ and $n$.
-    \end{proof}
-\end{enumerate}
-
-\newpage
-
-\section{Solution to Question 4}
-
-\textbf{First Method:}
-
-Consider $h(a) - h(b) = [f_a(r) - f_b(r)]$ mod $p$ \\
-If $a \neq b$ but, $h(a) - h(b) = 0$ then the algorithm will return false negative(incorrect result). Thus, we will try to determine
-the probability that algorithm fails $i.e.$ it returns false negative.
-
-Now, consider $h(a) - h(b) = [\sum_{i=0}^{n-1} (a_i-b_i) x^i]$ mod $p$ under following assumption: \\
-\textbf{Assumption 1:} p  is very large such that the maximum value of $h(a) - h(b)$ is less than p.\\
-\\
-Under the above assumption, if $ a \neq b$ and $h(a) - h(b) = [f_a(r) - f_b(r)]$ mod $p= 0$, it is only possible when
-$f_a(r) - f_b(r) = 0$ since p is a prime number. \\
-$i.e.$ $(a_{n-1} - b_{n-1}) x^{n-1} + (a_{n-2} - b_{n-2}) x^{n-2} + ......+ (a_0 - b_0)1 = 0$ \\
-The maximum degree of this polynomial is $n-1$, when $a_{n-1} \neq b_{n-1}$.\\
-Thus this polynomial can have at most $n-1$ number of roots. \\
-Using Schwartz-Zippel algorithm, for any $r$ chosen randomly from a set of t values $(1,2,3,......,t)$ \\
-$P(h(a) - h(b) = 0$ when $a \neq b) \leq (n-1)/t$ \\
-$P(h(a) \neq h(b) \mid a \neq b) = 1 - P(h(a) = h(b) \mid a \neq b)$ \\
-$P(h(a) \neq h(b) \mid a \neq b) \geq 1- (n-1)/t  \geq 1 - 1/n$ \\
-Hence, smallest possible values of $t = n(n-1)$ \\
-
-The above t is only true when p is very large(from assumption 1). Now, let's determine the smallest possible value for p.\\
-The maximum possible value of $f_a(r) - f_b(r) = \sum_{i=0}^{n-1} (a_i-b_i) r^i$ is when each $a_i - b_i$ is maximum positive and
-$r$ is maximum. \\
-Since, $a$ and $b = (0,1,2...,m-1)$, the maximum value of $a_i - b_i = m-1$ when $a = m-1$ and $b= 0$.\\
-Also, the maximum possible value for $r = (1,2,3,......,t)$ is $t = n(n-1)$. \\
-Thus, the maximum possible value for  $f_a(r) - f_b(r) = \sum_{i=0}^{n-1} (m-1)(t^i)$ where $t = n(n-1)$.\\
-$ = (m-1)(t^n - 1)/(t-1)$ \\
-So, the smallest value of p should be the first prime number greater than\\ $(m-1)(({n(n-1))}^n - 1)/(n(n-1)-1)$.
-
-\textbf{Claim 1:} These are the smallest possible values for both t and p. 
-\begin{proof}
-	\textbf{Case 1:} If t is smaller than the above value, let us suppose $t = (n-1)(n-1)$, then using Schwartz-Zippel theorem \\
-	$P(h(a) = h(b)$ when $a \neq b) \leq (n-1)/((n-1)(n-1))$ \\
-	$\Rightarrow P(h(a) \neq h(b) \mid a \neq b) \geq 1 - 1/(n-1)$  which is less than the required probability $1 - 1/n$ \\
-	\textbf{Case 2:} If p is smaller than the above value, then there is a possibility that for some value of r 
-	$f_a(r) - f_b(r) = p$ and thus $h(a) - h(b) = 0$ since p mod p $= 0$\\
-	$i.e. f_a(r) - f_b(r) - p = 0$ which is again a polynomial of degree at most $n-1$. Using Schwartz-Zippel, \\
-	$P(h(a) = h(b)$ when $a \neq b) = P(f_a(r) - f_b(r) = 0 \mid a \neq b) + P(f_a(r) - f_b(r) = p \mid a \neq b) \leq 2(n-1)/t$
-	$\Rightarrow P(h(a) \neq h(b) \mid a \neq b) \geq 1 - 2(n-1)/t \geq 1 - 1/n$ \\
-	Thus, $t = 2n(n-1)$ which is more than  the smallest determined value $n(n-1)$ which we do not want. \\
-	Hence the above claim is valid.
-\end{proof}
-
-\textbf{Second Method:}
-To find the smallest possible value of r, we will use the following result: \\
-
-\textbf{Result 1:} Consider two strings: $a = a_{n-1}a_{n-2}.....a_2a_1a_0$ and $a = b_{n-1}b_{n-2}.....b_2b_1b_0$ such that $a_{n-1} 
-\neq b_{n-1}$
-while  remaining $a_i's$ and $b_i's$ can be anything(equal or non-equal). \\
-Now, for any given r, $f_a(r) - f_b(r) =  \sum_{i=0}^{n-1} (a_i-b_i)r^i$ \\
-The minimum value of this difference, given that $a_{n-1} \neq b_{n-1}$ is $ = r^{n-1}$ \\
-when $a_{n-1} - b_{n-1} = 1$ ($\neq 0$ since they are different) and for remaining $i's$ from $0$ to $n-2$ $a_i$ = $b_i$. \\
-Now,  without changing $b_{n-1}$  if we can find some combination of other $b_i's$ such that $a \neq b$ and $f_a(r) = f_b(r)$ \\
-then for those $a, b(new)$, we will always get $h(a) = h(b)$ regardless of any p. \\
-To avoid this, we need to determine a well conditioned r such that this is not possible. \\
-As calculated above, minimum possible value of difference, $diff_{min}$ $f_a(r) - f_b(r) = r^{n-1}$ \\
-while maximum possible value we can add to $f_b(r)$ by changing $(b_{n-2}....b_0)$, $add_{max} = \sum_{i=0}^{n-2}(m-1)r^i$ \\
-
-If $diff_{min} > add_{max}$ then there is no way that we can have $f_a(r) = f_b(r)$ given $a_{n-1} \neq b_{n-1}$ \\
-So, $r^{n-1} > (m-1) \sum_{i=0}^{n-2}r^i$ \\
-$\Rightarrow (m-r)r^{n-1} < m-1$ \\
-which is only true when $r \geq m$ assuming $n > 1$ and $m > 1$.\\
-So, smallest possible value of $r = m$.
-
-\textbf{Note} that the above result is valid for all possible strings irrespective of the fact that ${n-1}^{th}$ index is equal or not 
-in a and b. This can be implied using the following: \\
-Let say first non-matching value of a and b  occurs at index k. Then we need to compensate for the deficit  $(a_k - b_k) r^k$ for 
-$f_a(r) - f_b(r) = 0$ by changing $b_i$: \\
-Case 1: We only change $b_i$ where $i = (0 to k-1)$. In this case we  can never compensate for the deficit, given the above result.\\
-Case 2: We decide to change $b_i$ where $ i \in (k to n-1)$ then we will create a new deficit $(a_i-b_i)r^i$ which again cannot be 
-compensated by changing any of the following indices in b given above result.
-
-To determine smallest possible value of t, we follow the same procedure as done in analysis of first method.\\
-maximum possible value of $f_a(r) - f_b(r) = f_a(m) - f_b(m)$ \\
-$(f_a(m) - f_b(m))_{max} = (m-1) \sum_{i=0}^{n-1} m^i$ \\
-$ \Rightarrow  (f_a(m) - f_b(m))_{max} = m^n-1$ \\
-Now, we know that the number of primes in $(1, m^n) = (m^n)/ln(m^n)$ by prime numbers theorem.\\
-So, any number in $(1, m^n)$ can have at most these many  number of primes as the next prime which we can include will make
-it larger than the maximum range $(m^n-1)$.\\
-let $x =  (m^n)/ln(m^n)$
-So, for some $p$ chosen randomly from a set of first t prime values $(p_1,p_2,p_3,......,p_t)$ \\
-$P(h(a) - h(b) = 0$ when $a \neq b) \leq x/t$ because any difference in the possible range can have maximum x number of primes
-and will result in 0 when mod p for x number of values of p.\\
-$P(h(a) \neq h(b) \mid a \neq b) = 1 - P(h(a) = h(b) \mid a \neq b)$ \\
-$P(h(a) \neq h(b) \mid a \neq b) \geq 1- x/t  \geq 1 - 1/n$ \\
-Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
-
-\newpage
-\section{Solution to Question 5}
-
-\begin{enumerate}
-  \item In analyzing Karger's algorithm, we proved that for any min-cut $C$, the probability that Karger's algorithm returns $C$ is at least $\frac{2}{n^2}$.
-    Let $\mathcal{C}$ be the set of all min-cuts of $G$ and let $p$ be the probability that Karger's algorithm returns a min-cut when run on $G$.
-    Observe that
-    \begin{align*}
-    1 \geq p &= \sum_{C \in \mathcal{C}} P(\textnormal{Karger's alg. returns } C) \geq \sum_{C \in \mathcal{C}}\frac{2}{n^2} = \frac{2|\mathcal{C}|}{n^2}
-    \end{align*}
-    We conclude that $|\mathcal{C}| \leq \frac{n^2}{2}$, as desired.
-
-    As an example of a family of graphs where this bound is tight, consider the cycle on $n$ vertices.
-    For $k \in [1, n-1]$, any set of $k$ consecutive vertices, together with its complement, forms a cut of size $2$.
-    There are $n$ such sets for each value of $k$, but after $k = \left\lfloor\frac{n}{2}\right\rfloor$ we find they are the complements of already counted sets for lesser values of $k$.
-    Thus, the number of cuts of size $2$ in such a graph is $n\left\lfloor\frac{n}{2}\right\rfloor = \Omega(n^2)$.
-  \item Let $C$ be a cut of size $\alpha \lambda$.
-    As in the analysis of Karger's algorithm, we have that there are at least $\frac{\lambda \ell}{2} = \frac{k\ell}{2\alpha}$ edges in $G_{\ell}$.
-    Defining terms as in the original analysis, we have
-    \begin{align*}
-      P(C \textnormal{ survives up to } G_{2\alpha}) &= P(S_{2 \alpha}) = \prod_{\ell = 2\alpha + 1}^n P(H_{\ell} \mid S_{\ell})\\
-        &\geq \left(1 - \frac{2\alpha}{n}\right) \left(1 - \frac{2\alpha}{n-1}\right) \cdots \left(1 - \frac{2\alpha}{2\alpha + 2}\right) \left(1 - \frac{2\alpha}{2\alpha+1}\right)\\
-        &\geq \left(\frac{n-2\alpha}{n}\right) \left(\frac{(n-1)-2\alpha}{n-1}\right) \cdots \left(\frac{2}{2\alpha+2}\right) \left(\frac{1}{2\alpha + 1}\right)
-    \end{align*}
-
-Now, we see that in this product the denominators decrease from $n$ to $2\alpha+1$ while the numerators decrease from $n-2\alpha$ to $1$ 
-\\
-So, the first term in numerator will cancel out the ${2*\alpha}^{th}$ term in denominator and the next numerator will cancel out the 
-next denominator until the end is reached. \\
-So, we will be left with some small terms in numerator ranging from $1$ to $2\alpha$ \\
-and some large terms in denominator ranging from $n$ to $n-\alpha$ \\
-Thus $P \geq \frac{1x2x3....x2\alpha}{nx(n-1)x....x(n-\alpha)}$ \\
-$\Rightarrow P \geq \frac{2}{n^{\alpha}}$ \\
-Similar to what we done in the previous part, \\
-if the graph has $x$ number of $\alpha \lambda$ cuts. \\
-Then,$P($that any of these cut is returned$) \geq x*\frac{2}{n^{\alpha}}$ \\
-We know that, $P($that any of thse cut is returned$) \leq 1$ \\
-Thus, $x \leq n^{alpha}/2$
-
-Thus, the number of cuts of size $\alpha \lambda$ in such a graph is $\Omega(n^{\alpha})$.
-  \item
-\end{enumerate}
-
+	\end{equation*}
+	
+	\noindent {\bf Claim: } $P[X = i] = P[X = \frac{n(n-1)}{2} - i]$
+	
+	\begin{proof}
+		Note that we can do $i$ swaps on a list that has $\frac{n(n-1)}{2} - i$ of inverted pairs to add anthoer $i$ inverted pairs to this list and therefore make it reversely sorted.
+		That is, there're $i$ inverted pairs in the reversely sorted list.
+		Since the sorted list and the reversely sorted list have the same length, the number of their corresponding lists which have $i$ inverted pairs are the same.
+		Thus comes our claim.
+	\end{proof}
+	
+	\noindent Using the claim above, we can add up terms like $iP[X = i]$ and $[\frac{n(n-1)}{2} - i]P[X = \frac{n(n-1)}{2} - i]$ and get something like:
+	\begin{equation*}
+	2E(number\ of\ swaps) = \sum_{i = 0}^{\frac{n(n-1)}{2}} [\frac{n(n-1)}{2}]P[X = i] = \frac{n(n-1)}{2} \sum_{i = 0}^{\frac{n(n-1)}{2}} P[X = i] = \frac{n(n-1)}{2}
+	\end{equation*}
+	
+	\noindent So, the final result is:
+	\begin{equation*}
+	E(number\ of\ swaps) = \frac{n(n-1)}{4}
+	\end{equation*}
+	
+	 
+	
+	\section{Solution to Question 2}
+	
+	\textbf{Part 1:}
+	
+	\textbf{Algorithm}
+	\begin{enumerate}
+		\item Run the given algorithm $k$ number of times. $(k = 250)$
+		\item Return the most frequent output in these k runs.
+	\end{enumerate}
+	To determine the minimum $k$ so that the correct answer is the most frequent output after k runs, consider the following:
+	
+	The given algorithm gives correct answer with $P = 2/3$ and one of the $n$ other incorrect answers with $P = 1/3$.
+	Since nothing is specified for the probability distribution of incorrect answers, we will find the minimum number of trials needed for 
+	the worst case possible. 
+	
+	\noindent {\bf Claim 1:} The minimum number of trials($k$) to get the correct answer most number of times will be maximum when the 
+	probability distribution of incorrect answers is such that the algorithm always returns one specific wrong answer whenever it returns
+	the incorrect answer.
+	
+	\textbf{Please Note} that the worst case here is on the number of trials(k) required.
+	
+	\begin{proof}
+		In $k$ runs, if the correct answer is returned $k/2+1$ number of times, then regardless of the probability distribution of incorrect 
+		answers, we will always get correct answer as the mode (and final output). Thus, the worst case would be when the correct 
+		answer is returned $k/2$ times but it still was not the mode. This can only happen when one particular incorrect answer appeared exactly 
+		$k/2$ number of times. \newline
+		Thus, the above claim holds true.
+	\end{proof}
+	Hence, the worst case on number of trials required is when the algorithm returns the correct answer with $P = 2/3$ while it returns a 
+	specific incorrect answer(let's say $x$) with $P = 1/3$. \newline
+	So to find minimum $k$ for worst case, the probability distribution of the given algorithm is binomial.
+	
+	Taking analogy to the coin toss problem where heads can occur with probability p, the expected number of times we get incorrect answer
+	in k trials, $E(X) = k/3$, where $X$ is the random variable on number of times we see incorrect answer.
+	
+	Consider the following random variable: \\
+	$X_i = \left \{
+	\begin{tabular}{cc}
+	1 & when algorithm returns incorrect answer i number of times \\
+	0 & otherwise
+	\end{tabular}
+	\right \}$ \\
+	So $X_1, X_2,.....,X_k$ are independent boolean random variables such that \\
+	for $X = \sum_{i} X_i$, $\mu = E[X] = k/3$ \\
+	Using chernoff bounds: \\
+	$P[X \geq (1+\delta)\mu] \leq e^{-\delta^2 \mu/3}$ \\
+	Substituting $\delta = 1/2$ and the value of $\mu$ \\
+	$P[X \geq k/2] \leq e^{-k/36}$ \\
+	$1 - P[X < k/2] \leq e^{-k/36}$ \\
+	$P[X < k/2] \geq 1 - e^{-k/36}$ \\
+	Now, $P(success) = P($we get the incorrect answer less than half times in k runs$)$ \\
+	$\Rightarrow P(success) = P(X < k/2)$ \\
+	$\Rightarrow P(success) \geq 1 - e^{-k/36} \geq 0.999$ \\
+	$\Rightarrow k > 36ln(1000)$ \\
+	So, minimum number of runs needed, $k = 250$
+	
+	\textbf{Part 2:} When n is very large and each incorrect answer is equally likely. \\
+	Since n is very large and any incorrect answer have same probability to occur $(1/(3n))$ , any incorrect answer will have very
+	low probability to occur twice. Thus, we can run the algorithm until an output occurs twice and return that output to be the minimum 
+	vertex cover. \\
+	\textbf{Probability Analysis:} \\
+	Let $X$ be the random variable on number of times the output is correct in k trials.\\
+	So, the expected number of times we received the correct output, $E(X) = 2k/3$ l=similar to previous part.  \\
+	Consider the following random variable: \\
+	$X_i = \left \{
+	\begin{tabular}{cc}
+	1 & when algorithm returns correct answer i number of times \\
+	0 & otherwise
+	\end{tabular}
+	\right \}$ \\
+	So $X_1, X_2,.....,X_k$ are independent boolean random variables such that \\
+	for $X = \sum_{i} X_i$, $\mu = E[X] = 2k/3$ \\
+	Using chernoff bounds: \\
+	$P[X \leq (1-\delta)\mu] \leq e^{-\delta^2 \mu/2}$ \\
+	Substituting $\delta = 1-3/2k$ and the value of $\mu$ \\
+	$P[X \leq 1] \leq e^{-(2k-3)^2/6k}$ \\
+	$1 - P[X \leq 1] \leq e^{-(2k-3)^2/6k}$ \\
+	$P[X \geq 2] \geq 1 - e^{-(2k-3)^2/6k}$ \\
+	Now, $P(success) = P($we get the incorrect answer less than 2 times$)$ \\
+	$\Rightarrow P(success) = P(X \geq 2)$ \\
+	$\Rightarrow P(success) \geq 1 - e^{-(2k-3)^2/6k} \geq 0.999$ \\
+	$\Rightarrow k > 13.87$ \\
+	So, minimum number of runs needed, $k = 14$
+	
+	 
+	
+	\section{Solution to Question 3}
+	
+	\begin{enumerate}[(1)]
+		\item Even a very simple algorithm will work with high probability:
+		
+		\begin{algorithm}
+			\begin{algorithmic}
+				\Function{alg}{$G$}
+				\Loop
+				\State pick $k$ vertices uniformly at random to form $X$
+				\If{$|E(G[X])| \geq \frac{mk(k-1)}{n(n-1)}$}
+				\State \Return $X$
+				\EndIf
+				\EndLoop
+				\EndFunction
+			\end{algorithmic}
+		\end{algorithm}
+		
+		Because it always chooses $k$ vertices for $X$ and only terminates when the desired condition is met, $\alg$ is correct.
+		We argue that its expected runtime is polynomial in $n$ and $m$.
+		
+		{\bf Claim 1:} If $X \subseteq V$ of size $k$ is selected uniformly at random, the expected number of edges in $G[X]$ is $\frac{mk(k-1)}{n(n-1)}$.
+		
+		\begin{proof}
+			For each $(u,v) \in E(G)$, define a random variable \[X_{(u,v)} = \begin{cases}1 & u, v \in X\\ 0 & \textnormal{otherwise}.\end{cases}\]
+			Then the expected number of edges in $G[X]$ is $E\left[\sum_{e \in E(G)}X_e\right]$.
+			If $e = (u,v)$ then \[E[X_e] = P(u \in X) P(v \in X \mid u \in X) = \frac{k}{n}\frac{k-1}{n-1}.\]
+			Thus, \[E\left[\sum_{e \in E(G)}X_e\right] = \sum_{e \in E(G)} E[X_e] = mE[x_e] = \frac{mk(k-1)}{n(n-1)}\] as desired.
+		\end{proof}
+		
+		{\bf Claim 2:} $\alg$ has runtime polynomial in $m$ and $n$.
+		
+		\begin{proof}
+			Choosing $X$ randomly can be done in multiple ways, but a na\"ive approach requires no more than $\Theta(n)$ time (e.g. by iterating through all the vertices and choosing them or not).
+			Checking whether the candidate set $X$ satisfies the edge count requirement by iterating through the vertices in $X$ and counting edges incident to them incurs another $\Theta(m)$ time.
+			Thus each iteration of the loop requires time linear in $m$ and $n$.
+			The expected runtime of the algorithm is therefore $\Theta(m + n)$ times the expected number of times the loop runs.
+			The latter quantity can be computed as follows.
+			Let $X$ be a random variable equal to the number of edges in $G[X]$ on a given run.
+			Let $p = P(X \geq E[X])$ be the probability of ``success.''
+			Since $X$ is integer-valued, we have
+			\begin{align*}
+			E[X] &\leq (E[X] - 1)P(X \leq E[x] - 1) + Mp\\
+			E[X] &\leq (E[X] - 1)(1 - p) + Mp\\
+			E[X] &\leq (E[X] - 1) + (E[X] - 1)p + Mp\\
+			1 &\leq Mp - (E[X] - 1)p\\
+			\frac{1}{M - E[X] + 1} &\leq p
+			\end{align*} where $M$ is the maximum value $X$ can take (note that dividing by $(M - E[X] + 1)$ is only okay because we know $M \geq E[X]$).
+			Therefore the probability that $\alg$ finds a suitable $X$ on any given attempt is \[p \geq \frac{1}{M - E[X] + 1} = \frac{1}{\binom{k}{2} - \frac{mk(k-1)}{n(n-1)} + 1}.\]
+			The expected number of attempts until a suitable $X$ is found is therefore $\frac{1}{p}$ (geometric distribution), whereby the expected runtime is polynomial in $n$, $m$, and $k$.
+		\end{proof}
+		
+		\item We can use a very similar algorithm to the above, this time randomly assigning vertices to create a cut $(A, A^c)$.
+		
+		\begin{algorithm}
+			\begin{algorithmic}
+				\Function{alg}{$G$}
+				\Loop
+				\For{$v \in V$}
+				\State include $v$ in $A$ with probability $\frac{1}{2}$
+				\EndFor
+				\If{$|(A, A^c)| \geq \frac{m}{2}$}
+				\State \Return $(A, A^c)$
+				\EndIf
+				\EndLoop
+				\EndFunction
+			\end{algorithmic}
+		\end{algorithm}
+		
+		Similarly to (1), this algorithm is correct if it terminates, because it only returns once it has verified its output has the required property.
+		
+		{\bf Claim 1:} The expected size of the cut found by a given iteration of $\alg$ is $\frac{m}{2}$.
+		
+		\begin{proof}
+			For each edge of $G$, define a random variable \[X_{(u,v)} = \begin{cases}1 & u \in A, v \in A^c\\ 1 & u \in A^c, v \in A\\ 0 & \textnormal{otherwise}.\end{cases}\]
+			Thus, for a given $(u,v) \in E(G)$, \[E[X_{(u,v)}] = P(u \in A)P(v \in A^c \mid u \in A) + P(u \in A^c)P(v \in A \mid u \in A^c) = \frac{1}{4} + \frac{1}{4} = \frac{1}{2}.\]
+			Then \[E\left[|(A, A^c)|\right] = E\left[\sum_{e \in E(G)} X_e\right] = \sum_{e \in E(G)}E[X_e] = mE[X_e] = \frac{m}{2}.\]
+		\end{proof}
+		
+		{\bf Claim 2:} $\alg$ has runtime polynomial in $n$ and $m$.
+		\begin{proof}
+			The analysis is very similar to that for (1).
+			We again have \[p = P(X \geq E[X]) \geq \frac{1}{M - E[X] + 1}\] where $X$ is the size of the candidate cut and $M$ is the maximum possible value of $X$.
+			In this case, $E[X] = \frac{1}{2}$ and $M = m$, so we have \[p \geq \frac{2}{m+2}.\]
+			Therefore the expected number of attempts until $\alg$ finds a suitable cut is $\frac{1}{2}(m+2)$.
+			The runtime of each attempt is linear in $n$ and $m$, since creating the candidate cut requires a single iteration through $V(G)$ and checking its size requires $\Theta(m)$ time, since we can do so in a single scan of $E(G)$.
+			Thus, the total expected runtime is polynomial in $m$ and $n$.
+		\end{proof}
+	\end{enumerate}
+	
+	 
+	
+	\section{Solution to Question 4}
+	
+	\textbf{First Method:}
+	
+	Consider $h(a) - h(b) = [f_a(r) - f_b(r)]$ mod $p$ \\
+	If $a \neq b$ but, $h(a) - h(b) = 0$ then the algorithm will return false negative(incorrect result). Thus, we will try to determine
+	the probability that algorithm fails $i.e.$ it returns false negative.
+	
+	Now, consider $h(a) - h(b) = [\sum_{i=0}^{n-1} (a_i-b_i) x^i]$ mod $p$ under following assumption: \\
+	\textbf{Assumption 1:} p  is very large such that the maximum value of $h(a) - h(b)$ is less than p.\\
+	\\
+	Under the above assumption, if $ a \neq b$ and $h(a) - h(b) = [f_a(r) - f_b(r)]$ mod $p= 0$, it is only possible when
+	$f_a(r) - f_b(r) = 0$ since p is a prime number. \\
+	$i.e.$ $(a_{n-1} - b_{n-1}) x^{n-1} + (a_{n-2} - b_{n-2}) x^{n-2} + ......+ (a_0 - b_0)1 = 0$ \\
+	The maximum degree of this polynomial is $n-1$, when $a_{n-1} \neq b_{n-1}$.\\
+	Thus this polynomial can have at most $n-1$ number of roots. \\
+	Using Schwartz-Zippel algorithm, for any $r$ chosen randomly from a set of t values $(1,2,3,......,t)$ \\
+	$P(h(a) - h(b) = 0$ when $a \neq b) \leq (n-1)/t$ \\
+	$P(h(a) \neq h(b) \mid a \neq b) = 1 - P(h(a) = h(b) \mid a \neq b)$ \\
+	$P(h(a) \neq h(b) \mid a \neq b) \geq 1- (n-1)/t  \geq 1 - 1/n$ \\
+	Hence, smallest possible values of $t = n(n-1)$ \\
+	
+	The above t is only true when p is very large(from assumption 1). Now, let's determine the smallest possible value for p.\\
+	The maximum possible value of $f_a(r) - f_b(r) = \sum_{i=0}^{n-1} (a_i-b_i) r^i$ is when each $a_i - b_i$ is maximum positive and
+	$r$ is maximum. \\
+	Since, $a$ and $b = (0,1,2...,m-1)$, the maximum value of $a_i - b_i = m-1$ when $a = m-1$ and $b= 0$.\\
+	Also, the maximum possible value for $r = (1,2,3,......,t)$ is $t = n(n-1)$. \\
+	Thus, the maximum possible value for  $f_a(r) - f_b(r) = \sum_{i=0}^{n-1} (m-1)(t^i)$ where $t = n(n-1)$.\\
+	$ = (m-1)(t^n - 1)/(t-1)$ \\
+	So, the smallest value of p should be the first prime number greater than\\ $(m-1)(({n(n-1))}^n - 1)/(n(n-1)-1)$.
+	
+	\textbf{Claim 1:} These are the smallest possible values for both t and p. 
+	\begin{proof}
+		\textbf{Case 1:} If t is smaller than the above value, let us suppose $t = (n-1)(n-1)$, then using Schwartz-Zippel theorem \\
+		$P(h(a) = h(b)$ when $a \neq b) \leq (n-1)/((n-1)(n-1))$ \\
+		$\Rightarrow P(h(a) \neq h(b) \mid a \neq b) \geq 1 - 1/(n-1)$  which is less than the required probability $1 - 1/n$ \\
+		\textbf{Case 2:} If p is smaller than the above value, then there is a possibility that for some value of r 
+		$f_a(r) - f_b(r) = p$ and thus $h(a) - h(b) = 0$ since p mod p $= 0$\\
+		$i.e. f_a(r) - f_b(r) - p = 0$ which is again a polynomial of degree at most $n-1$. Using Schwartz-Zippel, \\
+		$P(h(a) = h(b)$ when $a \neq b) = P(f_a(r) - f_b(r) = 0 \mid a \neq b) + P(f_a(r) - f_b(r) = p \mid a \neq b) \leq 2(n-1)/t$
+		$\Rightarrow P(h(a) \neq h(b) \mid a \neq b) \geq 1 - 2(n-1)/t \geq 1 - 1/n$ \\
+		Thus, $t = 2n(n-1)$ which is more than  the smallest determined value $n(n-1)$ which we do not want. \\
+		Hence the above claim is valid.
+	\end{proof}
+	
+	\textbf{Second Method:}
+	To find the smallest possible value of r, we will use the following result: \\
+	
+	\textbf{Result 1:} Consider two strings: $a = a_{n-1}a_{n-2}.....a_2a_1a_0$ and $a = b_{n-1}b_{n-2}.....b_2b_1b_0$ such that $a_{n-1} 
+	\neq b_{n-1}$
+	while  remaining $a_i's$ and $b_i's$ can be anything(equal or non-equal). \\
+	Now, for any given r, $f_a(r) - f_b(r) =  \sum_{i=0}^{n-1} (a_i-b_i)r^i$ \\
+	The minimum value of this difference, given that $a_{n-1} \neq b_{n-1}$ is $ = r^{n-1}$ \\
+	when $a_{n-1} - b_{n-1} = 1$ ($\neq 0$ since they are different) and for remaining $i's$ from $0$ to $n-2$ $a_i$ = $b_i$. \\
+	Now,  without changing $b_{n-1}$  if we can find some combination of other $b_i's$ such that $a \neq b$ and $f_a(r) = f_b(r)$ \\
+	then for those $a, b(new)$, we will always get $h(a) = h(b)$ regardless of any p. \\
+	To avoid this, we need to determine a well conditioned r such that this is not possible. \\
+	As calculated above, minimum possible value of difference, $diff_{min}$ $f_a(r) - f_b(r) = r^{n-1}$ \\
+	while maximum possible value we can add to $f_b(r)$ by changing $(b_{n-2}....b_0)$, $add_{max} = \sum_{i=0}^{n-2}(m-1)r^i$ \\
+	
+	If $diff_{min} > add_{max}$ then there is no way that we can have $f_a(r) = f_b(r)$ given $a_{n-1} \neq b_{n-1}$ \\
+	So, $r^{n-1} > (m-1) \sum_{i=0}^{n-2}r^i$ \\
+	$\Rightarrow (m-r)r^{n-1} < m-1$ \\
+	which is only true when $r \geq m$ assuming $n > 1$ and $m > 1$.\\
+	So, smallest possible value of $r = m$.
+	
+	\textbf{Note} that the above result is valid for all possible strings irrespective of the fact that ${n-1}^{th}$ index is equal or not 
+	in a and b. This can be implied using the following: \\
+	Let say first non-matching value of a and b  occurs at index k. Then we need to compensate for the deficit  $(a_k - b_k) r^k$ for 
+	$f_a(r) - f_b(r) = 0$ by changing $b_i$: \\
+	Case 1: We only change $b_i$ where $i = (0 to k-1)$. In this case we  can never compensate for the deficit, given the above result.\\
+	Case 2: We decide to change $b_i$ where $ i \in (k to n-1)$ then we will create a new deficit $(a_i-b_i)r^i$ which again cannot be 
+	compensated by changing any of the following indices in b given above result.
+	
+	To determine smallest possible value of t, we follow the same procedure as done in analysis of first method.\\
+	maximum possible value of $f_a(r) - f_b(r) = f_a(m) - f_b(m)$ \\
+	$(f_a(m) - f_b(m))_{max} = (m-1) \sum_{i=0}^{n-1} m^i$ \\
+	$ \Rightarrow  (f_a(m) - f_b(m))_{max} = m^n-1$ \\
+	Now, we know that the number of primes in $(1, m^n) = (m^n)/ln(m^n)$ by prime numbers theorem.\\
+	So, any number in $(1, m^n)$ can have at most these many  number of primes as the next prime which we can include will make
+	it larger than the maximum range $(m^n-1)$.\\
+	let $x =  (m^n)/ln(m^n)$
+	So, for some $p$ chosen randomly from a set of first t prime values $(p_1,p_2,p_3,......,p_t)$ \\
+	$P(h(a) - h(b) = 0$ when $a \neq b) \leq x/t$ because any difference in the possible range can have maximum x number of primes
+	and will result in 0 when mod p for x number of values of p.\\
+	$P(h(a) \neq h(b) \mid a \neq b) = 1 - P(h(a) = h(b) \mid a \neq b)$ \\
+	$P(h(a) \neq h(b) \mid a \neq b) \geq 1- x/t  \geq 1 - 1/n$ \\
+	Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
+	
+	 
+	\section{Solution to Question 5}
+	
+	\begin{enumerate}
+		\item In analyzing Karger's algorithm, we proved that for any min-cut $C$, the probability that Karger's algorithm returns $C$ is at least $\frac{2}{n^2}$.
+		Let $\mathcal{C}$ be the set of all min-cuts of $G$ and let $p$ be the probability that Karger's algorithm returns a min-cut when run on $G$.
+		Observe that
+		\begin{align*}
+		1 \geq p &= \sum_{C \in \mathcal{C}} P(\textnormal{Karger's alg. returns } C) \geq \sum_{C \in \mathcal{C}}\frac{2}{n^2} = \frac{2|\mathcal{C}|}{n^2}
+		\end{align*}
+		We conclude that $|\mathcal{C}| \leq \frac{n^2}{2}$, as desired.
+		
+		As an example of a family of graphs where this bound is tight, consider the cycle on $n$ vertices.
+		For $k \in [1, n-1]$, any set of $k$ consecutive vertices, together with its complement, forms a cut of size $2$.
+		There are $n$ such sets for each value of $k$, but after $k = \left\lfloor\frac{n}{2}\right\rfloor$ we find they are the complements of already counted sets for lesser values of $k$.
+		Thus, the number of cuts of size $2$ in such a graph is $n\left\lfloor\frac{n}{2}\right\rfloor = \Omega(n^2)$.
+		\item Let $C$ be a cut of size $\alpha \lambda$.
+		As in the analysis of Karger's algorithm, we have that there are at least $\frac{\lambda \ell}{2} = \frac{k\ell}{2\alpha}$ edges in $G_{\ell}$.
+		Defining terms as in the original analysis, we have
+		\begin{align*}
+		P(C \textnormal{ survives up to } G_{2\alpha}) &= P(S_{2 \alpha}) = \prod_{\ell = 2\alpha + 1}^n P(H_{\ell} \mid S_{\ell})\\
+		&\geq \left(1 - \frac{2\alpha}{n}\right) \left(1 - \frac{2\alpha}{n-1}\right) \cdots \left(1 - \frac{2\alpha}{2\alpha + 2}\right) \left(1 - \frac{2\alpha}{2\alpha+1}\right)\\
+		&\geq \left(\frac{n-2\alpha}{n}\right) \left(\frac{(n-1)-2\alpha}{n-1}\right) \cdots \left(\frac{2}{2\alpha+2}\right) \left(\frac{1}{2\alpha + 1}\right)
+		\end{align*}
+		
+		Now, we see that in this product the denominators decrease from $n$ to $2\alpha+1$ while the numerators decrease from $n-2\alpha$ to $1$ 
+		\\
+		So, the first term in numerator will cancel out the ${2*\alpha}^{th}$ term in denominator and the next numerator will cancel out the 
+		next denominator until the end is reached. \\
+		So, we will be left with some small terms in numerator ranging from $1$ to $2\alpha$ \\
+		and some large terms in denominator ranging from $n$ to $n-\alpha$ \\
+		Thus $P \geq \frac{1.2.3.....2\alpha}{n.(n-1).....x(n-2\alpha)}$ \\
+		$\Rightarrow P \geq \frac{2}{n^{2\alpha}}$ \\
+		Similar to what we done in the previous part, \\
+		if the graph has $x$ number of $\alpha \lambda$ cuts. \\
+		Then,$P($that any of these cut is returned$) \geq x*\frac{2}{n^{\alpha}}$ \\
+		We know that, $P($that any of these cut is returned$) \leq 1$ \\
+		Thus, $x \leq n^{2 \alpha}/2$
+		
+		Thus, the number of cuts of size $\alpha \lambda$ in such a graph is $\O(n^{2\alpha})$.
+		\item
+	\end{enumerate}
+	
 \end{document}
+ 
