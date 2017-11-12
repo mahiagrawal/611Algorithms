@@ -69,142 +69,51 @@ Thus comes our claim.
 \newpage
 
 \section{Solution to Question 2}
+We first consider the case where there are no guarantees about the distribution of wrong answers.
+Our strategy will be to run our friend's algorithm $\alg$ $k$ times and then return the mode answer given by $\alg$.\\
 
-\textbf{Part 1:}
-
-\textbf{Algorithm}
-\begin{enumerate}
-	\item Run the given algorithm $k$ number of times. $(k = 250)$
-	\item Return the most frequent output in these k runs.
-\end{enumerate}
-To determine the minimum $k$ so that the correct answer is the most frequent output after k runs, consider the following:
-
-The given algorithm gives correct answer with $P = 2/3$ and one of the $n$ other incorrect answers with $P = 1/3$.
-Since nothing is specified for the probability distribution of incorrect answers, we will find the minimum number of trials needed for 
-the worst case possible. 
-
-\noindent {\bf Claim 1:} The minimum number of trials($k$) to get the correct answer most number of times will be maximum when the 
-probability distribution of incorrect answers is such that the algorithm always returns one specific wrong answer whenever it returns
-the incorrect answer.
-
-\textbf{Please Note} that the worst case here is on the number of trials(k) required.
+\noindent \textbf{Claim 1:} Without loss of generality, we can assume that when $\alg$ is wrong, it always returns the same wrong answer $w$.
 
 \begin{proof}
-In $k$ runs, if the correct answer is returned $k/2+1$ number of times, then regardless of the probability distribution of incorrect 
-answers, we will always get correct answer as the mode (and final output). Thus, the worst case would be when the correct 
-answer is returned $k/2$ times but it still was not the mode. This can only happen when one particular incorrect answer appeared exactly 
-$k/2$ number of times. \newline
-Thus, the above claim holds true.
+  For the sake of analysis, we can assume $\alg$ gives an adversarial distribution of wrong answers, such that $p = P(\operatorname{mode}(K) \textnormal{ is correct})$ is minimized.
+  If $\alg$ always returns $w$ when it is wrong, our algorithm returns the correct answer if and only if $\alg$ is correct at least $\frac{1}{2} k + 1$ times.
+  However, if $\alg$ can return multiple wrong answers, we will still be correct if $\alg$ returns more than $\frac{1}{2}k$ correct answers, but there is a chance that $\alg$ could return fewer than $\frac{1}{2}k$ correct answers and our algorithm would still find that the mode answer was correct.
+  Thus, a distribution of wrong answers in which $\alg$ always returns $w$ minimizes $p$, because such a distribution results in strictly fewer outcomes such that the mode answer returned is correct.
 \end{proof}
-Hence, the worst case on number of trials required is when the algorithm returns the correct answer with $P = 2/3$ while it returns a 
-specific incorrect answer(let's say $x$) with $P = 1/3$. \newline
-So to find minimum $k$ for worst case, the probability distribution of the given algorithm is binomial.
 
-Taking analogy to the coin toss problem where heads can occur with probability p, the expected number of times we get incorrect answer
-in k trials, $E(X) = k/3$, where $X$ is the random variable on number of times we see incorrect answer.
+\noindent \textbf{Claim 2:} The minimum value of $k$ is $250$ in the case that we have no guarantees about the distribution of wrong answers returned by $\alg$.
 
-Consider the following random variable: \\
-$X_i = \left \{
-\begin{tabular}{cc}
-1 & when algorithm returns incorrect answer i number of times \\
-0 & otherwise
-\end{tabular}
-\right \}$ \\
-So $X_1, X_2,.....,X_k$ are independent boolean random variables such that \\
-for $X = \sum_{i} X_i$, $\mu = E[X] = k/3$ \\
-Using chernoff bounds: \\
-$P[X \geq (1+\delta)\mu] \leq e^{-\delta^2 \mu/3}$ \\
-Substituting $\delta = 1/2$ and the value of $\mu$ \\
-$P[X \geq k/2] \leq e^{-k/36}$ \\
-$1 - P[X < k/2] \leq e^{-k/36}$ \\
-$P[X < k/2] \geq 1 - e^{-k/36}$ \\
-Now, $P(success) = P($we get the incorrect answer less than half times in k runs$)$ \\
-$\Rightarrow P(success) = P(X < k/2)$ \\
-$\Rightarrow P(success) \geq 1 - e^{-k/36} \geq 0.999$ \\
-$\Rightarrow k > 36ln(1000)$ \\
-So, minimum number of runs needed, $k = 250$
+\begin{proof}
+  By Claim 1, we can assume that $\alg$ returns the correct answer with probability $\frac{2}{3}$ and a particular wrong answer $w$ with probability $\frac{1}{3}$.
+  In this case, our algorithm must observe more than $\frac{k}{2}$ correct runs of $\alg$ to be correct.
+  Let $X$ be the number of wrong answers observed in $k$ runs of $\alg$.
+  Thus, the expected number of wrong answers in $k$ runs of $\alg$ is $\frac{k}{3}$.
+  Let \[X_i = \begin{cases}1 & \alg \textnormal{ was wrong on the $i$th run}\\ 0 & \textnormal{otherwise}\end{cases}.\]
+  Then $X = \sum_{i = 1}^{k} X_i$ and the $X_i$ are independent, since the different runs do not influence each other.
+  Therefore, we can apply the Chernoff Bound with $\delta = \frac{1}{2}$:
+  \begin{align*}
+    P\left(X \geq \frac{k}{2}\right) &\leq e^{-k/36}.
+  \end{align*}
+  The probability that our algorithm succeeds is therefore \[1 - P\left(X \geq \frac{k}{2}\right) \geq 1 - e^{-k/36}.\]
+  Setting $1 - e^{-k/36} \geq 0.999$ and solving for $k$ gives $k \geq 36\ln(1000)$, implying $k \geq 249$ is sufficient.
+\end{proof}
 
-\newpage
+In the case that the wrong answers returned by $\alg$ are distributed uniformly at random over $[n]$, and $n$ is large, we can do better with a different algorithm.
+In this case, we will run $\alg$ until it returns some answer for the second time, and then return that answer.\\
 
-\textbf{Part 2:} When n is very large and each incorrect answer is equally likely. \\
-Since n is very large and any incorrect answer have same probability to occur $(1/(3n))$ , any incorrect answer will have very
-low probability to occur twice. Thus, we can run the algorithm until an output occurs twice and return that output to be the minimum 
-vertex cover. \\
-\textbf{Probability Analysis:} \\
-Let $X$ be the random variable on number of times the output is correct in k trials.\\
-So, the expected number of times we received the correct output, $E(X) = 2k/3$ l=similar to previous part.  \\
-Consider the following random variable: \\
-$X_i = \left \{
-\begin{tabular}{cc}
-1 & when algorithm returns correct answer i number of times \\
-0 & otherwise
-\end{tabular}
-\right \}$ \\
-So $X_1, X_2,.....,X_k$ are independent boolean random variables such that \\
-for $X = \sum_{i} X_i$, $\mu = E[X] = 2k/3$ \\
-Using chernoff bounds: \\
-$P[X \leq (1-\delta)\mu] \leq e^{-\delta^2 \mu/2}$ \\
-Substituting $\delta = 1-3/2k$ and the value of $\mu$ \\
-$P[X \leq 1] \leq e^{-(2k-3)^2/6k}$ \\
-$1 - P[X \leq 1] \leq e^{-(2k-3)^2/6k}$ \\
-$P[X \geq 2] \geq 1 - e^{-(2k-3)^2/6k}$ \\
-Now, $P(success) = P($we get the incorrect answer less than 2 times$)$ \\
-$\Rightarrow P(success) = P(X \geq 2)$ \\
-$\Rightarrow P(success) \geq 1 - e^{-(2k-3)^2/6k} \geq 0.999$ \\
-$\Rightarrow k > 13.87$ \\
-So, minimum number of runs needed, $k = 14$
+\noindent \textbf{Claim 3:} With the new algorithm and assumptions on the distribution of wrong answers, $k = 24$ suffices.
 
-\newpage
-
-\noindent {\bf Another solution to Q2:}
-\newline
-
-\noindent{\bf Part 1: }
-
-\noindent Suppose we run the algorithm $k$ times and return the most frequent answer.
-Assume correct answer $c$ is returned $m$ times by running this algorithm $k$ times.
-If the most frequent answer is one of the $n$ incorrect answer, say $i$.
-Then $i$ is returned at least $m$ times by running this algorithm $k$ times.
-Note $k \le 2m$ in such case or $c$ will always be returned.
-
-\noindent So if correct answer is returned for $m(m \in \{2, \dots, \frac{k}{2}\})$ times in the $k$ trials, there're still $k-m$ trials to be filled with incorrect answers. 
-And we have in total $n$ incorrect answers to fill this $k-m$ trials.
-Now the question is what's the probability that $m$ or more of a particular incorrect answer $i$ are filled in this $k-m$ trials.
-If $X_i$ is the number of incorrect answer $i$ being returned in the $k-m$ trials then $X_i$ is a binomial distribution with $k-m$ trials and $p = \frac{1}{n}$.
-It helps to recall load balancing problem.
-You can think the $n$ incorrect answers of $n$ bins.
-We're throwing $k-m$ balls and want to find the probabilty that $m$ or more balls are in bin $i$.
-\\
-
-\noindent {Lemma: } $P(X_i \ge m) \le {k-m \choose m} p^m$
-\\
-
-\noindent This lemma was proved in class.
-
-\noindent Therefore, the probability that correct answer is returned $m$ times in the k trials and a particular incorrect answer is returned $m$ or more times in the k trials is:
-
-\begin{equation*}
-	P(FAIL) \le {k \choose m} \left(\frac{2}{3}\right) ^ m \left(\frac{1}{3}\right) ^ {k-m} * P(X_i \ge m)
-\end{equation*}
-
-\noindent Thus,
-
-\begin{equation*}
-	P(FAIL) \le {k \choose m} \left(\frac{2}{3}\right) ^ m * {k-m \choose m} \left(\frac{1}{3n}\right) ^ {m} * \left(\frac{1}{3}\right) ^ {k-2m}
-\end{equation*}
-
-\noindent So for a given $n$ we can compute $P(FAIL)$ for all possible $m$ and get an upper bound of all the failing cases until the upper bound is less than 0.001 which gives us confidence of 0.999 that the returned answer is correct.
-The smallet k found that satisfies this requirement is the number of trials we need.
-\newline
-
-\noindent {\bf Part 2: }
-
-\noindent We see that $P(FAIL)$ decreases dramatically if $n$ becomes very large even if $m$ is not so large. 
-For example, if $n \ge 100$ and $m \ge 2$, $\left(\frac{1}{3n}\right) ^ m \le \frac{1}{90000}$. The rest part of $P(FAIL)$ can barely offset such extremely small quantity when the number of trials $k$ is small.
-
-\noindent Therefore, we can just run this algorithm until we get a duplicate and return this as the correct answer.
-Great chances are that by running just a few trials a duplicate will be returned.
-
+\begin{proof}
+  The probability that our new algorithm returns a correct answer after $k$ runs of $\alg$ is strictly greater than the probability that $k$ runs of $\alg$ contain two correct answers and no two of the same wrong answer.
+  When $n$ is large and the wrong answers are distributed uniformly, we can neglect the probability of returning two of the same wrong answer, and assume that $P(\textnormal{our algorithm is correct}) = P(\textnormal{$\alg$ returns two correct answers in $k$ runs})$.
+  Let $X$ be the number of times $\alg$ is correct in $k$ runs, so $E[X] = \frac{2k}{3}.$
+  Let \[X_i = \begin{cases}1 & \alg \textnormal{ was correct on the $i$th run}\\ 0 & \textnormal{otherwise}\end{cases}\] so that $X = \sum_{i = 1}^{k} X_i$.
+  The $X_i$ are independent, so we can use the Chernoff Bound again.
+  Supposing $k > 1$, we have $\delta = 1 - \frac{3}{2k} > 0$, and the Chernoff Bound gives \[P(X \leq 1) \leq e^{-\frac{k}{3} - \frac{3}{4k} + 1}.\]
+  Thus $P(X \geq 2) \geq 1 - e^{-\frac{k}{3} - \frac{3}{4k} + 1}$.
+  Setting $P(X \geq 2) \geq 0.999$ and solving for $k$ gives two solutions, one of which is ruled out by our assumption that $k > 1$.
+  The remaining solution is $k > 23$, so we expect this algorithm to return a correct answer after $k = 24$ runs of $\alg$.
+\end{proof}
 \newpage
 
 \section{Solution to Question 3}
@@ -387,6 +296,10 @@ and will result in 0 when mod p for x number of values of p.\\
 $P(h(a) \neq h(b) \mid a \neq b) = 1 - P(h(a) = h(b) \mid a \neq b)$ \\
 $P(h(a) \neq h(b) \mid a \neq b) \geq 1- x/t  \geq 1 - 1/n$ \\
 Hence, smallest possible values of $t = nx = n(m^n)/ln(m^n)$ \\
+
+To detect instead whether $a$ and $b$ are reorderings of each other, we can define a new hash function.
+Given a string $a = a_1a_2 \dots a_n$, define $h(a_i) = p_i$ where $p_i$ is the $i$th prime number.
+Then unique prime factorization guarantees that the hash function $H(a) = \prod_{i = 1}^n h(a_i)$ has the property that $H(a) = H(b)$ if and only if $a$ is a reordering of $b$.
 
 \newpage
 \section{Solution to Question 5}
