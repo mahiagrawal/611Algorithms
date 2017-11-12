@@ -124,6 +124,47 @@ $\Rightarrow P(success) \geq 1 - e^{-k/36} \geq 0.999$ \\
 $\Rightarrow k > 36ln(1000)$ \\
 So, minimum number of runs needed, $k = 250$
 
+\newpage
+
+\noindent {\bf Another approach to Part 1:}
+
+\noindent Suppose we run the algorithm $k$ times and return the most frequent answer.
+Assume correct answer $c$ is returned $m$ times by running this algorithm $k$ times.
+If the most frequent answer is one of the $n$ incorrect answer, say $i$.
+Then $i$ is returned at least $m$ times by running this algorithm $k$ times.
+Note $k \le 2m$ in such case or $c$ will always be returned.
+
+\noindent So if correct answer is returned for $m(m \in \{2, \dots, \frac{k}{2}\})$ times in the $k$ trials, there're still $k-m$ trials to be filled with incorrect answers. 
+And we have in total $n$ incorrect answers to fill this $k-m$ trials.
+Now the question is what's the probability that $m$ or more of a particular incorrect answer $i$ are filled in this $k-m$ trials.
+If $X_i$ is the number of incorrect answer $i$ being returned in the $k-m$ trials then $X_i$ is a binomial distribution with $k-m$ trials and $p = \frac{1}{n}$.
+It helps to recall load balancing problem.
+You can think the $n$ incorrect answers of $n$ bins.
+We're throwing $k-m$ balls and want to find the probabilty that $m$ or more balls are in bin $i$.
+\\
+
+\noindent {Lemma: } $P(X_i \ge m) \le {k-m \choose m} p^m$
+\\
+
+\noindent This lemma was proved in class.
+
+\noindent Therefore, the probability that correct answer is returned $m$ times in the k trials and a particular incorrect answer is returned $m$ or more times in the k trials is:
+
+\begin{equation*}
+	P(FAIL) \le {k \choose m} \left(\frac{2}{3}\right) ^ m \left(\frac{1}{3}\right) ^ {k-m} * P(X_i \ge m)
+\end{equation*}
+
+\noindent Thus,
+
+\begin{equation*}
+	P(FAIL) \le {k \choose m} \left(\frac{2}{3}\right) ^ m * {k-m \choose m} \left(\frac{1}{3n}\right) ^ {m} * \left(\frac{1}{3}\right) ^ {k-2m}
+\end{equation*}
+
+\noindent So for a given $n$ we can compute $P(FAIL)$ for all possible $m$ and get an upper bound of all the failing cases until the upper bound is less than 0.001 which gives us confidence of 0.999 that the returned answer is correct.
+The smallet k found that satisfies this requirement is the number of trials we need.
+
+\newpage
+
 \textbf{Part 2:} When n is very large and each incorrect answer is equally likely.
 
 \newpage
