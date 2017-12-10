@@ -175,6 +175,8 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
     $\Longrightarrow$ Approximation ratio $= minSum_{alg}/minSum_{optimal}$ \\
     $\Longrightarrow$ Approximation ratio $=  \frac{4*r*(\sum_{i=1}^n x_i/r)^2}{r*(\sum_{i=1}^n x_i/r)^2}$\\
     $\Longrightarrow$ Approximation ratio = 4
+    
+    \textbf{Note that} if an element itself is greater than $2*\frac{\sum_{i=1}^n x_i}{r}$ then we dont have any choice but to make a separate subset of only this element and choose other subsets so as to minimize the sum. In other words, it will be similar to running the algorithm for creating r-1 subsets with n-1 elements(excluding the one with large value). And this won't change the approximation much. Also, there can only be r/2-1 number of such elements otherwise we can never create r subsets.
 \end{enumerate}
 \newpage
 \section{Solution to Question 4}
