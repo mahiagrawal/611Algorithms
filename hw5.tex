@@ -121,8 +121,61 @@ Since, the maximum size of an independent set in a graph can be n, the approxima
 $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
 \newpage
 \section{Solution to Question 3}
-cacdsczxczxx
-
+\begin{enumerate}
+    \item Min-Squares is NP-Complete
+    \begin{proof}\\
+  \textbf{Problem is in NP:} \\
+   If we are given r number of sets of positive integers then we can easily verify whether the given sum is less than L or not in polynomial time. We can traverse through each set once, calculating their individual sums and then calculate the sum of squares of these individual sums to check whether the final sum is less than L.This all can be done in $\mathcal{O}(n)$ time.
+   Thus, this problem is in NP. \\
+  \textbf{Problem is NP-Hard:} \\
+  asdsad 
+   \end{proof}
+   \item Approximation algorithm for minimizing $\sum_{i=1}^r (\sum_{x \in S_i} x)^2$ \\
+   We will try to partition given set such that each partition has their individual sums as close as possible to each other. The algorithm is as follows:
+   \begin{algorithm}
+  \begin{algorithmic}
+    \Function{alg}{$x_1, x_2, ...., x_n, r$}
+      \State $S_1 \leftarrow \Phi, S_2 \leftarrow \Phi,.....,S_n \leftarrow \Phi$
+      \State Sort the given set of integers in decreasing order of their values.
+      \State Put first(largest) r elements in the sorted array to each of the sets $S_1, S_2, ...., S_r$ such that each set contains exactly one element.
+      \For{i from r+1 to n}
+        \State Find the subset $S_k$ with the minimum individual sum among all subsets from $S_1$ to $S_r$. 
+        \State $S_k \leftarrow S_k \cup {x_i}$
+        \EndFor
+      \State \Return $S_1, S_2, ...., S_r$
+    \EndFunction
+    \end{algorithmic}
+    \end{algorithm}\\
+    To calculate the approximation ratio of this algorithm , consider the following claims:
+    
+    \textbf{Claim 1:} All the elements that are added from r+1 to n have value less than $\sum_{i=1}^n x_i/r$\\
+    i.e. $\forall k \in \{r+1,r+2,...,n\} x_k < \sum_{i=1}^n x_i/r$
+    \begin{proof} by contradiction \\
+    Let $(r+1)^{th}$ element is greater than $\sum_{i=1}^n x_i/r$\\
+    If any element after index r is greater than $\sum_{i=1}^n x_i/r$, then all the elements from 1 to r are at least $\sum_{i=1}^n x_i/r$ as the set is arranged in decreasing order.\\
+    So, r+1 elements have value greater than or equal to $\sum_{i=1}^n x_i/r$\\
+    $\Longrightarrow \sum_{i=1}^{r+1} x_i \geq (r+1)\sum_{i=1}^n x_i/r > \sum_{i=1}^n x_i$ \\
+    Since, the sum cannot be greater than sum of all elements, our assumption is wrong.\\
+    Thus the claim that no element from r+1 to n in the sorted set is greater than $\sum_{i=1}^n x_i/r$ is valid.
+    \end{proof}
+    \textbf{Claim 2:} The individual sum of any subset returned from the above algorithm can be at most $2* \sum_{i=1}^n x_i/r$ \\ i.e. $\forall k \in \{1,2,...,n\} \sum_{x \in S_k} x \leq 2* \sum_{i=1}^n x_i/r$
+    \begin{proof}
+     Let among the r subsets that algorithm returned, $S_k$ had the maximum individual sum. Also, assume that the last element we added to $S_k$ was $x_j$.\\
+     According to the algorithm, an element is added to a subset only if the individual sum of that subset is lowest.Thus, \\
+     $\forall_{i \neq k} \sum_{x \in S_i} x \geq \sum_{x \in S_k} x - x_j$ \\
+     $\Longrightarrow$ Total sum of all the individual subsets at that point, $\sum_{i=1}^r (\sum_{x \in S_i} x) \geq r(\sum_{x \in S_k} x - x_j)$ \\
+     Also, $r(\sum_{x \in S_k} x - x_j) \leq \sum_{i=1}^n x_i$ (Sum of all elements)\\
+     From \textbf{Claim 1} we know that $x_j \leq \frac{\sum_{i=1}^n x_i}{r}$ \\
+     Hence, $\sum_{x \in S_k} x \leq 2*\frac{\sum_{i=1}^n x_i}{r}$ \\
+     Thus, the claim is valid.
+    \end{proof}
+    Thus, maximum possible value of $\sum_{i=1}^r (\sum_{x \in S_i} x)^2$ = $\sum_{i=1}^r (2*\sum_{i=1}^n x_i/r)^2$ \\
+    $\Longrightarrow minSum_{alg} \leq 4*r*(\sum_{i=1}^n x_i/r)^2$ \\
+    Also, we know (also the given hint) that $\sum_{i=1}^r (\sum_{x \in S_i} x)^2$ $\geq r*(\sum_{i=1}^n x_i/r)^2$ \\
+    $\Longrightarrow$ Approximation ratio $= minSum_{alg}/minSum_{optimal}$ \\
+    $\Longrightarrow$ Approximation ratio $=  \frac{4*r*(\sum_{i=1}^n x_i/r)^2}{r*(\sum_{i=1}^n x_i/r)^2}$\\
+    $\Longrightarrow$ Approximation ratio = 4
+\end{enumerate}
 \newpage
 \section{Solution to Question 4}
 \begin{proof}\\
