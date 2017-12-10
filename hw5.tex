@@ -1,0 +1,119 @@
+\documentclass[11pt]{article}
+\usepackage{fullpage} % better margins
+\usepackage{amsthm,amssymb,amsmath} % useful math commands
+\usepackage{graphicx} % figures
+\usepackage{xfrac} % inline fractions
+\usepackage{enumerate} % custom enum symbols
+\usepackage{algpseudocode,algorithm} % for pseudocode
+
+% Define some useful shortcuts
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\M}{\mathcal{M}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\E}{\mathcal{E}}
+\renewcommand{\O}{\mathcal{O}}
+% if you want to use \alg and \opt in text, wrap them in math mode to make the spacing work
+% e.g. We have shown that $\alg$ runs in $\O(n)$
+\newcommand{\alg}{\textsc{alg}}
+\newcommand{\opt}{\textsc{opt}}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\title{Solutions for 611 Homework 5}
+
+\author{Mahim Agarwal}
+
+\begin{document}
+
+\maketitle
+
+\section{Solution to Question 1}
+
+\begin{enumerate}
+    \item Choose k sets from $\mathcal{B}$ such that $|{\cup_{i=1}^k C_i}|$ is maximized \newline
+    The greedy approach will give us the required approximation. The algorithm is as follows:
+    \begin{algorithm}
+  \begin{algorithmic}
+    \Function{alg}{$[n] , \mathcal{B}, k$}
+      \State $\mathcal{C} \leftarrow \Phi$
+      \State uncovered elements, $E \leftarrow [n]$
+      \While{$|\mathcal{C}| < k$}
+          \State Determine the set $B_i$ which contains the maximum number of uncovered points from $E$
+          \State $\mathcal{C} \leftarrow \mathcal{C} + \{B_i\}$
+          \State update $E$ to delete all the elements that are present in $B_i$, i.e. $E \leftarrow E - (E \cap B_i)$
+      \EndWhile
+      \State \Return $\mathcal{C}$
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}\\
+Let us assume that the optimal solution covered k sets such that $|{\cup_{i=1}^k C_i}| = opt $ number of elements. We know that $opt \leq n$ \\
+Since the optimal solution uses k sets, by pigeon-hole principle, there must be at least one set that contains equal to or more than 1/k fraction of the elements. Now, since the algorithm chooses the set that covers the most elements, so the chosen set must cover at least that many new elements. Therefore, after the first iteration of the algorithm, there are at most $opt(1 - 1/k)$ elements left to cover. \\
+Now, we might have chosen the set which belongs to optimal solution(in which case we are left with k-1 more optimal sets) or we might have chosen some other set (in which case we still have k more optimal sets). Taking the worst case scenario of not choosing the optimal set, we have k optimal sets remaining.\\
+Going by the same principle used earlier, in the next iteration, we choose the set that covers the most elements remaining and after the second iteration, there are at most $(opt(1 - 1/k))(1 - 1/k)$ elements remaining. \\
+So, after k iterations, there are at most $opt(1 - 1/k)^k$ elements left. \\
+In other words, after k iterations, we have covered at least $opt - opt(1 - 1/k)^k$ elements. \\
+Thus the approximation ratio of this algorithm is: \\
+$\frac{C_{opt}}{C_{alg}} = \frac{opt}{opt - opt(1- 1/k)^k} $
+$\Longrightarrow$ approximation ratio $= 1/(1 - (1 - 1/k)^k)$
+    \item Find smallest set $D \subseteq [n]$ such that $B \cap D \neq \Phi $ \\
+    asdsad
+    saasd   
+\end{enumerate}
+
+\newpage
+\section{Solution to Question 2}
+The greedy approach will give us the required approximation. The algorithm is as follows:
+    \begin{algorithm}
+  \begin{algorithmic}
+    \Function{alg}{$G = (V, E)$}
+      \State $S \leftarrow \Phi$
+      \While{G is not empty}
+          \State Determine the node v of minimum degree in G
+          \State $S \leftarrow S \cup \{v\}$
+          \State Remove v and its neighbors(vertices connected through an edge) from G
+      \EndWhile
+      \State \Return S
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}\\
+At the end of the algorithm, the cardinality of independent set output is $|S|$ and all the vertices that were deleted because of choosing their neighbors in S are $|V \backslash S|$ \\
+Now, consider a vertex u in S. Since we chose u and the maximum degree it can have is d, the maximum number of vertices that were deleted because of choosing u are d. \\
+So, there are at most d vertices in $V \backslash S$ for every vertex in S. Note that it can be lower than this as two non-neighboring vertices chosen in S might have common neighbor. \\
+$\Longrightarrow |V \backslash S| \leq d|S| $ \\
+Also, since each vertex is either chosen or deleted and there is no vertex left unoperated in G at the end, $|S| + |V \backslash S| = |V| = n$ \\
+$\Longrightarrow n - |S| \leq d|S|$ \\
+$\Longrightarrow |S| \geq \frac{n}{d+1}$ \\
+Since, the maximum size of an independent set in a graph can be n, the approximation of this algorithm is: \\
+$\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
+\newpage
+\section{Solution to Question 3}
+cacdsczxczxx
+
+\newpage
+\section{Solution to Question 4}
+\begin{proof}\\
+  \textbf{Problem is in NP:} \\
+   If we are given a set of vertices which constitute the dominating set then we can easily verify whether it is a dominating set or not in polynomial time. We can check that the size of the given set is k by traversing it once in polynomial time. Also, we can traverse all vertices of the given graph, and check whether they themselves or their neighboring vertex lie in the given dominating set or not.
+   Thus, this problem is in NP. \\
+  \textbf{Problem is NP-Hard:} \\
+   To show this we will reduce the NP-complete vertex cover problem to the given problem. \\
+   Given an undirected graph G, create a graph H by replacing each edge of G with a clique of size 3(a triangle of 3 edges connecting 3 vertices, where 2 vertices are of original graph while one vertex is added new).\\ In other words, create a graph $H(V', E')$, \\ where $V' = V \cup V_e$ for $V_e = \{v_{e_i}|e_i \in E\}$ \\
+   and $E' = E \cup E_e$ for $E_e = \{(v_{e_i},v_k)(v_{e_i},v_l)|e_i = (v_k, v_l) \in E\}$ \\
+   \textbf{Claim 1:} If G has a vertex cover of size k then graph H has a dominating set of size k. \\
+   For every edge $(u, v)$ in graph G, at least one of u or v has to be in the vertex cover by the definition. Let us suppose u is in vertex cover. Now, consider the clique formed by corresponding vertices(u, v, $v_{e_{u,v}}$) in graph H. For each vertex of this clique, either it itself is in the vertex cover (in our case u) or it's neighbor is in the vertex cover(neighbor of v is u and neighbor of $v_{e_{u,v}}$ is also u). Thus, if G has a vertex cover of size k then H has a dominating set of size k constituting same set of vertices as in vertex cover.\\  
+   \textbf{Claim 2:} If H has a dominating set of size k, then graph G has a vertex cover of size k.\\
+   Without loss of generality we can assume that the dominating set only has vertices from graph G and does not contain new vertices added, $v_{e_i}$. This is so because even if it did contain a vertex $v_{e_i}$ then, we can easily replace it with either of the vertex u or v in the clique of $v_{e_i}$ and it still will be a dominating set of graph H without any increase in its size. Now, this dominating set of vertices form a vertex cover for graph G. This is so because for every edge $e_i$ inclined to $v_{e_i}$, at least one of the two neighbors u or v has to be in the dominating set. Thus, for every edge, $e \in E$ of graph G, we have a vertex(u or v) in dominating set. This will make the dominating set a vertex cover for graph G.
+   \end{proof}
+   Since, the problem is both in NP and NP-Hard, it is NP-Complete.
+
+\newpage
+\section{Solution to Question 5} 
+asdasd
+
+\end{document}
