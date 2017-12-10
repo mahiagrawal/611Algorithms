@@ -53,17 +53,45 @@
   \end{algorithmic}
 \end{algorithm}\\
 Let us assume that the optimal solution covered k sets such that $|{\cup_{i=1}^k C_i}| = opt $ number of elements. We know that $opt \leq n$ \\
-Since the optimal solution uses k sets, by pigeon-hole principle, there must be at least one set that contains equal to or more than 1/k fraction of the elements. Now, since the algorithm chooses the set that covers the most elements, so the chosen set must cover at least that many new elements. Therefore, after the first iteration of the algorithm, there are at most $opt(1 - 1/k)$ elements left to cover. \\
-Now, we might have chosen the set which belongs to optimal solution(in which case we are left with k-1 more optimal sets) or we might have chosen some other set (in which case we still have k more optimal sets). Taking the worst case scenario of not choosing the optimal set, we have k optimal sets remaining.\\
-Going by the same principle used earlier, in the next iteration, we choose the set that covers the most elements remaining and after the second iteration, there are at most $(opt(1 - 1/k))(1 - 1/k)$ elements remaining. \\
+Since the optimal solution uses k sets, by pigeon-hole principle, there must be at least one set that contains equal to or more than 1/k 
+fraction of the elements. Now, since the algorithm chooses the set that covers the most elements, so the chosen set must cover at least 
+that many new elements. Therefore, after the first iteration of the algorithm, there are at most $opt(1 - 1/k)$ elements left to cover. \\
+Now, we might have chosen the set which belongs to optimal solution(in which case we are left with k-1 more optimal sets) or we might 
+have chosen some other set (in which case we still have k more optimal sets). Taking the worst case scenario of not choosing the optimal 
+set, we have k optimal sets remaining.\\
+Going by the same principle used earlier, in the next iteration, we choose the set that covers the most elements remaining and after the 
+second iteration, there are at most $(opt(1 - 1/k))(1 - 1/k)$ elements remaining. \\
 So, after k iterations, there are at most $opt(1 - 1/k)^k$ elements left. \\
 In other words, after k iterations, we have covered at least $opt - opt(1 - 1/k)^k$ elements. \\
 Thus the approximation ratio of this algorithm is: \\
 $\frac{C_{opt}}{C_{alg}} = \frac{opt}{opt - opt(1- 1/k)^k} $
 $\Longrightarrow$ approximation ratio $= 1/(1 - (1 - 1/k)^k)$
     \item Find smallest set $D \subseteq [n]$ such that $B \cap D \neq \Phi $ \\
-    asdsad
-    saasd   
+    The greedy approach will give us the required approximation. The algorithm is as follows:   
+    \begin{algorithm}
+  \begin{algorithmic}
+    \Function{alg}{$[n] , \mathcal{B}$}
+      \State $\mathcal{D} \leftarrow \Phi$
+      \State disjoint subsets, $\mathcal{B}$ (given)
+      \For{i from 1 to m}
+        \If{$B_i \cap \mathcal{D} = \Phi$}
+            \State $\mathcal{D} \leftarrow \mathcal{D} + B_i$
+         \EndIf
+        \EndFor
+      \State \Return $\mathcal{D}$
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}\\
+In words, starting from the first subset, keep adding the subset to our solution if it is a disjoint subset. \\
+Now, let us suppose the algorithm chose k subsets for creating the output $\mathcal{D}$. Also, we know that $b = max_i |B_i|$. \\
+So, maximum number of elements output set $\mathcal{D}$ can contain = $b*k$\\
+Thus, $minD_{alg} \leq b*k$ \\
+Also, since algorithm only chooses a subset if it is disjoint, that means the k subsets that we chose are all disjoint from each other. 
+Thus, the optimal solution should contain at least one element each from all these k subsets, otherwise we will have $\mathcal{D}_{opt} 
+\cap B_x = \Phi$ for one or more of $B_i s$\\
+Thus, $minD_{opt} \geq k$ \\
+Hence, approximation ratio, $\frac{minD_{alg}}{minD_{opt}}$ = $\frac{b*k}{k}$ \\
+$\Longrightarrow$ approximation ratio = b
 \end{enumerate}
 
 \newpage
