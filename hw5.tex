@@ -215,13 +215,14 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
 
 \newpage
 \section{Solution to Question 5} 
-(1)Assume we have a input graph $G = (V, E)$ and need to solve its dominating set.
+
+\begin{enumerate}[(1)]
+  \item Assume we have a input graph $G = (V, E)$ and need to solve its dominating set.
 We do a transformation like following: Transform each vertex of $G$ to some student in the minimum max-min distance problem.
 For each vertex pair, if there's an edge between the two vertices then set the distance of the two corresponding students to 1 mile.
 Otherwise set it to 2 miles. \\
 
 \noindent{\bf Claim: }{\it There exists a dominating set of size $t$ of $G$ iff there exists a subset $C$ of size $t$ such that $max-dist(C) < 2$ in the converted minimum max-min distance problem}.
-
 \begin{proof}
 	First we need to show that the converted instance of minimum max-min distance problem satisfies the inequality $d_{ij} + d_{jk} \geq d_{ik}$.
 	According to our transformation, a student can go to another student with distance of either $1$ or $2$ miles.
@@ -247,35 +248,9 @@ Otherwise set it to 2 miles. \\
 	Converting all the vertices to students takes time $\O(n)$.
 	Add distance to each student pair takes time $\O(n^2)$.
 	Thus, the reduction from dominating set to the question in this part is in polynomial time.\\
-
-\noindent (2)The approximation ratio the algorithm is 2.
-
-\begin{proof}
-	Assume the returned $C$ isn't the optimal solution, $C'$ is the optimal solution.
-
-	\noindent First we argue that there're at least $t+1$ students that live at least $r$ miles away from each other, where $r$ is $max-dist(C)$.
-	This is true because at least one student other than those in $C$ is $r$ miles away from all the students in $C$ according to the algorithm.
-	There're at least one student who needs to walk to students in $C$ since it makes no sense to nominate all the students.
-	That case, the denominator of approximation ratio is $0$.
-	The walking distance will be at most $r$ miles.
-	Plus the $t$ students in $C$ are also at least $r$ miles away from each other since we pick students greedily.
-	We have at least $t+1$ students that are at least $r$ miles away from each other.
-
-	\noindent Since $C' \neq C$ and $|C'| = |C| = t$, there're at least $2$ students in the above mentioned $t+1$ students that are not in $C'$.
-	This is because if there're only $1$ student who's in the above mentioned $t+1$ students while not in $C'$, then the only one left student will be at least $r$ miles away from all the $t$ students in $C'$ which makes no improvement at all.
-	Let's assume the $2$ students are student $i$ and $j$.
-	For any student $k$ in $C'$, consider the distance between $k$ and $i$, $j$.
-	We have $d_{ij} \geq r$ as argued above.
-	And $d_{ik} + d_{kj} \geq d_{ij} \geq r$. Then one of $d_{ik} (d_{ki})$ and $d_{kj}$ will have to be at least $\frac{r}{2}$.
-	Therefore, $max-dist(C') \geq \frac{r}{2}$.
-	Which gives us the approximation ratio of 2.
-\end{proof}
-
-\section{New Solution to Question 5}
-
-\begin{enumerate}[(1)]
-  \item 
-  \item Let $\alg$ denote the given algorithm and $\opt$ denote an algorithm that always gives an optimal solution.
+  \item The approximation ratio of this algorithm is 2.
+  
+  Let $\alg$ denote the given algorithm and $\opt$ denote an algorithm that always gives an optimal solution.
   Supose $\alg$ returns a set $C$ of $t$ lecturers, and $\opt$ returns a set $C'$ (different from $C$).
   Let $r = \operatorname{max-dist}(C)$.
 
