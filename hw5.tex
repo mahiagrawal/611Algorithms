@@ -219,12 +219,12 @@ Thus, the reduction from dominating set to the question in this part is in polyn
 	Assume the returned $C$ isn't the optimal solution, $C'$ is the optimal solution.
 
 	\noindent First we argue that there're at least $t+1$ students that live at least $r$ miles away from each other, where $r$ is $max-dist(C)$.
-	This is true because all the students other than those in $C$ are at least $r$ miles away from the students in $C$ according to the definition of $max-dist(C)$.
+	This is true because at least one student other than those in $C$ is $r$ miles away from all the students in $C$ according to the algorithm.
 	There're at least one student who needs to walk to students in $C$ since it makes no sense to nominate all the students.
 	That case, the denominator of approximation ratio is $0$.
-	The walking distance will be at least $r$ miles.
+	The walking distance will be at most $r$ miles.
 	Plus the $t$ students in $C$ are also at least $r$ miles away from each other since we pick students greedily.
-	We have at least $t+1$ students that are $r$ miles away from each other.
+	We have at least $t+1$ students that are at least $r$ miles away from each other.
 
 	\noindent Since $C' \neq C$ and $|C'| = |C| = t$, there're at least $2$ students in the above mentioned $t+1$ students that are not in $C'$.
 	This is because if there're only $1$ student who's in the above mentioned $t+1$ students while not in $C'$, then the only one left student will be at least $r$ miles away from all the $t$ students in $C'$ which makes no improvement at all.
