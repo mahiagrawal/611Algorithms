@@ -198,20 +198,37 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
 \end{enumerate}
 \newpage
 \section{Solution to Question 4}
-\begin{proof}\\
-  \textbf{Problem is in NP:} \\
-   If we are given a set of vertices which constitute the dominating set then we can easily verify whether it is a dominating set or not in polynomial time. We can check that the size of the given set is k by traversing it once in polynomial time. Also, we can traverse all vertices of the given graph, and check whether they themselves or their neighboring vertex lie in the given dominating set or not.
-   Thus, this problem is in NP. \\
-  \textbf{Problem is NP-Hard:} \\
-   To show this we will reduce the NP-complete vertex cover problem to the given problem. \\
-   Given an undirected graph G, create a graph H by replacing each edge of G with a clique of size 3(a triangle of 3 edges connecting 3 vertices, where 2 vertices are of original graph while one vertex is added new).\\ In other words, create a graph $H(V', E')$, \\ where $V' = V \cup V_e$ for $V_e = \{v_{e_i}|e_i \in E\}$ \\
-   and $E' = E \cup E_e$ for $E_e = \{(v_{e_i},v_k)(v_{e_i},v_l)|e_i = (v_k, v_l) \in E\}$ \\
-   \textbf{Claim 1:} If G has a vertex cover of size k then graph H has a dominating set of size k. \\
-   For every edge $(u, v)$ in graph G, at least one of u or v has to be in the vertex cover by the definition. Let us suppose u is in vertex cover. Now, consider the clique formed by corresponding vertices(u, v, $v_{e_{u,v}}$) in graph H. For each vertex of this clique, either it itself is in the vertex cover (in our case u) or it's neighbor is in the vertex cover(neighbor of v is u and neighbor of $v_{e_{u,v}}$ is also u). Thus, if G has a vertex cover of size k then H has a dominating set of size k constituting same set of vertices as in vertex cover.\\  
-   \textbf{Claim 2:} If H has a dominating set of size k, then graph G has a vertex cover of size k.\\
-   Without loss of generality we can assume that the dominating set only has vertices from graph G and does not contain new vertices added, $v_{e_i}$. This is so because even if it did contain a vertex $v_{e_i}$ then, we can easily replace it with either of the vertex u or v in the clique of $v_{e_i}$ and it still will be a dominating set of graph H without any increase in its size. Now, this dominating set of vertices form a vertex cover for graph G. This is so because for every edge $e_i$ inclined to $v_{e_i}$, at least one of the two neighbors u or v has to be in the dominating set. Thus, for every edge, $e \in E$ of graph G, we have a vertex(u or v) in dominating set. This will make the dominating set a vertex cover for graph G.
-   \end{proof}
-   Since, the problem is both in NP and NP-Hard, it is NP-Complete.
+\begin{enumerate}
+	\item {\bf Problem is in NP}
+		\begin{proof}
+			If we are given a set of vertices which constitute the dominating set then we can easily verify whether it is a dominating set or not in polynomial time. We can check that the size of the given set is k by traversing it once in polynomial time. Also, we can traverse all vertices of the given graph, and check whether they themselves or their neighboring vertex lie in the given dominating set or not.
+			Thus, this problem is in NP.
+		\end{proof}
+
+	\item {\bf Problem is NP-Hard}
+		\begin{proof}
+			To prove this we will show the NP-complete vertex cover problem is polynomial time reducible to the dominating set problem.
+
+			Given an undirected graph G, create a graph H by replacing each edge of G with a clique of size 3(a triangle of 3 edges connecting 3 vertices, where 2 vertices are of original graph while one vertex is added new), and delete any single vertex not incident to any edges.
+
+			In other words, create a graph $H(V', E')$,
+			
+			where $V' = (V \cup V_e) \ V_s$ for $V_e = \{v_{e_i}|e_i \in E\}, V_s = {v_s|\rho(v_s) = 0}$
+
+			and $E' = E \cup E_e$ for $E_e = \{(v_{e_i},v_k)(v_{e_i},v_l)|e_i = (v_k, v_l) \in E\}$
+
+   			{\bf Claim 1:} If G has a vertex cover of size k then graph H has a dominating set of size k.
+
+			For every edge $(u, v)$ in graph G, at least one of u or v has to be in the vertex cover by the definition. Let us suppose u is in vertex cover. Now, consider the clique formed by corresponding vertices(u, v, $v_{e_{u,v}}$) in graph H. For each vertex of this clique, either itself is in the vertex cover (in our case u) or it's neighbor is in the vertex cover(neighbor of v is u and neighbor of $v_{e_{u,v}}$ is also u). Thus, if G has a vertex cover of size k then H has a dominating set of size k constituting same set of vertices as in vertex cover.
+
+			{\bf Claim 2:} If H has a dominating set of size k, then graph G has a vertex cover of size k.
+
+			Without loss of generality we can assume that the dominating set only has vertices from graph G and does not contain new vertices added, $v_{e_i}$. This is so because even if it did contain a vertex $v_{e_i}$ then, we can easily replace it with either of the vertex u or v in the clique of $v_{e_i}$ and it still will be a dominating set of graph H without any increase in its size. Now, this dominating set of vertices form a vertex cover for graph G. This is so because for every edge $e_i$ inclined to $v_{e_i}$, at least one of the two neighbors u or v has to be in the dominating set. Thus, for every edge, $e \in E$ of graph G, we have a vertex(u or v) in dominating set. This will make the dominating set a vertex cover for graph G. The size of the corresponding vertex cover is at most k since if we replace some $v_e$ with some vertex $v$ that's already in the dominating set the size of the vertex cover will be less than $k$. But we can always add new vertices into a vertex cover and it's still a vertex cover.
+			
+			Note that the transformation from G to H can be done in polynomial time.
+			Since it only takes $\O(|E|)$ time to add vertices and $\O(|V|)$ time to delete single vertices.
+		\end{proof}
+Now that the problem is both in NP and NP-Hard, it is NP-Complete.
 
 \newpage
 \section{Solution to Question 5} 
