@@ -235,4 +235,38 @@ Thus, the reduction from dominating set to the question in this part is in polyn
 	Therefore, $max-dist(C') \geq \frac{r}{2}$.
 	Which gives us the approximation ratio of 2.
 \end{proof}
+
+\section{New Solution to Question 5}
+
+\begin{enumerate}[(1)]
+  \item 
+  \item Let $\alg$ denote the given algorithm and $\opt$ denote an algorithm that always gives an optimal solution.
+  Supose $\alg$ returns a set $C$ of $t$ lecturers, and $\opt$ returns a set $C'$ (different from $C$).
+  Let $r = \operatorname{max-dist}(C)$.
+
+  We argue that there exists a set of $t+1$ students who are pairwise at least $r$ apart.
+  By definition of $r$, there is some student $s \in [n]$ such that $d_{si} \geq r$ for all $i \in C$, with equality for at least one choice of $i$.
+  Note also that the students in $C$ are pairwise at least $r$ apart; otherwise, $\alg$ would have added $s$ to $C$, since it greedily adds the farthest students from $C$.
+  Thus, $D = C \cup \{s\}$ is a set of $t+1$ mutually distant (by at least $r$) students.
+
+  Since $|D| = |C'| + 1$, there must be a student $i$ in $D \setminus C'$.
+  If $i$ is the only student in $D \setminus C'$, then $C' = D \setminus \{i\}$.
+  But $i$ is at least $r$ from the other students in $D$, so this would mean $\opt$ does not improve on the solution found by $\alg$.
+  Therefore we can assume there are at least two students in $D \setminus C'$.
+
+  Let $A = D \cap C'$ and $B = D \setminus C'$, so $A \cap B = \emptyset$, $A \cup B = D$, and $|B| \geq 2$.
+  In the output of $\opt$, no student in $B$ will visit a lecturer in $A$, since they would travel at least $r$ to do so, again contradicting that $\opt$ gives a better solution.
+  Thus all the students in $B$ visit lecturers in $C' \setminus A$.
+  Since $|A| + |B| = t + 1$, we have $|C' \setminus A| = t - |A| = |B| - 1$, so the solution of $\opt$ requires $|B|$ students to visit $|B| - 1$ lecturers.
+  By the pigeonhole principle, it must be the case that at least one lecturer $\ell \in C' \setminus A$ is visited by two students $i$ and $j$ in $B$.
+  Now, $d_{ij} \geq r$ because $i$ and $j$ are in $D$.
+  By the triangle inequality, $d_{i \ell} + d_{j \ell} \geq r$, so one of these distances must be at least $\frac{r}{2}$.
+  Thus \[\operatorname{max-dist}(C') \geq \frac{r}{2} = \frac{\operatorname{max-dist}(C)}{2},\] so the approximation ratio is at most 2.
+
+  To show that in fact, $\frac{\operatorname{max-dist}(C)}{\operatorname{max-dist}(C')} = 2$, we provide an example input on three students where equality is obtained.
+  Let $(i, 0)$ be the coordinates of the student $i$ in $\R^2$, for $i \in [3]$, and let $t = 1$.
+  Then $\alg$ will pick $C = \{1\}$, where $\operatorname{max-dist}(C) = 2$.
+  But $\opt$ will pick $C' = \{2\}$, so $\operatorname{max-dist}(C') = 1$.
+  In this case, the competitive ratio of $2$ is obtained, completing the proof.
+\end{enumerate}
 \end{document}
