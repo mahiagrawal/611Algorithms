@@ -62,10 +62,12 @@ set, we have k optimal sets remaining.\\
 Going by the same principle used earlier, in the next iteration, we choose the set that covers the most elements remaining and after the 
 second iteration, there are at most $(opt(1 - 1/k))(1 - 1/k)$ elements remaining. \\
 So, after k iterations, there are at most $opt(1 - 1/k)^k$ elements left. \\
+{\bf I think the little problem with this proof is that we can't say if we hit worst case scenario in each iteration, the final result will also be worst case.} \\
 In other words, after k iterations, we have covered at least $opt - opt(1 - 1/k)^k$ elements. \\
 Thus the approximation ratio of this algorithm is: \\
 $\frac{C_{opt}}{C_{alg}} = \frac{opt}{opt - opt(1- 1/k)^k} $
 $\Longrightarrow$ approximation ratio $= 1/(1 - (1 - 1/k)^k)$
+
     \item Find smallest set $D \subseteq [n]$ such that $B \cap D \neq \Phi $ \\
     The greedy approach will give us the required approximation. The algorithm is as follows:   
     \begin{algorithm}
@@ -90,9 +92,24 @@ Also, since algorithm only chooses a subset if it is disjoint, that means the k 
 Thus, the optimal solution should contain at least one element each from all these k subsets, otherwise we will have $\mathcal{D}_{opt} 
 \cap B_x = \Phi$ for one or more of $B_i s$\\
 Thus, $minD_{opt} \geq k$ \\
-Hence, approximation ratio, $\frac{minD_{alg}}{minD_{opt}}$ = $\frac{b*k}{k}$ \\
+Hence, approximation ratio, $\frac{minD_{alg}}{minD_{opt}} \leq \frac{b*k}{k}$ \\
 $\Longrightarrow$ approximation ratio = b
 \end{enumerate}
+
+\newpage
+
+\noindent {\bf Q1P1 Proof:}
+\begin{proof}
+	\noindent Assume the optimal solution has $|\cup_{i=1}^{k}C_i| = opt$ number of elements, obviously $opt \leq n$.
+	Suppose we have some elements that we can cover, we argue that in the next step we can cover at least $\frac{1}{k}$ fraction of the uncovered elements in the optimal sets.
+	To see why, suppose we've picked $j$ number of sets and there're $k-j$ number of sets left.
+	If the next step we can only cover less than $\frac{1}{k}$ fraction of the uncoverd elements in the optimal sets, then the returned result $\mathcal{C}$ will always satisfy $|\mathcal{C}| < |\cup_{i=1}^{j}C_i| + (k-j) * \frac{|optimal~sets/\{C_1, C_2, \dots, C_j\}|}{k}$.
+	Now, assume we're picking in a way that opimizes $\mathcal{C}$ in our return result.
+	Then, the righthand side of the inequality will be strictly less than $opt$ since $(k-j) < k$.
+	This means we can never pick sets from $\mathcal{B}$ in a way that reaches $opt$.
+	Contradicted to our assumption, so our claim is true.
+	Therefore, after $k$ iterations, we have covered at least $opt - opt(1 - 1/k)^k$ elements, which gives us a performance ratio of $1/(1 - (1 - 1/k)^k)$.
+\end{proof}
 
 \newpage
 \section{Solution to Question 2}
@@ -149,7 +166,7 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
     To calculate the approximation ratio of this algorithm , consider the following claims:
     
     \textbf{Claim 1:} All the elements that are added from r+1 to n have value less than $\sum_{i=1}^n x_i/r$\\
-    i.e. $\forall k \in \{r+1,r+2,...,n\} x_k < \sum_{i=1}^n x_i/r$
+    i.e. $\forall k \in \{r+1,r+2,...,n\}$, $ x_k < \sum_{i=1}^n x_i/r$
     \begin{proof} by contradiction \\
     Let $(r+1)^{th}$ element is greater than $\sum_{i=1}^n x_i/r$\\
     If any element after index r is greater than $\sum_{i=1}^n x_i/r$, then all the elements from 1 to r are at least $\sum_{i=1}^n x_i/r$ as the set is arranged in decreasing order.\\
@@ -158,11 +175,12 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
     Since, the sum cannot be greater than sum of all elements, our assumption is wrong.\\
     Thus the claim that no element from r+1 to n in the sorted set is greater than $\sum_{i=1}^n x_i/r$ is valid.
     \end{proof}
-    \textbf{Claim 2:} The individual sum of any subset returned from the above algorithm can be at most $2* \sum_{i=1}^n x_i/r$ \\ i.e. $\forall k \in \{1,2,...,n\} \sum_{x \in S_k} x \leq 2* \sum_{i=1}^n x_i/r$
+    \textbf{Claim 2:} The individual sum of any subset returned from the above algorithm can be at most $2* \sum_{i=1}^n x_i/r$ \\ 
+    i.e. $\forall k \in \{1,2,...,r\}$, $\sum_{x \in S_k} x \leq 2* \sum_{i=1}^n x_i/r$
     \begin{proof}
      Let among the r subsets that algorithm returned, $S_k$ had the maximum individual sum. Also, assume that the last element we added to $S_k$ was $x_j$.\\
      According to the algorithm, an element is added to a subset only if the individual sum of that subset is lowest.Thus, \\
-     $\forall_{i \neq k} \sum_{x \in S_i} x \geq \sum_{x \in S_k} x - x_j$ \\
+     $\forall {i \neq k}$, $\sum_{x \in S_i} x \geq \sum_{x \in S_k} x - x_j$ \\
      $\Longrightarrow$ Total sum of all the individual subsets at that point, $\sum_{i=1}^r (\sum_{x \in S_i} x) \geq r(\sum_{x \in S_k} x - x_j)$ \\
      Also, $r(\sum_{x \in S_k} x - x_j) \leq \sum_{i=1}^n x_i$ (Sum of all elements)\\
      From \textbf{Claim 1} we know that $x_j \leq \frac{\sum_{i=1}^n x_i}{r}$ \\
@@ -197,21 +215,38 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
 
 \newpage
 \section{Solution to Question 5} 
-(1)Define a undirected Graph $G = (V, E)$ where each student is a vertex in $V$ and there's an edge between two vertices if the distance between the two students are less than $2$ miles. \\
+(1)Assume we have a input graph $G = (V, E)$ and need to solve its dominating set.
+We do a transformation like following: Transform each vertex of $G$ to some student in the minimum max-min distance problem.
+For each vertex pair, if there's an edge between the two vertices then set the distance of the two corresponding students to 1 mile.
+Otherwise set it to 2 miles. \\
 
-\noindent{\bf Claim: }{\it There exists a dominating set of size $t$ of $G$ iff there exists a subset $C$ of size $t$ such that $max-dist(C) < 2$}.
+\noindent{\bf Claim: }{\it There exists a dominating set of size $t$ of $G$ iff there exists a subset $C$ of size $t$ such that $max-dist(C) < 2$ in the converted minimum max-min distance problem}.
 
 \begin{proof}
-$\Rightarrow$: If there exists a dominating set of size $t$ of $G$, then a student is either nominated or can reach a nominated student in the dominating set within distance of $2$ miles.
-Thus, $max-dist(C) < 2$.
+	First we need to show that the converted instance of minimum max-min distance problem satisfies the inequality $d_{ij} + d_{jk} \geq d_{ik}$.
+	According to our transformation, a student can go to another student with distance of either $1$ or $2$ miles.
+	if the student first go to some other student(s), then it takes the student at least $2$ miles to get to the destination.
+	Thus the inequality is established.
+	Then we prove the iff statement below:
 
-$\Leftarrow$: The minimum distance from student $i$ to student $j$ is always $d_{ij}$ since $d_{ik} + d_{kj} \geq d_{ij}$. THe existence of a subset $C$ tells us a student $i$ is either in this subset $C$ or $max_imin_{j \in C} d_{ij} < 2$, which means $C$ is a dominating set of $G$.
+	$\Rightarrow$: If there exists a dominating set of size $t$ of $G$, then by nominating the students that are correspondingly vertices in the dominating set to $C$ we can satisfy $max-dist(C) < 2$. 
+	According to the definition of dominating set we know a vertex is either in it or incident to an edge whose another endpoint is in it.
+	Therefore, in the converted instance a student is either a TA or can get to a TA with distance of $1$ mile.
+	Since $1$ mile is the minimum distance for a student to get to any other students, $max-dist(C)$ can only be $1$.
+
+	$\Leftarrow$: In the constructed students placement, a student can either go to another student with distance of $1$ or $2$ miles.
+	Since we're looking for a set of $C$ which satisfies $max-dist(C) < 2$, a student will never go to a TA with distance larger than or equal to $2$ miles.
+	The distance in the instance can only be integral, so $max-dist(C)$ has to be $1$.
+	This suggests that a student is either a TA or can go to a TA with distance of $1$ mile.
+	Therefore, suppose we can find such a set $C$ of size $t$.
+	We know every vertex outside of set $C$ can reach some corresponding vertex in set $C$ directly.
+	This means the vertices in set $C$ is a dominating set of size $t$.
 \end{proof}
 
-\noindent Note that it's obvious that we can construct such a graph $G$ in time propotional to the number of students $n$.
-Including all the students takes $\O(n)$.
-Checking and including edges takes $\O(n^2)$.
-Thus, the reduction from dominating set to the question in this part is in polynomial time.\\
+\noindent Note that we can construct the student placement in time propotional to the number of vertices $n$.
+	Converting all the vertices to students takes time $\O(n)$.
+	Add distance to each student pair takes time $\O(n^2)$.
+	Thus, the reduction from dominating set to the question in this part is in polynomial time.\\
 
 \noindent (2)The approximation ratio the algorithm is 2.
 
