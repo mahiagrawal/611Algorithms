@@ -197,6 +197,20 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
 
 \newpage
 \section{Solution to Question 5} 
-asdasd
+(1)Define a undirected Graph $G = (V, E)$ where each student is a vertex in $V$ and there's an edge between two vertices if the distance between the two students are less than $2$ miles. \\
+
+\noindent{\bf Claim: }{\it There exists a dominating set of size $t$ of $G$ iff there exists a subset $C$ of size $t$ such that $max-dist(C) < 2$}.
+
+\begin{proof}
+$\Rightarrow$: If there exists a dominating set of size $t$ of $G$, then a student is either nominated or can reach a nominated student in the dominating set within distance of $2$ miles.
+Thus, $max-dist(C) < 2$.
+
+$\Leftarrow$: The minimum distance from student $i$ to student $j$ is always $d_{ij}$ since $d_{ik} + d_{kj} \geq d_{ij}$. THe existence of a subset $C$ tells us a student $i$ is either in this subset $C$ or $max_imin_{j \in C} d_{ij} < 2$, which means $C$ is a dominating set of $G$.
+\end{proof}
+
+\noindent Note that it's obvious that we can construct such a graph $G$ in time propotional to the number of students $n$.
+Including all the students takes $\O(n)$.
+Checking and including edges takes $\O(n^2)$.
+Thus, the reduction from dominating set to the question in this part is in polynomial time.
 
 \end{document}
