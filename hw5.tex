@@ -211,6 +211,27 @@ $\Leftarrow$: The minimum distance from student $i$ to student $j$ is always $d_
 \noindent Note that it's obvious that we can construct such a graph $G$ in time propotional to the number of students $n$.
 Including all the students takes $\O(n)$.
 Checking and including edges takes $\O(n^2)$.
-Thus, the reduction from dominating set to the question in this part is in polynomial time.
+Thus, the reduction from dominating set to the question in this part is in polynomial time.\\
 
+\noindent (2)The approximation ratio the algorithm is 2.
+
+\begin{proof}
+	Assume the returned $C$ isn't the optimal solution, $C'$ is the optimal solution.
+
+	\noindent First we argue that there're at least $t+1$ students that live at least $r$ miles away from each other, where $r$ is $max-dist(C)$.
+	This is true because all the students other than those in $C$ are at least $r$ miles away from the students in $C$ according to the definition of $max-dist(C)$.
+	There're at least one student who needs to walk to students in $C$ since it makes no sense to nominate all the students.
+	That case, the denominator of approximation ratio is $0$.
+	The walking distance will be at least $r$ miles.
+	Plus the $t$ students in $C$ are also at least $r$ miles away from each other since we pick students greedily.
+	We have at least $t+1$ students that are $r$ miles away from each other.
+
+	\noindent Since $C' \neq C$ and $|C'| = |C| = t$, there're at least $2$ students in the above mentioned $t+1$ students that are not in $C'$.
+	Let's assume the $2$ students are student $i$ and $j$.
+	For any student $k$ in $C'$, consider the distance between $k$ and $i$, $j$.
+	We have $d_{ij} \geq r$ as argued above.
+	And $d_{ik} + d_{kj} \geq d_{ij} \geq r$. Then one of $d_{ik} (d_{ki})$ and $d_{kj}$ will have to be at least $\frac{r}{2}$.
+	Therefore, $max-dist(C') \geq \frac{r}{2}$.
+	Which gives us the approximation ratio of 2.
+\end{proof}
 \end{document}
