@@ -62,11 +62,27 @@ set, we have k optimal sets remaining.\\
 Going by the same principle used earlier, in the next iteration, we choose the set that covers the most elements remaining and after the 
 second iteration, there are at most $(opt(1 - 1/k))(1 - 1/k)$ elements remaining. \\
 So, after k iterations, there are at most $opt(1 - 1/k)^k$ elements left. \\
-{\bf I think the little problem with this proof is that we can't say if we hit worst case scenario in each iteration, the final result will also be worst case.} \\
 In other words, after k iterations, we have covered at least $opt - opt(1 - 1/k)^k$ elements. \\
 Thus the approximation ratio of this algorithm is: \\
 $\frac{C_{opt}}{C_{alg}} = \frac{opt}{opt - opt(1- 1/k)^k} $
 $\Longrightarrow$ approximation ratio $= 1/(1 - (1 - 1/k)^k)$
+
+\newpage
+
+{\bf Another Proof for Part 1: }
+\begin{proof}
+	\noindent Assume the optimal solution has $|\cup_{i=1}^{k}C_i| = opt$ number of elements, obviously $opt \leq n$.
+	Suppose we have some elements that we can cover, we argue that in the next step we can cover at least $\frac{1}{k}$ fraction of the uncovered elements in the optimal sets.
+	To see why, suppose we've picked $j$ number of sets and there're $k-j$ number of sets left.
+	If the next step we can only cover less than $\frac{1}{k}$ fraction of the uncoverd elements in the optimal sets, then the returned result $\mathcal{C}$ will always satisfy $|\mathcal{C}| < |\cup_{i=1}^{j}C_i| + (k-j) * \frac{|optimal~sets/\{C_1, C_2, \dots, C_j\}|}{k}$.
+	Now, assume we're picking in a way that opimizes $\mathcal{C}$ in our return result.
+	Then, the righthand side of the inequality will be strictly less than $opt$ since $(k-j) < k$.
+	This means we can never pick sets from $\mathcal{B}$ in a way that reaches $opt$.
+	Contradicted to our assumption, so our claim is true.
+	Therefore, after $k$ iterations, we have covered at least $opt - opt(1 - 1/k)^k$ elements, which gives us a performance ratio of $1/(1 - (1 - 1/k)^k)$.
+\end{proof}
+
+\newpage
 
     \item Find smallest set $D \subseteq [n]$ such that $B \cap D \neq \emptyset $ \\
     The greedy approach will give us the required approximation. The algorithm is as follows:   
@@ -98,20 +114,6 @@ $\Longrightarrow$ approximation ratio = b
 
 \newpage
 
-\noindent {\bf Q1P1 Proof:}
-\begin{proof}
-	\noindent Assume the optimal solution has $|\cup_{i=1}^{k}C_i| = opt$ number of elements, obviously $opt \leq n$.
-	Suppose we have some elements that we can cover, we argue that in the next step we can cover at least $\frac{1}{k}$ fraction of the uncovered elements in the optimal sets.
-	To see why, suppose we've picked $j$ number of sets and there're $k-j$ number of sets left.
-	If the next step we can only cover less than $\frac{1}{k}$ fraction of the uncoverd elements in the optimal sets, then the returned result $\mathcal{C}$ will always satisfy $|\mathcal{C}| < |\cup_{i=1}^{j}C_i| + (k-j) * \frac{|optimal~sets/\{C_1, C_2, \dots, C_j\}|}{k}$.
-	Now, assume we're picking in a way that opimizes $\mathcal{C}$ in our return result.
-	Then, the righthand side of the inequality will be strictly less than $opt$ since $(k-j) < k$.
-	This means we can never pick sets from $\mathcal{B}$ in a way that reaches $opt$.
-	Contradicted to our assumption, so our claim is true.
-	Therefore, after $k$ iterations, we have covered at least $opt - opt(1 - 1/k)^k$ elements, which gives us a performance ratio of $1/(1 - (1 - 1/k)^k)$.
-\end{proof}
-
-\newpage
 \section{Solution to Question 2}
 The greedy approach will give us the required approximation. The algorithm is as follows:
     \begin{algorithm}
@@ -145,7 +147,7 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
    If we are given r number of sets of positive integers then we can easily verify whether the given sum is less than L or not in polynomial time. We can traverse through each set once, calculating their individual sums and then calculate the sum of squares of these individual sums to check whether the final sum is less than L.This all can be done in $\mathcal{O}(n)$ time.
    Thus, this problem is in NP. \\
   \textbf{Problem is NP-Hard:} \\
-  asdsad 
+
    \end{proof}
    \item Approximation algorithm for minimizing $\sum_{i=1}^r (\sum_{x \in S_i} x)^2$ \\
    We will try to partition given set such that each partition has their individual sums as close as possible to each other. The algorithm is as follows:
@@ -194,7 +196,7 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
     $\Longrightarrow$ Approximation ratio $=  \frac{4*r*(\sum_{i=1}^n x_i/r)^2}{r*(\sum_{i=1}^n x_i/r)^2}$\\
     $\Longrightarrow$ Approximation ratio = 4
     
-    \textbf{Note that} if an element itself is greater than $2*\frac{\sum_{i=1}^n x_i}{r}$ then we dont have any choice but to make a separate subset of only this element and choose other subsets so as to minimize the sum. In other words, it will be similar to running the algorithm for creating r-1 subsets with n-1 elements(excluding the one with large value). And this won't change the approximation much. Also, there can only be r/2-1 number of such elements otherwise we can never create r subsets.
+		{\bf Note that} the proof is based on the assumption that every integer is at most $\sum_i \frac{x_i}{r}$ 
 \end{enumerate}
 \newpage
 \section{Solution to Question 4}
