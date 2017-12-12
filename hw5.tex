@@ -41,7 +41,7 @@
     \begin{algorithm}
   \begin{algorithmic}
     \Function{alg}{$[n] , \mathcal{B}, k$}
-      \State $\mathcal{C} \leftarrow \Phi$
+      \State $\mathcal{C} \leftarrow \emptyset$
       \State uncovered elements, $E \leftarrow [n]$
       \While{$|\mathcal{C}| < k$}
           \State Determine the set $B_i$ which contains the maximum number of uncovered points from $E$
@@ -68,15 +68,15 @@ Thus the approximation ratio of this algorithm is: \\
 $\frac{C_{opt}}{C_{alg}} = \frac{opt}{opt - opt(1- 1/k)^k} $
 $\Longrightarrow$ approximation ratio $= 1/(1 - (1 - 1/k)^k)$
 
-    \item Find smallest set $D \subseteq [n]$ such that $B \cap D \neq \Phi $ \\
+    \item Find smallest set $D \subseteq [n]$ such that $B \cap D \neq \emptyset $ \\
     The greedy approach will give us the required approximation. The algorithm is as follows:   
     \begin{algorithm}
   \begin{algorithmic}
     \Function{alg}{$[n] , \mathcal{B}$}
-      \State $\mathcal{D} \leftarrow \Phi$
+      \State $\mathcal{D} \leftarrow \emptyset$
       \State disjoint subsets, $\mathcal{B}$ (given)
       \For{i from 1 to m}
-        \If{$B_i \cap \mathcal{D} = \Phi$}
+        \If{$B_i \cap \mathcal{D} = \emptyset$}
             \State $\mathcal{D} \leftarrow \mathcal{D} + B_i$
          \EndIf
         \EndFor
@@ -90,7 +90,7 @@ So, maximum number of elements output set $\mathcal{D}$ can contain = $b*k$\\
 Thus, $minD_{alg} \leq b*k$ \\
 Also, since algorithm only chooses a subset if it is disjoint, that means the k subsets that we chose are all disjoint from each other. 
 Thus, the optimal solution should contain at least one element each from all these k subsets, otherwise we will have $\mathcal{D}_{opt} 
-\cap B_x = \Phi$ for one or more of $B_i s$\\
+\cap B_x = \emptyset$ for one or more of $B_i s$\\
 Thus, $minD_{opt} \geq k$ \\
 Hence, approximation ratio, $\frac{minD_{alg}}{minD_{opt}} \leq \frac{b*k}{k}$ \\
 $\Longrightarrow$ approximation ratio = b
@@ -117,7 +117,7 @@ The greedy approach will give us the required approximation. The algorithm is as
     \begin{algorithm}
   \begin{algorithmic}
     \Function{alg}{$G = (V, E)$}
-      \State $S \leftarrow \Phi$
+      \State $S \leftarrow \emptyset$
       \While{G is not empty}
           \State Determine the node v of minimum degree in G
           \State $S \leftarrow S \cup \{v\}$
@@ -152,7 +152,7 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
    \begin{algorithm}
   \begin{algorithmic}
     \Function{alg}{$x_1, x_2, ...., x_n, r$}
-      \State $S_1 \leftarrow \Phi, S_2 \leftarrow \Phi,.....,S_n \leftarrow \Phi$
+      \State $S_1 \leftarrow \emptyset, S_2 \leftarrow \emptyset,.....,S_n \leftarrow \emptyset$
       \State Sort the given set of integers in decreasing order of their values.
       \State Put first(largest) r elements in the sorted array to each of the sets $S_1, S_2, ...., S_r$ such that each set contains exactly one element.
       \For{i from r+1 to n}
