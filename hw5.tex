@@ -147,8 +147,17 @@ $\frac{\frac{n}{d+1}}{n} = \frac{1}{d+1}$
    If we are given r number of sets of positive integers then we can easily verify whether the given sum is less than L or not in polynomial time. We can traverse through each set once, calculating their individual sums and then calculate the sum of squares of these individual sums to check whether the final sum is less than L.This all can be done in $\mathcal{O}(n)$ time.
    Thus, this problem is in NP. \\
   \textbf{Problem is NP-Hard:} \\
-
+  We will prove this by reducing the SubSet problem to min-squares problem. That means any instance which outputs Yes for Min-Squares should give Yes for Subset problem as well and a NO in min-squares maps to NO in subset.\\
+  This can be done by finding a subset of elements with sum equal to the half of sum of all the elements. \\
+  i.e. instance P of subset problem is: $X={x_1, x_2, ....., x_n}$ and sum, $s = \sum_{i=1}^{n} x_i /2$ \\
+  Now, the instance P' of Min-Squares for perfect output mapping is: $X={x_1, x_2, ....., x_n}$, $r=2$ and $L = (\sum_{i=1}^{n} x_i)^2 /2 $.\\
+  Note that, using the given hint where $\sum_{i=1}^r (\sum_{x \in S_i} x)^2$ $\geq r*(\sum_{i=1}^n x_i/r)^2$ for r=2, we get minimum possible value of sum of squares is $(\sum_{i=1}^{n} x_i)^2 /2$\\
+  Now, for a Yes instance in P will give us a subset whose sum is $\sum_{i=1}^{n} x_i/2$. So, remaining all elements will form another subset which will have sum $\sum_{i=1}^{n} x_i/2$. Thus, the corresponding instance of P' will give us $\sum_{i=1}^r (\sum_{x \in S_i} x)^2 =(\sum_{i=1}^{n} x_i)^2 /2$ which is equal to L and is the minimum possible value. Thus, P' will also output Yes. \\
+  Also, a NO instance of P means there is no subset with sum $\sum_{i=1}^{n} x_i/2$ and thus the corresponding sum in P' cannot be L. Since, L is the lowest possible sum, and it is not equal to L then the output sum in P' $> L$. This means that the Min-Square will also return NO. \\
+  This is true for opposite direction as well since a yes instance in P' is only possible when each subset square sums up to $L^2/2$. \\
+  Thus, subset sum is reducible to Min squares and hence  min square is NP-Hard.
    \end{proof}
+   Since, Min-Squares is both NP and NP-Hard, it is NP-Complete.\\
    \item Approximation algorithm for minimizing $\sum_{i=1}^r (\sum_{x \in S_i} x)^2$ \\
    We will try to partition given set such that each partition has their individual sums as close as possible to each other. The algorithm is as follows:
    \begin{algorithm}
